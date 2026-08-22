@@ -19,7 +19,7 @@ import { UserRole } from '../types';
 import { SARakshaLogo } from '../components/branding/SARakshaLogo';
 
 export const Login: React.FC = () => {
-  const { login, isAuthenticated, role } = useAuth();
+  const { login, isAuthenticated, isInitializing, role } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -34,7 +34,7 @@ export const Login: React.FC = () => {
 
   // If already authenticated and not explicitly redirected from a protected route, navigate to dashboard
   React.useEffect(() => {
-    if (isAuthenticated) {
+    if (!isInitializing && isAuthenticated) {
       if (targetFrom) {
         navigate(targetFrom, { replace: true });
       } else if (role === 'SUPER_ADMIN') {
@@ -45,7 +45,7 @@ export const Login: React.FC = () => {
         navigate('/field-officer/dashboard', { replace: true });
       }
     }
-  }, [isAuthenticated, role, targetFrom, navigate]);
+  }, [isInitializing, isAuthenticated, role, targetFrom, navigate]);
 
   const handleSelectDemoCredential = (role: UserRole) => {
     setSelectedRole(role);

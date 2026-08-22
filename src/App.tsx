@@ -82,7 +82,8 @@ const RouteLoadingFallback: React.FC = () => (
 
 // Role-based root redirect component
 const RootRedirect: React.FC = () => {
-  const { isAuthenticated, role } = useAuth();
+  const { isAuthenticated, isInitializing, role } = useAuth();
+  if (isInitializing) return <RouteLoadingFallback />;
   if (!isAuthenticated) return <Navigate to="/login" replace />;
   if (role === 'SUPER_ADMIN') return <Navigate to="/super-admin" replace />;
   if (role === 'NORMAL_ADMIN') return <Navigate to="/dashboard" replace />;

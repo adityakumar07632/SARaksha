@@ -42,7 +42,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleMobileNav }) => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate('/login', { replace: true });
   };
 
   // Generate breadcrumb items from current path

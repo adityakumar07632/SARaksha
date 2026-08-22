@@ -1,4 +1,4 @@
-﻿import React, { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
@@ -61,7 +61,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen = false, onClose })
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate('/login', { replace: true });
   };
 
   // Nav Items based on Role
