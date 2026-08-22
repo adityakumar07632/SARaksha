@@ -25,28 +25,28 @@ export const StatCard: React.FC<StatCardProps> = ({
   return (
     <div
       onClick={onClick}
-      className={`relative overflow-hidden rounded-xl border border-slate-800 bg-slate-900/80 p-5 backdrop-blur-md transition-all duration-200 hover:border-slate-700 hover:bg-slate-900/95 hover:shadow-lg ${
+      className={`relative overflow-hidden rounded-xl border border-slate-800 bg-slate-900/80 p-3.5 sm:p-5 backdrop-blur-md transition-all duration-200 hover:border-slate-700 hover:bg-slate-900/95 hover:shadow-lg w-full ${
         onClick ? 'cursor-pointer' : ''
       }`}
     >
       {/* Top row */}
-      <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 font-mono">
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400 font-mono line-clamp-1">
           {title}
         </span>
-        <div className={`flex h-10 w-10 items-center justify-center rounded-lg border ${iconColor}`}>
-          <Icon className="h-5 w-5" />
+        <div className={`flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-lg border shrink-0 ${iconColor}`}>
+          <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
         </div>
       </div>
 
       {/* Value */}
-      <div className="mt-3 flex items-baseline gap-2">
-        <span className="text-3xl font-extrabold tracking-tight text-white font-mono">
+      <div className="mt-2 sm:mt-3 flex items-baseline gap-2">
+        <span className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-white font-mono truncate">
           {value}
         </span>
         {change && (
           <span
-            className={`text-xs font-semibold ${
+            className={`text-[10px] sm:text-xs font-semibold ${
               changeType === 'positive'
                 ? 'text-emerald-400'
                 : changeType === 'negative'
@@ -61,7 +61,7 @@ export const StatCard: React.FC<StatCardProps> = ({
 
       {/* Subtitle */}
       {subtitle && (
-        <p className="mt-1 text-xs text-slate-400 line-clamp-1">
+        <p className="mt-1 text-[10px] sm:text-xs text-slate-400 line-clamp-1">
           {subtitle}
         </p>
       )}

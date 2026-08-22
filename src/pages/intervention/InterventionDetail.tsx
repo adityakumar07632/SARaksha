@@ -512,7 +512,7 @@ export const InterventionDetail: React.FC = () => {
                 <DataSourceBadge type="DEMO_DATA" sourceText="DEMO / SIMULATED DATA" isSimulated={true} size="sm" />
               )}
 
-              <span className="text-xs font-mono text-slate-400">
+              <span className="text-[10px] sm:text-xs font-mono text-slate-400">
                 Watershed:{' '}
                 <Link
                   to={`/watershed/${intervention.watershedId}`}
@@ -523,68 +523,68 @@ export const InterventionDetail: React.FC = () => {
               </span>
             </div>
 
-            <h1 className="text-3xl font-black tracking-tight text-white font-mono">
+            <h1 className="text-xl sm:text-3xl font-black tracking-tight text-white font-mono">
               {intervention.name}
             </h1>
 
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-mono text-slate-300">
+            <div className="flex flex-wrap items-center gap-x-4 sm:gap-x-6 gap-y-1.5 sm:gap-y-2 text-xs font-mono text-slate-300">
               <div className="flex items-center gap-1.5">
-                <MapPin className="h-4 w-4 text-emerald-400" />
+                <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-400 shrink-0" />
                 <span>
                   {intervention.coordinates[0].toFixed(4)}° N, {intervention.coordinates[1].toFixed(4)}° E (±5m GNSS)
                 </span>
               </div>
               <div className="flex items-center gap-1.5">
-                <Calendar className="h-4 w-4 text-emerald-400" />
+                <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-400 shrink-0" />
                 <span>Constructed: {intervention.constructionDate}</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <Building2 className="h-4 w-4 text-emerald-400" />
+                <Building2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-400 shrink-0" />
                 <span>{intervention.implementingAgency}</span>
               </div>
             </div>
           </div>
 
           {/* Actions & Health Gauge */}
-          <div className="flex flex-col sm:flex-row items-end sm:items-center gap-3">
+          <div className="flex flex-wrap sm:flex-nowrap items-stretch sm:items-center gap-2.5 sm:gap-3">
             <button
               onClick={handleGenerateDossier}
-              className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-mono font-bold uppercase tracking-wider bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition shadow-lg cursor-pointer"
+              className="flex items-center justify-center gap-2 px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-xl text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition shadow-lg cursor-pointer flex-1 sm:flex-none"
             >
-              <FileText className="h-4 w-4 text-emerald-400" />
-              <span>Evidence Dossier (PDF)</span>
+              <FileText className="h-4 w-4 text-emerald-400 shrink-0" />
+              <span>Dossier (PDF)</span>
             </button>
 
             <button
               onClick={handleQueryLiveSentinel2}
               disabled={isQueryingStac}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition shadow-lg cursor-pointer ${
+              className={`flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider transition shadow-lg cursor-pointer flex-1 sm:flex-none ${
                 satelliteState === 'REAL'
                   ? 'bg-cyan-600 hover:bg-cyan-500 text-white shadow-cyan-950/50'
                   : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-950/50'
               }`}
             >
-              <Activity className={`h-4 w-4 ${isQueryingStac ? 'animate-spin' : ''}`} />
-              <span>{isQueryingStac ? 'Streaming Pixels...' : 'Run Real Raster Pixel Analysis'}</span>
+              <Activity className={`h-4 w-4 shrink-0 ${isQueryingStac ? 'animate-spin' : ''}`} />
+              <span>{isQueryingStac ? 'Streaming...' : 'Run Raster Analysis'}</span>
             </button>
 
-            <div className="flex items-center gap-4 bg-slate-950 p-3.5 rounded-xl border border-slate-800 shadow-inner">
-              <div className="text-right font-mono">
+            <div className="flex items-center gap-3 sm:gap-4 bg-slate-950 p-2.5 sm:p-3.5 rounded-xl border border-slate-800 shadow-inner w-full sm:w-auto justify-between sm:justify-start">
+              <div className="text-left sm:text-right font-mono">
                 <span className="text-[10px] uppercase font-bold text-slate-400 block">Health Score</span>
-                <span className="text-2xl font-black text-emerald-400">{intervention.healthScore}/100</span>
-                <span className="text-[10px] font-bold text-emerald-300 uppercase block">
+                <span className="text-xl sm:text-2xl font-black text-emerald-400">{intervention.healthScore}/100</span>
+                <span className="text-[9px] sm:text-[10px] font-bold text-emerald-300 uppercase block">
                   {isVerified ? '🟢 FIELD VERIFIED' : '🟡 PENDING VERIFICATION'}
                 </span>
               </div>
-              <div className="h-11 w-11 rounded-full border-4 border-emerald-500 flex items-center justify-center bg-emerald-500/10">
-                <ShieldCheck className="h-5 w-5 text-emerald-400" />
+              <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-full border-4 border-emerald-500 flex items-center justify-center bg-emerald-500/10 shrink-0">
+                <ShieldCheck className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-400" />
               </div>
             </div>
           </div>
         </div>
 
         {/* 6 Tabs Navigation */}
-        <div className="mt-6 flex flex-wrap gap-2 border-t border-slate-800 pt-4">
+        <div className="mt-4 sm:mt-6 flex flex-wrap gap-1.5 sm:gap-2 border-t border-slate-800 pt-3 sm:pt-4">
           {[
             { id: 'overview', label: '1. Overview', icon: Layers },
             { id: 'evidence', label: '2. Field Evidence', icon: Camera, badge: evidenceList.length },
@@ -599,17 +599,17 @@ export const InterventionDetail: React.FC = () => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-bold transition cursor-pointer ${
+                className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-mono font-bold transition cursor-pointer ${
                   isActive
                     ? 'bg-emerald-500 text-slate-950 shadow-lg font-extrabold'
                     : 'bg-slate-950/70 text-slate-400 hover:text-slate-200 hover:bg-slate-800'
                 }`}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
                 <span>{tab.label}</span>
                 {tab.badge !== undefined && tab.badge > 0 && (
                   <span
-                    className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
+                    className={`px-1.5 py-0.2 rounded-full text-[9px] sm:text-[10px] font-bold ${
                       isActive
                         ? 'bg-slate-900 text-emerald-400'
                         : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'

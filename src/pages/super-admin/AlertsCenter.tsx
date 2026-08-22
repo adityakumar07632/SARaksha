@@ -36,29 +36,29 @@ export const AlertsCenter: React.FC = () => {
   });
 
   return (
-    <div className="space-y-6 font-sans">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
+    <div className="space-y-4 sm:space-y-6 font-sans">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-slate-800/80 pb-4">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="bg-rose-500/20 text-rose-300 text-[10px] font-mono font-bold px-2.5 py-0.5 rounded border border-rose-500/30 uppercase">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="bg-rose-500/20 text-rose-300 text-[10px] font-mono font-bold px-2.5 py-0.5 rounded border border-rose-500/30 uppercase shrink-0">
               EARLY WARNING &amp; ESCALATION ENGINE
             </span>
             <span className="text-xs font-mono text-slate-400">Automated Multi-Spectral Triage</span>
           </div>
-          <h1 className="text-2xl font-black text-white font-mono tracking-tight mt-1">
+          <h1 className="text-lg sm:text-2xl font-black text-white font-mono tracking-tight mt-1">
             Watershed Alert &amp; Incident Command Center
           </h1>
         </div>
       </div>
 
       {/* Multi-Tier Filter Toolbar */}
-      <div className="flex flex-wrap gap-3 bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800 font-mono text-xs">
+      <div className="flex flex-wrap gap-3 bg-slate-900/80 p-3 sm:p-3.5 rounded-2xl border border-slate-800 font-mono text-xs">
         <div className="flex items-center gap-2">
-          <span className="text-slate-400 font-bold">Severity:</span>
+          <span className="text-slate-400 font-bold shrink-0">Severity:</span>
           <select
             value={severityFilter}
             onChange={(e) => setSeverityFilter(e.target.value)}
-            className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-white focus:outline-none focus:border-emerald-500"
+            className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-white focus:outline-none focus:border-emerald-500 text-xs"
           >
             <option value="ALL">All Severities</option>
             <option value="HIGH">High Priority (Δ ≤ -10%)</option>
@@ -68,11 +68,11 @@ export const AlertsCenter: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-slate-400 font-bold">State / Division:</span>
+          <span className="text-slate-400 font-bold shrink-0">State:</span>
           <select
             value={stateFilter}
             onChange={(e) => setStateFilter(e.target.value)}
-            className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-white focus:outline-none focus:border-emerald-500"
+            className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-white focus:outline-none focus:border-emerald-500 text-xs"
           >
             <option value="ALL">All States</option>
             <option value="Rajasthan">Rajasthan (Alwar North)</option>
@@ -92,7 +92,7 @@ export const AlertsCenter: React.FC = () => {
           return (
             <div
               key={alert.id}
-              className={`p-5 rounded-2xl border transition-all ${
+              className={`p-3.5 sm:p-5 rounded-2xl border transition-all ${
                 alert.isResolved
                   ? 'bg-slate-950/40 border-slate-800 opacity-60'
                   : isHigh
@@ -103,9 +103,9 @@ export const AlertsCenter: React.FC = () => {
               }`}
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3 mb-3">
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <span
-                    className={`px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border ${
+                    className={`px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border shrink-0 ${
                       isHigh
                         ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
                         : isMedium
@@ -116,8 +116,8 @@ export const AlertsCenter: React.FC = () => {
                     {alert.severity} PRIORITY
                   </span>
                   {isEscalated && (
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40 uppercase">
-                      ⚡ ESCALATED TO SUPER ADMIN
+                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40 uppercase shrink-0">
+                      ⚡ ESCALATED
                     </span>
                   )}
                   <span className="text-xs font-bold text-white">

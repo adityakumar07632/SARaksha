@@ -41,11 +41,11 @@ export const UsersManagement: React.FC = () => {
   );
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-slate-800/80 pb-4">
         <div>
-          <h1 className="text-xl font-black text-white font-mono tracking-tight">
-            User & Access Control Directory
+          <h1 className="text-lg sm:text-xl font-black text-white font-mono tracking-tight">
+            User &amp; Access Control Directory
           </h1>
           <p className="text-xs text-slate-400 mt-0.5">
             Manage government administrators, GIS nodal officers, and field personnel.
@@ -54,7 +54,7 @@ export const UsersManagement: React.FC = () => {
 
         <button
           onClick={() => setShowAddModal(true)}
-          className="flex items-center gap-2 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-mono font-bold transition shadow-lg"
+          className="flex items-center gap-2 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-mono font-bold transition shadow-lg shrink-0 cursor-pointer self-start sm:self-auto"
         >
           <Plus className="h-4 w-4" />
           <span>Add New User</span>

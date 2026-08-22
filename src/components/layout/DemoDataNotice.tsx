@@ -104,10 +104,10 @@ export const DemoDataNotice: React.FC = () => {
   return (
     <>
       {/* Top Banner Notice */}
-      <div className="bg-slate-950/90 border-b border-emerald-500/30 px-4 py-2 text-xs font-mono text-emerald-200 backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-2 z-40 relative">
+      <div className="bg-slate-950/90 border-b border-emerald-500/30 px-3 sm:px-4 py-2 text-xs font-mono text-emerald-200 backdrop-blur-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 z-40 relative">
         <div className="flex items-center gap-2 max-w-5xl">
           <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-          <span className="bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded border border-emerald-500/40 text-[10px] uppercase tracking-wider shrink-0">
+          <span className="bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded border border-emerald-500/40 text-[9px] sm:text-[10px] uppercase tracking-wider shrink-0">
             SARAKSHA SIH EVALUATION MODE
           </span>
           <span className="text-slate-300 text-xs hidden md:inline">
@@ -115,10 +115,10 @@ export const DemoDataNotice: React.FC = () => {
           </span>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
           <button
             onClick={() => setModalOpen(true)}
-            className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-[11px] font-bold transition flex items-center gap-1 cursor-pointer shadow-sm shadow-emerald-950"
+            className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-[10px] sm:text-[11px] font-bold transition flex items-center gap-1 cursor-pointer shadow-sm shadow-emerald-950"
           >
             <Play className="h-3 w-3 fill-current" />
             <span>SIH Demonstration Scenarios</span>
@@ -138,13 +138,13 @@ export const DemoDataNotice: React.FC = () => {
       {modalOpen &&
         createPortal(
           <div
-            className="fixed inset-0 z-[9990] flex items-center justify-center p-4 sm:p-6 bg-slate-950/80 backdrop-blur-md transition-opacity duration-200 font-sans"
+            className="fixed inset-0 z-[9990] flex items-center justify-center p-3 sm:p-6 bg-slate-950/80 backdrop-blur-md transition-opacity duration-200 font-sans"
             onClick={() => setModalOpen(false)}
             onMouseDown={(e) => e.stopPropagation()}
             onTouchStart={(e) => e.stopPropagation()}
           >
             <div
-              className="relative z-[10000] bg-slate-900 border border-slate-700/80 rounded-2xl max-w-2xl w-full max-h-[calc(100vh-48px)] overflow-y-auto p-6 shadow-2xl space-y-4 font-mono pointer-events-auto"
+              className="relative z-[10000] bg-slate-900 border border-slate-700/80 rounded-2xl max-w-2xl w-[calc(100vw-24px)] sm:w-full max-h-[calc(100vh-48px)] overflow-y-auto p-4 sm:p-6 shadow-2xl space-y-4 font-mono pointer-events-auto"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Modal Header */}

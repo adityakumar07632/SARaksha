@@ -79,24 +79,24 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col justify-center items-center p-4 relative overflow-hidden font-sans">
+    <div className="min-h-screen bg-slate-950 flex flex-col justify-center items-center p-3 sm:p-4 relative overflow-hidden font-sans">
       {/* Ambient background gradients */}
       <div className="absolute -top-40 -left-40 w-96 h-96 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-teal-600/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* Top Prototype / Demo Badge */}
-      <div className="mb-6 flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-950/40 px-4 py-1.5 text-xs font-mono text-amber-300 backdrop-blur-md shadow-xl">
-        <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
-        <span className="font-bold">DEMO / SIMULATED ENVIRONMENT &bull; DEMO CREDENTIALS</span>
+      <div className="mb-4 sm:mb-6 flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-950/40 px-3 sm:px-4 py-1.5 text-[10px] sm:text-xs font-mono text-amber-300 backdrop-blur-md shadow-xl text-center max-w-[calc(100vw-24px)]">
+        <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse shrink-0" />
+        <span className="font-bold truncate">DEMO ENVIRONMENT &bull; PRESET ROLES</span>
       </div>
 
-      <div className="w-full max-w-lg rounded-3xl border border-slate-800 bg-slate-900/90 p-8 shadow-2xl backdrop-blur-xl">
+      <div className="w-full max-w-lg rounded-3xl border border-slate-800 bg-slate-900/90 p-4 sm:p-8 shadow-2xl backdrop-blur-xl">
         {/* Header Branding */}
-        <div className="text-center mb-6">
-          <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 shadow-xl shadow-emerald-950/50 mb-3 border border-emerald-400/30">
-            <ShieldCheck className="h-9 w-9 text-white" />
+        <div className="text-center mb-5 sm:mb-6">
+          <div className="inline-flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 shadow-xl shadow-emerald-950/50 mb-3 border border-emerald-400/30">
+            <ShieldCheck className="h-7 w-7 sm:h-9 sm:w-9 text-white" />
           </div>
-          <h1 className="text-3xl font-black tracking-tight text-white font-mono">
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white font-mono">
             SARaksha
           </h1>
           <p className="text-xs font-mono font-bold text-emerald-400 mt-1 uppercase tracking-wider">

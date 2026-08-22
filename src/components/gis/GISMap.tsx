@@ -511,18 +511,18 @@ export const GISMap: React.FC<GISMapProps> = ({
           <div class="relative flex flex-col items-center justify-center cursor-pointer group">
             ${
               isSelected
-                ? `<div class="absolute -top-18 left-1/2 -translate-x-1/2 whitespace-nowrap px-3 py-1.5 rounded-xl bg-slate-950/95 border border-cyan-400 text-white font-mono shadow-2xl pointer-events-auto flex flex-col gap-1 z-30">
-                     <div class="text-[11px] font-extrabold text-cyan-300 flex items-center justify-between gap-2">
-                       <span>${item.code}</span>
-                       <span class="px-1.5 py-0.2 rounded bg-rose-500/30 text-rose-300 text-[8px] font-bold">HIGH PRIORITY</span>
+                ? `<div class="absolute -top-20 left-1/2 -translate-x-1/2 whitespace-normal max-w-[190px] sm:max-w-[260px] px-2.5 py-1.5 rounded-xl bg-slate-950/95 border border-cyan-400 text-white font-mono shadow-2xl pointer-events-auto flex flex-col gap-1 z-30">
+                     <div class="text-[10px] sm:text-[11px] font-extrabold text-cyan-300 flex items-center justify-between gap-2">
+                       <span class="truncate">${item.code}</span>
+                       <span class="px-1.5 py-0.2 rounded bg-rose-500/30 text-rose-300 text-[8px] font-bold shrink-0">HIGH PRIORITY</span>
                      </div>
-                     <div class="text-[9px] text-slate-300 font-medium">${item.name}</div>
+                     <div class="text-[9px] text-slate-300 font-medium line-clamp-2">${item.name}</div>
                      ${
                        hasEvidence
                          ? `<div class="flex items-center gap-1.5 pt-1 border-t border-slate-800">
                               <button type="button" class="ev-camera-btn flex items-center gap-1 px-2 py-0.5 rounded bg-indigo-950/90 hover:bg-indigo-900 border border-indigo-500/60 text-indigo-300 hover:text-white text-[9px] font-mono font-bold transition shadow-sm cursor-pointer" data-id="${item.id}">
-                                <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                                <span>📷 View Evidence (${itemEvidence.length})</span>
+                                <svg class="w-2.5 h-2.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                <span class="truncate">📷 View Evidence (${itemEvidence.length})</span>
                               </button>
                             </div>`
                          : ''
@@ -698,25 +698,25 @@ export const GISMap: React.FC<GISMapProps> = ({
       <div className="absolute inset-0 pointer-events-none border border-slate-800/80 rounded-2xl shadow-[inset_0_0_35px_rgba(2,6,23,0.55)]" />
 
       {/* 2. Top Header Bar (Overlaid on Map Canvas) */}
-      <div className="absolute top-0 left-0 right-0 z-[1000] flex items-center justify-between px-5 py-3 bg-gradient-to-b from-slate-950/95 via-slate-950/80 to-transparent border-b border-slate-800/40 text-xs font-mono backdrop-blur-sm pointer-events-auto">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
+      <div className="absolute top-0 left-0 right-0 z-[1000] flex items-center justify-between px-3 sm:px-5 py-2 sm:py-3 bg-gradient-to-b from-slate-950/95 via-slate-950/80 to-transparent border-b border-slate-800/40 text-xs font-mono backdrop-blur-sm pointer-events-auto">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <div className="h-5 w-5 rounded-lg bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-300 font-bold text-xs">
               🛡
             </div>
             <div>
-              <span className="font-extrabold text-white tracking-wider text-sm">SARaksha</span>
-              <span className="text-[10px] text-cyan-400 block -mt-1 font-semibold">Geospatial Monitoring</span>
+              <span className="font-extrabold text-white tracking-wider text-xs sm:text-sm">SARaksha</span>
+              <span className="text-[9px] sm:text-[10px] text-cyan-400 block -mt-1 font-semibold">Geospatial Monitoring</span>
             </div>
           </div>
           <span className="text-slate-700 hidden sm:inline">|</span>
-          <div className="hidden sm:block">
-            <span className="text-white font-bold tracking-wide">ALWAR NORTH CATCHMENT</span>
-            <span className="text-[10px] text-cyan-400 block -mt-0.5 font-semibold">RAJASTHAN, INDIA</span>
+          <div className="hidden sm:block truncate">
+            <span className="text-white font-bold tracking-wide text-xs">ALWAR NORTH CATCHMENT</span>
+            <span className="text-[9px] sm:text-[10px] text-cyan-400 block -mt-0.5 font-semibold">RAJASTHAN, INDIA</span>
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4 shrink-0">
           <div className="hidden lg:flex items-center gap-2 text-slate-300">
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
             <span>Satellite Imagery</span>
@@ -730,7 +730,7 @@ export const GISMap: React.FC<GISMapProps> = ({
           <button
             onClick={handleToggleFullscreen}
             title={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen Command Center'}
-            className="px-2.5 py-1 rounded-lg border border-slate-700 hover:border-slate-500 text-slate-200 text-xs font-semibold flex items-center gap-1.5 bg-slate-900/80 backdrop-blur-md transition cursor-pointer shadow-lg"
+            className="px-2 sm:px-2.5 py-1 rounded-lg border border-slate-700 hover:border-slate-500 text-slate-200 text-xs font-semibold flex items-center gap-1 sm:gap-1.5 bg-slate-900/80 backdrop-blur-md transition cursor-pointer shadow-lg"
           >
             {isFullscreen ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
             <span className="hidden sm:inline">Fullscreen</span>
@@ -739,66 +739,60 @@ export const GISMap: React.FC<GISMapProps> = ({
       </div>
 
       {/* 3. Left Navigation & Zoom Controls */}
-      <div className="absolute top-18 left-4 z-[1000] flex flex-col rounded-xl border border-slate-700/80 bg-slate-950/90 backdrop-blur-md shadow-2xl overflow-hidden">
+      <div className="absolute top-14 sm:top-18 left-2 sm:left-4 z-[1000] flex flex-col rounded-xl border border-slate-700/80 bg-slate-950/90 backdrop-blur-md shadow-2xl overflow-hidden">
         <button
           onClick={handleZoomIn}
           title="Zoom In"
-          className="p-2 text-slate-300 hover:text-white hover:bg-slate-800/80 transition cursor-pointer border-b border-slate-800 flex items-center justify-center"
+          className="p-1.5 sm:p-2 text-slate-300 hover:text-white hover:bg-slate-800/80 transition cursor-pointer border-b border-slate-800 flex items-center justify-center"
         >
-          <Plus className="h-4 w-4" />
+          <Plus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
         </button>
         <button
           onClick={handleZoomOut}
           title="Zoom Out"
-          className="p-2 text-slate-300 hover:text-white hover:bg-slate-800/80 transition cursor-pointer border-b border-slate-800 flex items-center justify-center"
+          className="p-1.5 sm:p-2 text-slate-300 hover:text-white hover:bg-slate-800/80 transition cursor-pointer border-b border-slate-800 flex items-center justify-center"
         >
-          <Minus className="h-4 w-4" />
+          <Minus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
         </button>
         <button
           onClick={handleResetNationalView}
           title="Reset to India National Overview"
-          className="p-2 text-cyan-400 hover:text-cyan-300 hover:bg-slate-800/80 transition cursor-pointer border-b border-slate-800 flex items-center justify-center"
+          className="p-1.5 sm:p-2 text-cyan-400 hover:text-cyan-300 hover:bg-slate-800/80 transition cursor-pointer border-b border-slate-800 flex items-center justify-center"
         >
-          <Crosshair className="h-4 w-4" />
+          <Crosshair className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
         </button>
-        <div className="p-2 text-slate-400 flex items-center justify-center pointer-events-none" title="North Arrow">
-          <Compass className="h-4 w-4 text-cyan-400" />
+        <div className="p-1.5 sm:p-2 text-slate-400 flex items-center justify-center pointer-events-none" title="North Arrow">
+          <Compass className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-cyan-400" />
         </div>
       </div>
 
       {/* 4. Bottom-Left Collapsible Administrative Context Card */}
       {showAdminContext && (
-        <div className="absolute bottom-16 left-4 z-[1000] w-64 rounded-xl border border-slate-800 bg-slate-950/90 backdrop-blur-md p-3.5 text-xs font-mono shadow-2xl space-y-2.5 hidden sm:block">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-1.5">
-            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
-              ADMINISTRATIVE CONTEXT
+        <div className="absolute bottom-10 sm:bottom-12 left-2 sm:left-4 z-[1000] max-w-[calc(100vw-32px)] sm:max-w-xs rounded-xl border border-cyan-500/40 bg-slate-950/95 p-3 sm:p-3.5 shadow-2xl backdrop-blur-md text-xs font-mono space-y-2 border-l-4 border-l-cyan-400">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] uppercase font-bold text-cyan-400 tracking-wider">
+              ADMINISTRATIVE HIERARCHY
             </span>
             <button
               onClick={() => setShowAdminContext(false)}
-              className="text-slate-500 hover:text-slate-300 p-0.5 cursor-pointer"
+              className="text-slate-400 hover:text-white p-0.5 cursor-pointer"
             >
               <X className="h-3.5 w-3.5" />
             </button>
           </div>
-
           <div>
-            <h4 className="text-sm font-extrabold text-cyan-300">Alwar District</h4>
-            <p className="text-[10px] text-slate-400 font-medium">Rajasthan, India</p>
+            <span className="text-white font-extrabold text-xs sm:text-sm">Alwar North Catchment</span>
+            <span className="text-cyan-300 text-[10px] sm:text-[11px] block font-mono">
+              Rajasthan &bull; Alwar District &bull; WS-001
+            </span>
           </div>
-
-          <div className="grid grid-cols-2 gap-1 text-[11px] text-slate-300 border-t border-b border-slate-800/80 py-2">
-            <div>Type: <strong className="text-white">District</strong></div>
-            <div>State: <strong className="text-white">Rajasthan</strong></div>
-            <div>Interventions: <strong className="text-emerald-400">8</strong></div>
-            <div>Healthy: <strong className="text-emerald-400">5</strong></div>
-            <div>Moderate: <strong className="text-amber-400">2</strong></div>
-            <div>Critical: <strong className="text-rose-400">1</strong></div>
-            <div className="col-span-2">Field Evidence: <strong className="text-indigo-400">6</strong></div>
+          <div className="pt-1.5 border-t border-slate-800 flex items-center justify-between text-[10px] sm:text-[11px]">
+            <span className="text-slate-400">Monitored Interventions:</span>
+            <strong className="text-white font-bold">{interventions.length} Structures</strong>
           </div>
-
           <button
             onClick={() => flyToTarget([27.5684, 76.6128], 13.5)}
-            className="w-full py-1.5 px-2.5 rounded-lg bg-cyan-600/30 hover:bg-cyan-600/50 text-cyan-300 text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer border border-cyan-500/40"
+            className="w-full py-1.5 px-2.5 rounded-lg bg-cyan-600/30 hover:bg-cyan-600/50 text-cyan-300 text-[10px] sm:text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer border border-cyan-500/40"
           >
             <span>View District Dashboard</span>
             <ArrowRight className="h-3 w-3" />
@@ -807,7 +801,7 @@ export const GISMap: React.FC<GISMapProps> = ({
       )}
 
       {/* 5. Bottom-Left Responsive Legend Bar */}
-      <div className="absolute bottom-8 left-4 z-[1000] max-w-[calc(100%-32px)] sm:max-w-none flex flex-wrap items-center gap-2.5 bg-slate-950/90 backdrop-blur-md border border-slate-800 px-3 py-1.5 rounded-xl text-[11px] font-mono text-slate-300 shadow-2xl">
+      <div className="absolute bottom-6 sm:bottom-8 left-2 sm:left-4 z-[1000] max-w-[calc(100%-16px)] sm:max-w-none flex flex-wrap items-center gap-1.5 sm:gap-2.5 bg-slate-950/90 backdrop-blur-md border border-slate-800 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl text-[10px] sm:text-[11px] font-mono text-slate-300 shadow-2xl">
         <div className="flex items-center gap-1.5">
           <span className="h-2 w-2 rounded-full bg-emerald-500" />
           <span>Healthy</span>
@@ -832,9 +826,9 @@ export const GISMap: React.FC<GISMapProps> = ({
       </div>
 
       {/* 6. Top-Right Collapsible Layers Manager */}
-      <div className="absolute top-18 right-4 z-[1000] w-64 rounded-xl border border-slate-800 bg-slate-950/95 backdrop-blur-md p-3.5 shadow-2xl text-xs font-mono space-y-2.5 max-h-[calc(100%-140px)] overflow-y-auto">
+      <div className="absolute top-14 sm:top-18 right-2 sm:right-4 z-[1000] w-56 sm:w-64 rounded-xl border border-slate-800 bg-slate-950/95 backdrop-blur-md p-2.5 sm:p-3.5 shadow-2xl text-xs font-mono space-y-2.5 max-h-[calc(100%-120px)] overflow-y-auto">
         <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-          <span className="font-extrabold text-white uppercase text-[11px] tracking-wider flex items-center gap-1.5">
+          <span className="font-extrabold text-white uppercase text-[10px] sm:text-[11px] tracking-wider flex items-center gap-1.5">
             <Layers className="h-3.5 w-3.5 text-cyan-400" />
             LAYERS
           </span>
@@ -1098,37 +1092,38 @@ export const GISMap: React.FC<GISMapProps> = ({
       {/* 9. Field Evidence Detail Modal Overlay over GIS Map */}
       {evidenceModalData.isOpen && (
         <div
-          className="absolute inset-0 z-[2000] flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md font-sans pointer-events-auto"
+          className="absolute inset-0 z-[2000] flex items-center justify-center p-2 sm:p-4 bg-slate-950/85 backdrop-blur-md font-sans pointer-events-auto"
           onClick={() => setEvidenceModalData((prev) => ({ ...prev, isOpen: false }))}
         >
           <div
-            className="w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl p-5 space-y-4 text-slate-200 font-sans"
+            className="w-[calc(100vw-16px)] sm:w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl p-3.5 sm:p-5 space-y-3.5 sm:space-y-4 text-slate-200 font-sans"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-indigo-500/20 border border-indigo-500/40 text-indigo-300">
-                  <Camera className="h-5 w-5" />
+            <div className="flex items-start sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+              <div className="flex items-start sm:items-center gap-2 sm:gap-2.5 min-w-0">
+                <div className="p-1.5 sm:p-2 rounded-xl bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 shrink-0">
+                  <Camera className="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-sm sm:text-base font-bold text-white font-mono">
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                    <h3 className="text-xs sm:text-base font-bold text-white font-mono truncate">
                       Field Evidence Dossier — {evidenceModalData.intervention?.code || 'Structure'}
                     </h3>
-                    <span className="px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[10px] font-mono font-bold">
-                      🟡 DEMO FIELD EVIDENCE
+                    <span className="px-1.5 sm:px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[9px] sm:text-[10px] font-mono font-bold shrink-0">
+                      🟡 DEMO EVIDENCE
                     </span>
                   </div>
-                  <p className="text-xs text-slate-400 font-mono mt-0.5">
+                  <p className="text-[10px] sm:text-xs text-slate-400 font-mono mt-0.5 truncate">
                     {evidenceModalData.intervention?.name || 'Water Retention Structure'} &bull; Alwar North Catchment
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setEvidenceModalData((prev) => ({ ...prev, isOpen: false }))}
-                className="p-1.5 rounded-lg border border-slate-700 hover:border-slate-500 text-slate-400 hover:text-white bg-slate-800/80 transition cursor-pointer"
+                className="p-1.5 rounded-lg border border-slate-700 hover:border-slate-500 text-slate-400 hover:text-white bg-slate-800/80 transition cursor-pointer shrink-0"
                 title="Close"
+                aria-label="Close evidence modal"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -1136,7 +1131,7 @@ export const GISMap: React.FC<GISMapProps> = ({
 
             {evidenceModalData.evidenceItems.length === 0 ? (
               /* Empty State */
-              <div className="py-10 text-center space-y-3 font-mono">
+              <div className="py-8 sm:py-10 text-center space-y-3 font-mono">
                 <div className="mx-auto w-12 h-12 rounded-2xl bg-slate-800 flex items-center justify-center text-slate-500 border border-slate-700">
                   <ImageOff className="w-6 h-6" />
                 </div>
@@ -1166,15 +1161,15 @@ export const GISMap: React.FC<GISMapProps> = ({
                 const totalCount = evidenceModalData.evidenceItems.length;
 
                 return (
-                  <div className="space-y-4">
+                  <div className="space-y-3.5 sm:space-y-4">
                     {/* Carousel Header if Multiple Photos */}
                     {totalCount > 1 && (
-                      <div className="flex items-center justify-between bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-xs font-mono">
-                        <span className="text-slate-300 font-bold">
+                      <div className="flex items-center justify-between bg-slate-950 p-2 sm:p-2.5 rounded-xl border border-slate-800 text-[11px] sm:text-xs font-mono">
+                        <span className="text-slate-300 font-bold truncate">
                           Photo {evidenceModalData.currentIndex + 1} of {totalCount} &bull;{' '}
                           <span className="text-indigo-400">{currentEv.id}</span>
                         </span>
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-1.5 shrink-0">
                           <button
                             onClick={() =>
                               setEvidenceModalData((prev) => ({
@@ -1185,6 +1180,7 @@ export const GISMap: React.FC<GISMapProps> = ({
                             }
                             className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition cursor-pointer"
                             title="Previous photo"
+                            aria-label="Previous photo"
                           >
                             <ChevronLeft className="h-4 w-4" />
                           </button>
@@ -1198,6 +1194,7 @@ export const GISMap: React.FC<GISMapProps> = ({
                             }
                             className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition cursor-pointer"
                             title="Next photo"
+                            aria-label="Next photo"
                           >
                             <ChevronRight className="h-4 w-4" />
                           </button>
@@ -1206,7 +1203,7 @@ export const GISMap: React.FC<GISMapProps> = ({
                     )}
 
                     {/* Image Area */}
-                    <div className="relative rounded-xl overflow-hidden aspect-video bg-black border border-slate-800 shadow-xl">
+                    <div className="relative rounded-xl overflow-hidden aspect-video bg-black border border-slate-800 shadow-xl w-full">
                       <EvidenceImage
                         src={currentEv.photoUrl}
                         alt={currentEv.caption}
@@ -1215,32 +1212,32 @@ export const GISMap: React.FC<GISMapProps> = ({
                         provenanceLabel="DEMO FIELD EVIDENCE"
                         className="w-full h-full object-cover"
                       />
-                      <div className="absolute bottom-2 left-2 z-10 bg-black/85 px-3 py-1 rounded-lg text-[11px] font-mono text-emerald-300 border border-emerald-500/40 backdrop-blur-xs">
-                        📍 {currentEv.coordinates[0].toFixed(5)}° N, {currentEv.coordinates[1].toFixed(5)}° E &bull; Accuracy {currentEv.accuracyM || '±4.8m (GNSS Lock)'}
+                      <div className="absolute bottom-2 left-2 right-2 sm:right-auto z-10 bg-black/85 px-2.5 py-1 rounded-lg text-[10px] sm:text-[11px] font-mono text-emerald-300 border border-emerald-500/40 backdrop-blur-xs truncate">
+                        📍 {currentEv.coordinates[0].toFixed(5)}° N, {currentEv.coordinates[1].toFixed(5)}° E &bull; {currentEv.accuracyM || '±4.8m Lock'}
                       </div>
                     </div>
 
                     {/* Caption */}
-                    <p className="text-xs text-slate-200 font-mono bg-slate-950/80 p-3 rounded-xl border border-slate-800 leading-relaxed">
+                    <p className="text-[11px] sm:text-xs text-slate-200 font-mono bg-slate-950/80 p-2.5 sm:p-3 rounded-xl border border-slate-800 leading-relaxed">
                       {currentEv.caption}
                     </p>
 
                     {/* Field Metadata Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs font-mono">
-                      <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-2.5 text-xs font-mono">
+                      <div className="p-2 sm:p-2.5 rounded-xl bg-slate-950 border border-slate-800">
                         <span className="text-[10px] text-slate-500 block">INSPECTED BY</span>
-                        <strong className="text-slate-200 text-[11px]">{currentEv.uploadedBy.name}</strong>
-                        <span className="text-[10px] text-slate-400 block">{currentEv.uploadedBy.role}</span>
+                        <strong className="text-slate-200 text-[11px] truncate block">{currentEv.uploadedBy.name}</strong>
+                        <span className="text-[10px] text-slate-400 block truncate">{currentEv.uploadedBy.role}</span>
                       </div>
-                      <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+                      <div className="p-2 sm:p-2.5 rounded-xl bg-slate-950 border border-slate-800">
                         <span className="text-[10px] text-slate-500 block">CAPTURE TIMESTAMP</span>
-                        <strong className="text-slate-200 text-[11px]">{currentEv.capturedAt}</strong>
+                        <strong className="text-slate-200 text-[11px] truncate block">{currentEv.capturedAt}</strong>
                         <span className="text-[10px] text-slate-400 block">Offline Timestamp Seal</span>
                       </div>
-                      <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+                      <div className="p-2 sm:p-2.5 rounded-xl bg-slate-950 border border-slate-800">
                         <span className="text-[10px] text-slate-500 block">VERIFICATION STATUS</span>
                         <strong
-                          className={`text-[11px] ${
+                          className={`text-[11px] block truncate ${
                             currentEv.verificationStatus === 'VERIFIED'
                               ? 'text-emerald-400'
                               : currentEv.verificationStatus === 'FLAGGED'
@@ -1254,7 +1251,7 @@ export const GISMap: React.FC<GISMapProps> = ({
                             ? '🚨 Flagged for Desilt'
                             : '⚠ Pending Review'}
                         </strong>
-                        <span className="text-[10px] text-slate-400 block">
+                        <span className="text-[10px] text-slate-400 block truncate">
                           {currentEv.verifiedBy ? `By ${currentEv.verifiedBy}` : 'Awaiting Nodal Sign'}
                         </span>
                       </div>
@@ -1262,58 +1259,58 @@ export const GISMap: React.FC<GISMapProps> = ({
 
                     {/* Assistive AI Analysis */}
                     {currentEv.aiAnalysis && (
-                      <div className="rounded-xl border border-indigo-500/30 bg-slate-950 p-3.5 font-mono text-xs space-y-2.5">
-                        <div className="flex items-center justify-between text-indigo-300 font-bold border-b border-slate-800 pb-2">
-                          <span className="flex items-center gap-1.5">
-                            <Sparkles className="h-4 w-4 text-indigo-400" />
-                            AI FIELD IMAGE ANALYSIS (DEMO AI)
+                      <div className="rounded-xl border border-indigo-500/30 bg-slate-950 p-3 sm:p-3.5 font-mono text-xs space-y-2 sm:space-y-2.5">
+                        <div className="flex flex-wrap items-center justify-between gap-1 text-indigo-300 font-bold border-b border-slate-800 pb-2">
+                          <span className="flex items-center gap-1.5 text-[11px] sm:text-xs">
+                            <Sparkles className="h-3.5 w-3.5 text-indigo-400 shrink-0" />
+                            AI FIELD IMAGE ANALYSIS
                           </span>
-                          <span className="text-indigo-400 font-bold">
-                            {currentEv.aiAnalysis.confidenceScore}% Model Confidence
+                          <span className="text-indigo-400 text-[11px] font-bold">
+                            {currentEv.aiAnalysis.confidenceScore}% Confidence
                           </span>
                         </div>
 
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
-                          <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
-                            <span className="text-slate-500 block text-[10px]">Structure:</span>
-                            <strong className="text-white">{currentEv.aiAnalysis.structureDetected}</strong>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2 text-[10px] sm:text-[11px]">
+                          <div className="p-1.5 sm:p-2 rounded-lg bg-slate-900 border border-slate-800">
+                            <span className="text-slate-500 block text-[9px] sm:text-[10px]">Structure:</span>
+                            <strong className="text-white truncate block">{currentEv.aiAnalysis.structureDetected}</strong>
                           </div>
-                          <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
-                            <span className="text-slate-500 block text-[10px]">Water Detected:</span>
+                          <div className="p-1.5 sm:p-2 rounded-lg bg-slate-900 border border-slate-800">
+                            <span className="text-slate-500 block text-[9px] sm:text-[10px]">Water:</span>
                             <strong
-                              className={
+                              className={`truncate block ${
                                 currentEv.aiAnalysis.waterDetected
                                   ? 'text-emerald-400'
                                   : 'text-slate-400'
-                              }
+                              }`}
                             >
                               {currentEv.aiAnalysis.waterDetected
                                 ? `YES (${currentEv.aiAnalysis.waterConfidence}%)`
                                 : 'NO'}
                             </strong>
                           </div>
-                          <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
-                            <span className="text-slate-500 block text-[10px]">Vegetation:</span>
+                          <div className="p-1.5 sm:p-2 rounded-lg bg-slate-900 border border-slate-800">
+                            <span className="text-slate-500 block text-[9px] sm:text-[10px]">Vegetation:</span>
                             <strong
-                              className={
+                              className={`truncate block ${
                                 currentEv.aiAnalysis.vegetationDetected
                                   ? 'text-emerald-400'
                                   : 'text-slate-400'
-                              }
+                              }`}
                             >
                               {currentEv.aiAnalysis.vegetationDetected
                                 ? `YES (${currentEv.aiAnalysis.vegetationConfidence}%)`
                                 : 'NO'}
                             </strong>
                           </div>
-                          <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
-                            <span className="text-slate-500 block text-[10px]">Condition:</span>
+                          <div className="p-1.5 sm:p-2 rounded-lg bg-slate-900 border border-slate-800">
+                            <span className="text-slate-500 block text-[9px] sm:text-[10px]">Condition:</span>
                             <strong
-                              className={
+                              className={`truncate block ${
                                 currentEv.verificationStatus === 'FLAGGED'
                                   ? 'text-rose-400'
                                   : 'text-amber-300'
-                              }
+                              }`}
                             >
                               {currentEv.aiAnalysis.potentialIssue || 'Intact'}
                             </strong>
@@ -1321,7 +1318,7 @@ export const GISMap: React.FC<GISMapProps> = ({
                         </div>
 
                         {currentEv.aiAnalysis.recommendation && (
-                          <div className="text-[11px] text-slate-300 bg-slate-900/60 p-2 rounded-lg border border-slate-800">
+                          <div className="text-[10px] sm:text-[11px] text-slate-300 bg-slate-900/60 p-2 rounded-lg border border-slate-800">
                             <strong className="text-indigo-300">Recommendation:</strong>{' '}
                             {currentEv.aiAnalysis.recommendation}
                           </div>
@@ -1330,12 +1327,12 @@ export const GISMap: React.FC<GISMapProps> = ({
                     )}
 
                     {/* Cryptographic Hash Seal */}
-                    <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800/80 font-mono text-[10px] text-slate-400 flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-1.5">
+                    <div className="p-2 sm:p-2.5 rounded-xl bg-slate-950 border border-slate-800/80 font-mono text-[9px] sm:text-[10px] text-slate-400 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-2">
+                      <div className="flex items-center gap-1.5 shrink-0">
                         <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
-                        <span>SHA-256 Tamper-Evident Digest:</span>
+                        <span>SHA-256 Digest:</span>
                       </div>
-                      <span className="font-mono text-slate-300 truncate max-w-[280px]">
+                      <span className="font-mono text-slate-300 break-all sm:truncate max-w-full sm:max-w-[280px]">
                         {generateSHA256Hash(
                           `${currentEv.id}:${currentEv.interventionId}:${currentEv.capturedAt}`
                         )}
@@ -1343,10 +1340,10 @@ export const GISMap: React.FC<GISMapProps> = ({
                     </div>
 
                     {/* Footer Actions */}
-                    <div className="flex items-center justify-between pt-3 border-t border-slate-800 font-mono text-xs">
+                    <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-2 pt-3 border-t border-slate-800 font-mono text-xs">
                       <button
                         onClick={() => setEvidenceModalData((prev) => ({ ...prev, isOpen: false }))}
-                        className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition cursor-pointer"
+                        className="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition cursor-pointer text-center"
                       >
                         Close
                       </button>
@@ -1356,7 +1353,7 @@ export const GISMap: React.FC<GISMapProps> = ({
                           setEvidenceModalData((prev) => ({ ...prev, isOpen: false }));
                           navigate(`/intervention/${currentEv.interventionId}`);
                         }}
-                        className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition flex items-center gap-1.5 shadow-lg shadow-indigo-950/50 cursor-pointer"
+                        className="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition flex items-center justify-center gap-1.5 shadow-lg shadow-indigo-950/50 cursor-pointer text-center"
                       >
                         <span>Open Full Intervention Dossier</span>
                         <ArrowRight className="h-3.5 w-3.5" />

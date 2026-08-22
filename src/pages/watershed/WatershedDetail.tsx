@@ -28,28 +28,28 @@ export const WatershedDetail: React.FC = () => {
   const alerts = allAlerts.filter((a) => a.watershedId === watershed.id);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Top Banner & Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-slate-800/80 pb-4">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20 uppercase">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[10px] sm:text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2 sm:px-2.5 py-0.5 rounded border border-emerald-500/20 uppercase shrink-0">
               WATERSHED FILE: {watershed.code}
             </span>
             <Badge status={watershed.status} size="sm" />
           </div>
-          <h1 className="text-2xl font-extrabold text-white font-mono tracking-tight mt-1">
+          <h1 className="text-xl sm:text-2xl font-extrabold text-white font-mono tracking-tight mt-1">
             {watershed.name}
           </h1>
           <p className="text-xs text-slate-400 mt-0.5">
-            {watershed.state} &bull; {watershed.district} &bull; Sub-district: {watershed.subDistrict} &bull; Catchment Area: {watershed.areaHa} Ha
+            {watershed.state} &bull; {watershed.district} &bull; Sub-district: {watershed.subDistrict} &bull; Area: {watershed.areaHa} Ha
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={() => navigate('/reports')}
-            className="flex items-center gap-1.5 px-3 py-2 bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 rounded-xl text-xs font-mono font-semibold transition"
+            className="flex items-center gap-1.5 px-3 py-2 bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 rounded-xl text-xs font-mono font-semibold transition cursor-pointer"
           >
             <FileText className="h-4 w-4 text-emerald-400" />
             <span>Generate Report</span>

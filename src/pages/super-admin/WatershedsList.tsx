@@ -19,11 +19,11 @@ export const WatershedsList: React.FC = () => {
   });
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-slate-800/80 pb-4">
         <div>
-          <h1 className="text-xl font-black text-white font-mono tracking-tight">
-            Watershed Management & Health Register
+          <h1 className="text-lg sm:text-xl font-black text-white font-mono tracking-tight">
+            Watershed Management &amp; Health Register
           </h1>
           <p className="text-xs text-slate-400 mt-0.5">
             Directory of all monitored hydrological units, GIS boundaries, and health indices.

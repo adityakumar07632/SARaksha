@@ -139,43 +139,43 @@ export const EvidenceChain: React.FC<EvidenceChainProps> = ({
   };
 
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/90 p-5 shadow-2xl backdrop-blur-md space-y-4">
+    <div className="rounded-2xl border border-slate-800 bg-slate-900/90 p-3.5 sm:p-5 shadow-2xl backdrop-blur-md space-y-3.5 sm:space-y-4">
       {/* Header with Traceability statement */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
-            <ShieldCheck className="h-5 w-5" />
+          <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 shrink-0">
+            <ShieldCheck className="h-4 w-4 sm:h-5 sm:w-5" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h3 className="text-sm font-black text-white font-mono tracking-tight uppercase">
+            <div className="flex flex-wrap items-center gap-2">
+              <h3 className="text-xs sm:text-sm font-black text-white font-mono tracking-tight uppercase">
                 Traceable Evidence Chain
               </h3>
               {isVerified ? (
-                <span className="bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border border-emerald-500/40 uppercase flex items-center gap-1">
+                <span className="bg-emerald-500/20 text-emerald-300 text-[9px] sm:text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border border-emerald-500/40 uppercase flex items-center gap-1 shrink-0">
                   <CheckCircle2 className="h-3 w-3" />
-                  Evidence Chain Complete
+                  Chain Complete
                 </span>
               ) : (
-                <span className="bg-amber-500/20 text-amber-300 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border border-amber-500/40 uppercase flex items-center gap-1">
+                <span className="bg-amber-500/20 text-amber-300 text-[9px] sm:text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border border-amber-500/40 uppercase flex items-center gap-1 shrink-0">
                   <AlertTriangle className="h-3 w-3" />
                   Verification Required
                 </span>
               )}
             </div>
-            <p className="text-[11px] text-slate-400 italic">
+            <p className="text-[10px] sm:text-[11px] text-slate-400 italic">
               "Every assessment in SARaksha is designed to remain traceable to supporting evidence."
             </p>
           </div>
         </div>
 
-        <div className="text-[11px] font-mono text-slate-400 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800 self-start sm:self-auto">
+        <div className="text-[10px] sm:text-[11px] font-mono text-slate-400 bg-slate-950 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-slate-800 self-start sm:self-auto">
           Audit File: <strong className="text-white">{intervention.name}</strong> ({intervention.code})
         </div>
       </div>
 
       {/* 6 Step Interactive Timeline Chain */}
-      <div className="grid grid-cols-2 md:grid-cols-6 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
         {chainSteps.map((step, idx) => {
           const Icon = step.icon;
           const isActive = activeStep === idx;

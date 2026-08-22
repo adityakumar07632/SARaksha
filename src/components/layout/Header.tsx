@@ -8,16 +8,18 @@ import {
   ChevronRight,
   UserCheck,
   Globe,
-  Bell,
-  Search,
-  Layers,
-  ChevronDown
+  ChevronDown,
+  Menu,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { UserRole } from '../../types';
 
-export const Header: React.FC = () => {
+interface HeaderProps {
+  onToggleMobileNav?: () => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({ onToggleMobileNav }) => {
   const { currentUser, role, switchDemoRole, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
@@ -80,35 +82,50 @@ export const Header: React.FC = () => {
   const breadcrumbs = getBreadcrumbs();
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-800 bg-slate-950/90 px-4 sm:px-6 backdrop-blur-md">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-800 bg-slate-950/90 px-3 sm:px-6 backdrop-blur-md">
       {/* Brand & Breadcrumbs */}
-      <div className="flex items-center gap-4">
-        <Link to={role === 'SUPER_ADMIN' ? '/super-admin' : '/dashboard'} className="flex items-center gap-2.5 group">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-teal-700 shadow-md group-hover:scale-105 transition-transform">
-            <ShieldCheck className="h-5 w-5 text-white" />
+      <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+        {/* Mobile Hamburger Menu Button */}
+        <button
+          type="button"
+          onClick={onToggleMobileNav}
+          className="lg:hidden p-2 rounded-lg border border-slate-800 bg-slate-900 text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer shrink-0"
+          aria-label="Open navigation menu"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+
+        <Link
+          to={role === 'SUPER_ADMIN' ? '/super-admin' : '/dashboard'}
+          className="flex items-center gap-2 sm:gap-2.5 group shrink-0"
+        >
+          <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-teal-700 shadow-md group-hover:scale-105 transition-transform shrink-0">
+            <ShieldCheck className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
           </div>
           <div className="flex flex-col">
-            <div className="flex items-center gap-1.5">
-              <span className="text-base font-black tracking-tight text-white font-mono">SARaksha</span>
-              <span className="text-[10px] uppercase font-bold tracking-widest px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+            <div className="flex items-center gap-1 sm:gap-1.5">
+              <span className="text-sm sm:text-base font-black tracking-tight text-white font-mono">
+                SARaksha
+              </span>
+              <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-widest px-1 sm:px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                 PROTOTYPE
               </span>
             </div>
-            <span className="text-[10px] text-slate-400 -mt-0.5 hidden sm:inline">
+            <span className="text-[10px] text-slate-400 -mt-0.5 hidden md:inline">
               Smart Watershed Monitoring System
             </span>
           </div>
         </Link>
 
-        {/* Drill-down Breadcrumb trail */}
-        <div className="hidden lg:flex items-center gap-1 text-xs font-mono text-slate-400 bg-slate-900/60 px-3 py-1.5 rounded-lg border border-slate-800 ml-4">
-          <Globe className="h-3.5 w-3.5 text-emerald-400" />
+        {/* Drill-down Breadcrumb trail (Desktop only) */}
+        <div className="hidden lg:flex items-center gap-1 text-xs font-mono text-slate-400 bg-slate-900/60 px-3 py-1.5 rounded-lg border border-slate-800 ml-4 truncate">
+          <Globe className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
           {breadcrumbs.map((crumb, idx) => (
             <React.Fragment key={crumb.label}>
-              {idx > 0 && <ChevronRight className="h-3 w-3 text-slate-600" />}
+              {idx > 0 && <ChevronRight className="h-3 w-3 text-slate-600 shrink-0" />}
               <Link
                 to={crumb.path}
-                className={`hover:text-emerald-400 transition-colors ${
+                className={`hover:text-emerald-400 transition-colors truncate ${
                   idx === breadcrumbs.length - 1 ? 'text-slate-200 font-semibold' : ''
                 }`}
               >
@@ -119,22 +136,25 @@ export const Header: React.FC = () => {
         </div>
       </div>
 
-      {/* Right Controls: Role Switcher, Alerts, Theme, User */}
-      <div className="flex items-center gap-3">
-        {/* Role Switcher Pill (Clearly labeled for Prototype Demo) */}
+      {/* Right Controls: Role Switcher, Theme, User */}
+      <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+        {/* Role Switcher Pill */}
         <div className="relative">
           <button
             onClick={() => setRoleDropdownOpen(!roleDropdownOpen)}
-            className="flex items-center gap-2 rounded-lg border border-amber-500/40 bg-slate-900 px-3 py-1.5 text-xs font-mono font-semibold text-amber-300 hover:border-amber-400 transition"
+            className="flex items-center gap-1 sm:gap-2 rounded-lg border border-amber-500/40 bg-slate-900 px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs font-mono font-semibold text-amber-300 hover:border-amber-400 transition cursor-pointer"
+            aria-label="Switch Demo Role"
           >
-            <UserCheck className="h-3.5 w-3.5 text-amber-400" />
-            <span className="hidden sm:inline text-slate-400">DEMO ROLE:</span>
-            <span className="text-emerald-400 font-bold">{role.replace('_', ' ')}</span>
-            <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
+            <UserCheck className="h-3.5 w-3.5 text-amber-400 shrink-0" />
+            <span className="hidden sm:inline text-slate-400">DEMO:</span>
+            <span className="text-emerald-400 font-bold max-w-[85px] sm:max-w-none truncate">
+              {role === 'SUPER_ADMIN' ? 'SUPER ADMIN' : role === 'NORMAL_ADMIN' ? 'NODAL' : 'FIELD'}
+            </span>
+            <ChevronDown className="h-3 w-3 text-slate-400 shrink-0" />
           </button>
 
           {roleDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-64 rounded-xl border border-amber-500/40 bg-slate-900 p-2.5 shadow-2xl backdrop-blur-md text-xs font-mono z-50">
+            <div className="absolute right-0 mt-2 w-60 sm:w-64 rounded-xl border border-amber-500/40 bg-slate-900 p-2.5 shadow-2xl backdrop-blur-md text-xs font-mono z-50">
               <div className="px-2 py-1 text-[10px] uppercase font-bold text-amber-400 border-b border-slate-800 pb-1 mb-1">
                 SWITCH DEMO ROLE (PROTOTYPE)
               </div>
@@ -172,27 +192,29 @@ export const Header: React.FC = () => {
         {/* Theme Toggle */}
         <button
           onClick={toggleTheme}
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-800 bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white transition"
+          className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg border border-slate-800 bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white transition cursor-pointer"
           title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} mode`}
+          aria-label="Toggle theme"
         >
           {theme === 'dark' ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4 text-slate-400" />}
         </button>
 
         {/* User profile & Logout */}
-        <div className="flex items-center gap-2 pl-2 border-l border-slate-800">
+        <div className="flex items-center gap-1.5 sm:gap-2 pl-1.5 sm:pl-2 border-l border-slate-800">
           <div className="hidden md:flex flex-col text-right">
-            <span className="text-xs font-semibold text-white leading-tight">
+            <span className="text-xs font-semibold text-white leading-tight truncate max-w-[120px]">
               {currentUser?.name || 'Authorized Official'}
             </span>
-            <span className="text-[10px] text-slate-400 font-mono">
+            <span className="text-[10px] text-slate-400 font-mono truncate max-w-[120px]">
               {currentUser?.region || 'National Division'}
             </span>
           </div>
 
           <button
             onClick={handleLogout}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-800 bg-slate-900 text-slate-400 hover:bg-rose-950/40 hover:text-rose-400 hover:border-rose-700/50 transition"
+            className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg border border-slate-800 bg-slate-900 text-slate-400 hover:bg-rose-950/40 hover:text-rose-400 hover:border-rose-700/50 transition cursor-pointer"
             title="Logout"
+            aria-label="Sign out"
           >
             <LogOut className="h-4 w-4" />
           </button>

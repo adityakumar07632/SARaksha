@@ -17,10 +17,10 @@ export const EvidenceManagement: React.FC = () => {
     : evidenceList.filter((e) => e.verificationStatus === statusFilter);
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-slate-800/80 pb-4">
         <div>
-          <h1 className="text-xl font-black text-white font-mono tracking-tight">
+          <h1 className="text-lg sm:text-xl font-black text-white font-mono tracking-tight">
             Field Evidence Verification Pipeline
           </h1>
           <p className="text-xs text-slate-400 mt-0.5">
@@ -30,7 +30,7 @@ export const EvidenceManagement: React.FC = () => {
       </div>
 
       {/* Top 4 KPI Metrics */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <StatCard
           title="Total Evidence"
           value="1,248"
@@ -62,36 +62,36 @@ export const EvidenceManagement: React.FC = () => {
       </div>
 
       {/* Evidence Pipeline Workflow Visualizer */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/90 p-4">
+      <div className="rounded-xl border border-slate-800 bg-slate-900/90 p-3.5 sm:p-4">
         <span className="text-[10px] uppercase font-bold text-slate-400 font-mono block mb-2">
-          Evidence Ingestion & Verification Workflow
+          Evidence Ingestion &amp; Verification Workflow
         </span>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-2 text-center text-xs font-mono">
-          <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
-            <span className="text-emerald-400 font-bold block">1. Field Upload</span>
-            <span className="text-[10px] text-slate-400">GNSS & Timestamp</span>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 text-center text-xs font-mono">
+          <div className="p-2 sm:p-2.5 rounded-lg bg-slate-950 border border-slate-800">
+            <span className="text-emerald-400 font-bold block text-[11px] sm:text-xs">1. Field Upload</span>
+            <span className="text-[9px] sm:text-[10px] text-slate-400">GNSS &amp; Timestamp</span>
           </div>
-          <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
-            <span className="text-indigo-400 font-bold block">2. AI Inference</span>
-            <span className="text-[10px] text-slate-400">Structure & Silt Detect</span>
+          <div className="p-2 sm:p-2.5 rounded-lg bg-slate-950 border border-slate-800">
+            <span className="text-indigo-400 font-bold block text-[11px] sm:text-xs">2. AI Inference</span>
+            <span className="text-[9px] sm:text-[10px] text-slate-400">Structure &amp; Silt</span>
           </div>
-          <div className="p-2.5 rounded-lg bg-slate-950 border border-amber-500/40">
-            <span className="text-amber-400 font-bold block">3. Pending Queue</span>
-            <span className="text-[10px] text-slate-400">Officer Verification</span>
+          <div className="p-2 sm:p-2.5 rounded-lg bg-slate-950 border border-amber-500/40">
+            <span className="text-amber-400 font-bold block text-[11px] sm:text-xs">3. Pending Queue</span>
+            <span className="text-[9px] sm:text-[10px] text-slate-400">Officer Verification</span>
           </div>
-          <div className="p-2.5 rounded-lg bg-slate-950 border border-emerald-500/40">
-            <span className="text-emerald-400 font-bold block">4. Verified Ledger</span>
-            <span className="text-[10px] text-slate-400">Locked to Chain</span>
+          <div className="p-2 sm:p-2.5 rounded-lg bg-slate-950 border border-emerald-500/40">
+            <span className="text-emerald-400 font-bold block text-[11px] sm:text-xs">4. Verified Ledger</span>
+            <span className="text-[9px] sm:text-[10px] text-slate-400">Locked to Chain</span>
           </div>
-          <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
-            <span className="text-rose-400 font-bold block">5. Corrective Action</span>
-            <span className="text-[10px] text-slate-400">Alert Dispatched</span>
+          <div className="p-2 sm:p-2.5 rounded-lg bg-slate-950 border border-slate-800 col-span-2 sm:col-span-1">
+            <span className="text-rose-400 font-bold block text-[11px] sm:text-xs">5. Action</span>
+            <span className="text-[9px] sm:text-[10px] text-slate-400">Alert Dispatched</span>
           </div>
         </div>
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {['ALL', 'VERIFIED', 'PENDING', 'FLAGGED'].map((tab) => (
           <button
             key={tab}

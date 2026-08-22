@@ -38,18 +38,18 @@ export const NormalUserDashboard: React.FC = () => {
   const [selectedInterventionId, setSelectedInterventionId] = useState<string>('CD-012');
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Prominent Watershed Header */}
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/90 p-6 shadow-2xl backdrop-blur-md">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4 mb-4">
+      <div className="rounded-2xl border border-slate-800 bg-slate-900/90 p-4 sm:p-6 shadow-2xl backdrop-blur-md">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 border-b border-slate-800 pb-4 mb-4">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20 uppercase">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-[10px] sm:text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2 sm:px-2.5 py-0.5 rounded border border-emerald-500/20 uppercase shrink-0">
                 {assignedWatershed.code} &bull; ASSIGNED JURISDICTION
               </span>
               <Badge status={assignedWatershed.status} size="sm" />
             </div>
-            <h1 className="text-3xl font-black text-white font-mono tracking-tight mt-1">
+            <h1 className="text-xl sm:text-3xl font-black text-white font-mono tracking-tight mt-1">
               {assignedWatershed.name.toUpperCase()}
             </h1>
             <p className="text-xs text-slate-400 font-mono mt-0.5">
@@ -57,47 +57,47 @@ export const NormalUserDashboard: React.FC = () => {
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <button
               onClick={() => navigate('/field-evidence')}
-              className="flex items-center gap-1.5 px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-mono font-semibold transition"
+              className="flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-mono font-semibold transition cursor-pointer"
             >
               <Camera className="h-4 w-4 text-emerald-400" />
               <span>Evidence ({assignedEvidence.length})</span>
             </button>
             <button
               onClick={() => navigate(`/intervention/CD-012`)}
-              className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-mono font-bold transition shadow-lg shadow-emerald-950/50"
+              className="flex items-center gap-2 px-3.5 sm:px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-mono font-bold transition shadow-lg shadow-emerald-950/50 cursor-pointer"
             >
-              <span>Investigate Check Dam #12</span>
+              <span>Investigate CD-012</span>
               <ArrowRight className="h-4 w-4" />
             </button>
           </div>
         </div>
 
         {/* 4 Summary Stats Bar */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 font-mono text-xs">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 font-mono text-xs">
           <div className="bg-slate-950 p-3 rounded-xl border border-slate-800">
             <span className="text-slate-400 text-[10px] uppercase block">Health Score</span>
-            <span className="text-xl font-bold text-emerald-400 mt-0.5 block">
+            <span className="text-lg sm:text-xl font-bold text-emerald-400 mt-0.5 block">
               {assignedWatershed.healthScore} / 100 (HEALTHY)
             </span>
           </div>
           <div className="bg-slate-950 p-3 rounded-xl border border-slate-800">
             <span className="text-slate-400 text-[10px] uppercase block">Interventions</span>
-            <span className="text-xl font-bold text-white mt-0.5 block">
+            <span className="text-lg sm:text-xl font-bold text-white mt-0.5 block">
               {assignedWatershed.totalInterventions} Units Monitored
             </span>
           </div>
           <div className="bg-slate-950 p-3 rounded-xl border border-slate-800">
             <span className="text-slate-400 text-[10px] uppercase block">Active Alerts</span>
-            <span className="text-xl font-bold text-rose-400 mt-0.5 block">
+            <span className="text-lg sm:text-xl font-bold text-rose-400 mt-0.5 block">
               {assignedAlerts.length} Anomaly Warning(s)
             </span>
           </div>
           <div className="bg-slate-950 p-3 rounded-xl border border-slate-800">
             <span className="text-slate-400 text-[10px] uppercase block">Last Monitoring Pass</span>
-            <span className="text-xl font-bold text-cyan-400 mt-0.5 block">
+            <span className="text-lg sm:text-xl font-bold text-cyan-400 mt-0.5 block">
               18 Aug 2026
             </span>
           </div>

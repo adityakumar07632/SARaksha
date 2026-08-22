@@ -33,29 +33,29 @@ export const AnalyticsView: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-slate-800/80 pb-4">
         <div>
-          <h1 className="text-xl font-black text-white font-mono tracking-tight">
-            National Watershed Analytics & Trend Models
+          <h1 className="text-lg sm:text-xl font-black text-white font-mono tracking-tight">
+            National Watershed Analytics &amp; Trend Models
           </h1>
           <p className="text-xs text-slate-400 mt-0.5">
-            Macro-level multi-spectral indicators, spectral biomass progression, and state-by-state benchmarks.
+            Macro-level multi-spectral indicators, spectral biomass progression, and state benchmarks.
           </p>
         </div>
-        <span className="text-xs font-mono text-amber-300 bg-amber-950/50 px-3 py-1 rounded-lg border border-amber-500/30">
+        <span className="text-[10px] sm:text-xs font-mono text-amber-300 bg-amber-950/50 px-2.5 sm:px-3 py-1 rounded-lg border border-amber-500/30 shrink-0 self-start sm:self-auto">
           DEMO DATA / SIMULATED ANALYTICS
         </span>
       </div>
 
       {/* Chart 1: State Comparison */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="rounded-xl border border-slate-800 bg-slate-900/90 p-5 space-y-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 min-w-0">
+        <div className="rounded-xl border border-slate-800 bg-slate-900/90 p-3.5 sm:p-5 space-y-3 sm:space-y-4 min-w-0">
           <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-            <h3 className="text-xs font-bold text-white font-mono uppercase tracking-wider">
+            <h3 className="text-xs font-bold text-white font-mono uppercase tracking-wider truncate">
               State-Wise Health Score Benchmark
             </h3>
-            <span className="text-[10px] font-mono text-slate-400">Average Composite Score</span>
+            <span className="text-[10px] font-mono text-slate-400 shrink-0">Average Composite</span>
           </div>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">

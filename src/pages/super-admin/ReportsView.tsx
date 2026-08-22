@@ -14,18 +14,18 @@ export const ReportsView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-slate-800/80 pb-4">
         <div>
-          <h1 className="text-xl font-black text-white font-mono tracking-tight">
-            Watershed Comprehensive Dossier & Audit Reports
+          <h1 className="text-lg sm:text-xl font-black text-white font-mono tracking-tight">
+            Watershed Comprehensive Dossier &amp; Audit Reports
           </h1>
           <p className="text-xs text-slate-400 mt-0.5">
             Compile traceable evidence packages into official government briefing documents.
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           <select
             value={selectedWatershedId}
             onChange={(e) => {
@@ -43,30 +43,30 @@ export const ReportsView: React.FC = () => {
 
           <button
             onClick={handleGenerate}
-            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-mono font-bold transition flex items-center gap-2 shadow-lg"
+            className="px-3.5 sm:px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-mono font-bold transition flex items-center gap-2 shadow-lg cursor-pointer"
           >
             <Sparkles className="h-4 w-4" />
-            <span>Generate Watershed Report</span>
+            <span>Generate Report</span>
           </button>
         </div>
       </div>
 
       {reportGenerated ? (
-        <div className="rounded-2xl border border-slate-700 bg-slate-900/95 p-8 shadow-2xl space-y-6 max-w-4xl mx-auto font-sans">
+        <div className="rounded-2xl border border-slate-700 bg-slate-900/95 p-4 sm:p-8 shadow-2xl space-y-4 sm:space-y-6 max-w-4xl mx-auto font-sans">
           {/* Report Top Header */}
-          <div className="flex items-center justify-between border-b-2 border-emerald-500/40 pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-emerald-500/40 pb-4">
             <div>
-              <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-emerald-400">
+              <span className="text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-widest text-emerald-400">
                 GOVERNMENT OF INDIA &bull; SARaksha EVIDENCE DOSSIER
               </span>
-              <h2 className="text-2xl font-black text-white font-mono mt-1">
-                Watershed Impact & Ground Verification Audit
+              <h2 className="text-xl sm:text-2xl font-black text-white font-mono mt-1">
+                Watershed Impact &amp; Ground Verification Audit
               </h2>
-              <p className="text-xs text-slate-400 font-mono">
+              <p className="text-xs text-slate-400 font-mono mt-0.5">
                 Jurisdiction: {watershed.name} ({watershed.code}) &bull; {watershed.state} &bull; {watershed.district}
               </p>
             </div>
-            <div className="text-right font-mono">
+            <div className="text-left sm:text-right font-mono shrink-0">
               <span className="text-xs text-slate-400">Audit Status:</span>
               <div className="text-emerald-400 font-bold text-sm">COMPLIANT (81/100)</div>
               <span className="text-[10px] text-slate-500">Dated: 22 Aug 2026</span>
@@ -74,7 +74,7 @@ export const ReportsView: React.FC = () => {
           </div>
 
           {/* Report Sections */}
-          <div className="grid grid-cols-2 gap-4 text-xs font-mono bg-slate-950 p-4 rounded-xl border border-slate-800">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs font-mono bg-slate-950 p-3.5 sm:p-4 rounded-xl border border-slate-800">
             <div>
               <span className="text-slate-500 uppercase text-[10px] block">Catchment Area</span>
               <span className="text-white font-bold">{watershed.areaHa.toLocaleString()} Ha</span>

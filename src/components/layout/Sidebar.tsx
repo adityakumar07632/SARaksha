@@ -8,17 +8,19 @@ import {
   AlertTriangle,
   BarChart3,
   FileText,
-  Settings,
   LogOut,
   Layers,
-  ChevronLeft,
-  ChevronRight,
   ShieldAlert,
-  Compass
+  X,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
-export const Sidebar: React.FC = () => {
+interface SidebarProps {
+  mobileOpen?: boolean;
+  onClose?: () => void;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen = false, onClose }) => {
   const { role, currentUser, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -60,9 +62,30 @@ export const Sidebar: React.FC = () => {
       ? normalAdminNav
       : fieldOfficerNav;
 
-  return (
-    <aside className="flex flex-col justify-between w-64 min-h-[calc(100vh-4rem)] border-r border-slate-800 bg-slate-950/95 p-4 backdrop-blur-md">
+  const renderNavContent = (isMobile = false) => (
+    <>
       <div className="space-y-6">
+        {/* Mobile Header with Close Button */}
+        {isMobile && (
+          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div className="flex items-center gap-2">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 font-bold text-xs">
+                🛡
+              </div>
+              <span className="font-extrabold text-white font-mono text-sm tracking-tight">
+                SARaksha Menu
+              </span>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
+              aria-label="Close navigation drawer"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+        )}
+
         {/* Role identifier badge */}
         <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
           <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">
@@ -77,7 +100,7 @@ export const Sidebar: React.FC = () => {
         </div>
 
         {/* Navigation list */}
-        <nav className="space-y-1">
+        <nav className="space-y-1" aria-label="Sidebar Navigation">
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -85,6 +108,7 @@ export const Sidebar: React.FC = () => {
                 key={item.name}
                 to={item.to}
                 end={item.to === '/super-admin' || item.to === '/dashboard'}
+                onClick={isMobile ? onClose : undefined}
                 className={({ isActive }) =>
                   `flex items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-medium font-mono transition-all duration-150 ${
                     isActive
@@ -111,8 +135,8 @@ export const Sidebar: React.FC = () => {
       {/* Bottom User summary & Log out */}
       <div className="border-t border-slate-800/80 pt-4 space-y-3">
         <div className="flex items-center gap-3 px-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-800 border border-slate-700 text-xs font-bold text-emerald-400 font-mono">
-            {currentUser?.name.charAt(0) || 'U'}
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-800 border border-slate-700 text-xs font-bold text-emerald-400 font-mono shrink-0">
+            {currentUser?.name?.charAt(0) || 'U'}
           </div>
           <div className="flex flex-col min-w-0">
             <span className="text-xs font-bold text-white truncate">
@@ -125,13 +149,47 @@ export const Sidebar: React.FC = () => {
         </div>
 
         <button
-          onClick={handleLogout}
-          className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-semibold text-slate-400 hover:bg-rose-950/30 hover:text-rose-400 transition font-mono"
+          onClick={() => {
+            if (isMobile && onClose) onClose();
+            handleLogout();
+          }}
+          className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-semibold text-slate-400 hover:bg-rose-950/30 hover:text-rose-400 transition font-mono cursor-pointer"
         >
           <LogOut className="h-4 w-4" />
           <span>Sign Out</span>
         </button>
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* Desktop Permanent Sidebar (>= 1024px) */}
+      <aside className="hidden lg:flex flex-col justify-between w-64 min-h-[calc(100vh-4rem)] border-r border-slate-800 bg-slate-950/95 p-4 backdrop-blur-md shrink-0">
+        {renderNavContent(false)}
+      </aside>
+
+      {/* Mobile Slide-in Drawer (< 1024px) */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-50 lg:hidden flex font-sans"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Mobile Navigation Menu"
+        >
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity duration-200"
+            onClick={onClose}
+            aria-hidden="true"
+          />
+
+          {/* Drawer */}
+          <aside className="relative flex flex-col justify-between w-72 max-w-[85vw] h-full border-r border-slate-800 bg-slate-950 p-4 shadow-2xl z-10 overflow-y-auto">
+            {renderNavContent(true)}
+          </aside>
+        </div>
+      )}
+    </>
   );
 };
