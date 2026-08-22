@@ -54,6 +54,9 @@ const FieldInspection = lazy(() =>
 const SyncQueue = lazy(() =>
   import('./pages/field-officer/SyncQueue').then((m) => ({ default: m.SyncQueue }))
 );
+const EvidenceDossierView = lazy(() =>
+  import('./pages/reports/EvidenceDossierView').then((m) => ({ default: m.EvidenceDossierView }))
+);
 
 // Loading Fallback Component
 const RouteLoadingFallback: React.FC = () => (
@@ -250,6 +253,16 @@ export const App: React.FC = () => {
                     }
                   />
                 </Route>
+
+                {/* Standalone Full-Page Dossier View with In-App Navigation */}
+                <Route
+                  path="/evidence-dossier"
+                  element={
+                    <ProtectedRoute>
+                      <EvidenceDossierView />
+                    </ProtectedRoute>
+                  }
+                />
 
                 {/* Fallback Catch-all */}
                 <Route path="*" element={<RootRedirect />} />

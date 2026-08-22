@@ -366,16 +366,8 @@ export const InterventionDetail: React.FC = () => {
   };
 
   const handleGenerateDossier = () => {
-    const auditLogs = evidenceAuditService.getAuditTrail(intervention.id);
-    openEvidenceDossierWindow({
-      intervention,
-      evidence: primaryEvidence,
-      rasterAnalysis: rasterPixelResult,
-      auditTrail: auditLogs,
-      generatedBy: 'Dr. Rajesh Sharma (Super Admin)',
-      generatedAt: new Date().toISOString(),
-      reportId: `DOSSIER-${intervention.code}-${Date.now().toString().slice(-6)}`,
-      isRealSatelliteData: satelliteState === 'REAL',
+    navigate(`/evidence-dossier?interventionId=${intervention.id}`, {
+      state: { returnTo: `/intervention/${intervention.id}` },
     });
   };
 

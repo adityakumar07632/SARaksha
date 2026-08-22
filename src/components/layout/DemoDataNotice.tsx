@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import {
   AlertTriangle,
   Info,
@@ -21,9 +21,21 @@ import { evidenceAuditService } from '../../services/evidence/evidenceAuditServi
 
 export const DemoDataNotice: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
   const { switchDemoRole } = useAuth();
   const [dismissed, setDismissed] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+
+  // Automatically open SIH Evaluation Modal when navigated back with ?sihModal=true
+  useEffect(() => {
+    if (searchParams.get('sihModal') === 'true' || (location.state as any)?.openSihModal) {
+      setModalOpen(true);
+      const newParams = new URLSearchParams(searchParams);
+      newParams.delete('sihModal');
+      setSearchParams(newParams, { replace: true });
+    }
+  }, [searchParams, location.state]);
 
   // Body Scroll Lock & Escape Key Listener for True Application Modal
   useEffect(() => {
@@ -78,21 +90,10 @@ export const DemoDataNotice: React.FC = () => {
         break;
       case 6:
         // Scenario 6: Generate Official Compliance Evidence Dossier (PDF)
-        {
-          const target = MOCK_INTERVENTIONS[0];
-          const evd = MOCK_FIELD_EVIDENCE[0];
-          const audit = evidenceAuditService.getAuditTrail(target.id);
-          openEvidenceDossierWindow({
-            intervention: target,
-            evidence: evd,
-            rasterAnalysis: null,
-            auditTrail: audit,
-            generatedBy: 'Dr. Rajesh Sharma (Super Admin)',
-            generatedAt: new Date().toISOString(),
-            reportId: `DOSSIER-${target.code}-${Date.now().toString().slice(-6)}`,
-            isRealSatelliteData: true,
-          });
-        }
+        switchDemoRole('SUPER_ADMIN');
+        navigate('/evidence-dossier?scenario=6', {
+          state: { fromScenario: true, returnTo: '/super-admin?sihModal=true' },
+        });
         break;
       default:
         break;
