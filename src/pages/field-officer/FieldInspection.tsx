@@ -38,7 +38,7 @@ export const FieldInspection: React.FC = () => {
   const [isAcquiringGps, setIsAcquiringGps] = useState(false);
 
   // Photo State
-  const [photoPreview, setPhotoPreview] = useState<string>('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1200&q=80');
+  const [photoPreview, setPhotoPreview] = useState<string>('/assets/evidence/cd012-upstream-checkdam.jpg');
   const [isPhotoCaptured, setIsPhotoCaptured] = useState(true);
 
   // Form State

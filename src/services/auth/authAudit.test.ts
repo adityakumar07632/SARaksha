@@ -24,6 +24,15 @@ describe('Phase 6: RBAC, Cryptographic Hashing & Evidence Audit', () => {
       expect(hasPermission('FIELD_OFFICER', 'UPLOAD_EVIDENCE')).toBe(true);
       expect(canAccessRoute('FIELD_OFFICER', '/field-evidence')).toBe(true);
     });
+
+    it('denies unauthenticated/invalid route access appropriately', () => {
+      expect(canAccessRoute('FIELD_OFFICER', '/super-admin/users')).toBe(false);
+      expect(canAccessRoute('NORMAL_ADMIN', '/super-admin')).toBe(false);
+      expect(canAccessRoute('NORMAL_ADMIN', '/super-admin/evidence')).toBe(false);
+      expect(canAccessRoute('SUPER_ADMIN', '/super-admin')).toBe(true);
+      expect(canAccessRoute('SUPER_ADMIN', '/super-admin/evidence')).toBe(true);
+      expect(canAccessRoute('FIELD_OFFICER', '/field-officer/dashboard')).toBe(true);
+    });
   });
 
   // 2. Cryptographic SHA-256 Tamper-Evident Hashing

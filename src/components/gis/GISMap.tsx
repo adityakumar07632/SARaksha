@@ -12,12 +12,20 @@ import {
   Trash2,
   ChevronDown,
   ChevronUp,
+  ChevronLeft,
+  ChevronRight,
   X,
   ArrowRight,
+  Camera,
+  Sparkles,
+  ShieldCheck,
+  ImageOff,
 } from 'lucide-react';
 import { Intervention, Watershed, Alert, FieldEvidence } from '../../types';
 import { MOCK_GEOJSON_LAYERS } from '../../data/mockData';
 import { ADMINISTRATIVE_BOUNDARIES } from '../../data/administrativeBoundaries';
+import { EvidenceImage } from '../ui/EvidenceImage';
+import { generateSHA256Hash } from '../../services/evidence/evidenceAuditService';
 
 interface GISMapProps {
   watersheds?: Watershed[];
@@ -63,6 +71,43 @@ export const GISMap: React.FC<GISMapProps> = ({
   const [showLayerPanel, setShowLayerPanel] = useState<boolean>(true);
   const [showTelemetryPanel, setShowTelemetryPanel] = useState<boolean>(true);
   const [showAdminContext, setShowAdminContext] = useState<boolean>(true);
+
+  // Field Evidence Modal State (opens over map on camera icon click)
+  const [evidenceModalData, setEvidenceModalData] = useState<{
+    intervention: Intervention | null;
+    evidenceItems: FieldEvidence[];
+    currentIndex: number;
+    isOpen: boolean;
+  }>({
+    intervention: null,
+    evidenceItems: [],
+    currentIndex: 0,
+    isOpen: false,
+  });
+
+  const handleOpenEvidence = useCallback(
+    (interventionId: string, specificEvidenceId?: string) => {
+      const matchedIntervention = interventions.find((i) => i.id === interventionId) || null;
+      const matchingEvidence = evidenceList.filter((e) => e.interventionId === interventionId);
+      let index = 0;
+      if (specificEvidenceId) {
+        const foundIdx = matchingEvidence.findIndex((e) => e.id === specificEvidenceId);
+        if (foundIdx >= 0) index = foundIdx;
+      }
+
+      setEvidenceModalData({
+        intervention: matchedIntervention,
+        evidenceItems: matchingEvidence,
+        currentIndex: index,
+        isOpen: true,
+      });
+
+      if (onSelectEvidence && specificEvidenceId) {
+        onSelectEvidence(specificEvidenceId);
+      }
+    },
+    [interventions, evidenceList, onSelectEvidence]
+  );
 
   // Dynamic Coordinates & Telemetry
   const [cursorCoords, setCursorCoords] = useState<{ lat: number; lng: number } | null>(null);
@@ -458,17 +503,30 @@ export const GISMap: React.FC<GISMapProps> = ({
             ? '#f59e0b'
             : '#ef4444';
 
-        // CD-012 Callout strictly positioned with breathing room
+        const itemEvidence = evidenceList.filter((e) => e.interventionId === item.id);
+        const hasEvidence = itemEvidence.length > 0;
+
+        // CD-012 / Selected Callout with interactive Field Evidence button
         const iconHtml = `
           <div class="relative flex flex-col items-center justify-center cursor-pointer group">
             ${
               isSelected
-                ? `<div class="absolute -top-14 left-1/2 -translate-x-1/2 whitespace-nowrap px-3 py-1.5 rounded-xl bg-slate-950/95 border border-cyan-400 text-white font-mono shadow-2xl pointer-events-auto">
+                ? `<div class="absolute -top-18 left-1/2 -translate-x-1/2 whitespace-nowrap px-3 py-1.5 rounded-xl bg-slate-950/95 border border-cyan-400 text-white font-mono shadow-2xl pointer-events-auto flex flex-col gap-1 z-30">
                      <div class="text-[11px] font-extrabold text-cyan-300 flex items-center justify-between gap-2">
                        <span>${item.code}</span>
                        <span class="px-1.5 py-0.2 rounded bg-rose-500/30 text-rose-300 text-[8px] font-bold">HIGH PRIORITY</span>
                      </div>
                      <div class="text-[9px] text-slate-300 font-medium">${item.name}</div>
+                     ${
+                       hasEvidence
+                         ? `<div class="flex items-center gap-1.5 pt-1 border-t border-slate-800">
+                              <button type="button" class="ev-camera-btn flex items-center gap-1 px-2 py-0.5 rounded bg-indigo-950/90 hover:bg-indigo-900 border border-indigo-500/60 text-indigo-300 hover:text-white text-[9px] font-mono font-bold transition shadow-sm cursor-pointer" data-id="${item.id}">
+                                <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                <span>📷 View Evidence (${itemEvidence.length})</span>
+                              </button>
+                            </div>`
+                         : ''
+                     }
                    </div>`
                 : ''
             }
@@ -476,6 +534,13 @@ export const GISMap: React.FC<GISMapProps> = ({
               isSelected ? 'border-cyan-400 ring-4 ring-cyan-500/30 scale-110' : 'border-slate-300/80'
             }" style="width: ${markerSize}px; height: ${markerSize}px;">
               <span class="rounded-full" style="width: ${innerDotSize}px; height: ${innerDotSize}px; background-color: ${statusColor};"></span>
+              ${
+                hasEvidence
+                  ? `<div class="camera-marker-badge absolute -top-1.5 -right-1.5 flex items-center justify-center h-4 w-4 rounded-full bg-indigo-600 hover:bg-indigo-500 border border-white text-white shadow-lg cursor-pointer hover:scale-125 transition-transform" title="Click to view Field Evidence (${itemEvidence.length} photo${itemEvidence.length > 1 ? 's' : ''})" data-id="${item.id}">
+                       <svg class="w-2.5 h-2.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                     </div>`
+                  : ''
+              }
             </div>
           </div>
         `;
@@ -490,7 +555,14 @@ export const GISMap: React.FC<GISMapProps> = ({
 
         const marker = L.marker(item.coordinates, { icon: customIcon });
 
-        marker.on('click', () => {
+        marker.on('click', (e: L.LeafletMouseEvent) => {
+          const origEvent = e.originalEvent;
+          const target = origEvent?.target as HTMLElement | null;
+          if (target && (target.closest('.camera-marker-badge') || target.closest('.ev-camera-btn'))) {
+            L.DomEvent.stopPropagation(e);
+            handleOpenEvidence(item.id);
+            return;
+          }
           if (onSelectIntervention) onSelectIntervention(item.id);
           flyToTarget(item.coordinates, 13.5);
         });
@@ -499,26 +571,35 @@ export const GISMap: React.FC<GISMapProps> = ({
       });
     }
 
-    // 2. Field Evidence Markers (Camera badges)
+    // 2. Field Evidence Markers (Standalone Camera badges)
     if (layers.fieldEvidence && evidenceList.length > 0) {
       evidenceList.forEach((ev) => {
         const evIconHtml = `
-          <div class="relative flex items-center justify-center cursor-pointer">
-            <div class="flex items-center justify-center h-4 w-4 rounded-md bg-slate-950/90 border border-indigo-400/80 shadow-md text-indigo-300 hover:scale-125 transition-transform">
-              <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          <div class="relative flex items-center justify-center cursor-pointer group" title="Click to view Field Evidence Dossier (${ev.id})">
+            <div class="flex items-center justify-center h-5 w-5 rounded-md bg-slate-950/95 border-2 border-indigo-400 shadow-xl text-indigo-300 group-hover:scale-125 group-hover:bg-indigo-600 group-hover:text-white group-hover:border-white transition-all">
+              <svg class="w-3 h-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             </div>
+            <span class="absolute -bottom-5 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 border border-indigo-500/50 text-[9px] font-mono text-indigo-200 px-1.5 py-0.5 rounded whitespace-nowrap pointer-events-none shadow-lg z-50">
+              ${ev.id} Photo
+            </span>
           </div>
         `;
 
         const evIcon = L.divIcon({
           html: evIconHtml,
           className: 'custom-evidence-marker',
-          iconSize: [16, 16],
-          iconAnchor: [8, 8],
-          popupAnchor: [0, -10],
+          iconSize: [20, 20],
+          iconAnchor: [10, 10],
+          popupAnchor: [0, -12],
         });
 
         const evMarker = L.marker(ev.coordinates, { icon: evIcon });
+
+        evMarker.on('click', (e) => {
+          L.DomEvent.stopPropagation(e);
+          handleOpenEvidence(ev.interventionId, ev.id);
+        });
+
         evidenceGroup.addLayer(evMarker);
       });
     }
@@ -565,6 +646,7 @@ export const GISMap: React.FC<GISMapProps> = ({
     currentZoom,
     onSelectIntervention,
     flyToTarget,
+    handleOpenEvidence,
   ]);
 
   // Controls Handlers
@@ -1012,6 +1094,281 @@ export const GISMap: React.FC<GISMapProps> = ({
           <span>ALT <strong className="text-emerald-400">415 m</strong></span>
         </div>
       </div>
+
+      {/* 9. Field Evidence Detail Modal Overlay over GIS Map */}
+      {evidenceModalData.isOpen && (
+        <div
+          className="absolute inset-0 z-[2000] flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md font-sans pointer-events-auto"
+          onClick={() => setEvidenceModalData((prev) => ({ ...prev, isOpen: false }))}
+        >
+          <div
+            className="w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl p-5 space-y-4 text-slate-200 font-sans"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-indigo-500/20 border border-indigo-500/40 text-indigo-300">
+                  <Camera className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm sm:text-base font-bold text-white font-mono">
+                      Field Evidence Dossier — {evidenceModalData.intervention?.code || 'Structure'}
+                    </h3>
+                    <span className="px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[10px] font-mono font-bold">
+                      🟡 DEMO FIELD EVIDENCE
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-400 font-mono mt-0.5">
+                    {evidenceModalData.intervention?.name || 'Water Retention Structure'} &bull; Alwar North Catchment
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setEvidenceModalData((prev) => ({ ...prev, isOpen: false }))}
+                className="p-1.5 rounded-lg border border-slate-700 hover:border-slate-500 text-slate-400 hover:text-white bg-slate-800/80 transition cursor-pointer"
+                title="Close"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            {evidenceModalData.evidenceItems.length === 0 ? (
+              /* Empty State */
+              <div className="py-10 text-center space-y-3 font-mono">
+                <div className="mx-auto w-12 h-12 rounded-2xl bg-slate-800 flex items-center justify-center text-slate-500 border border-slate-700">
+                  <ImageOff className="w-6 h-6" />
+                </div>
+                <h4 className="text-white font-bold text-sm">No Field Evidence Registered</h4>
+                <p className="text-xs text-slate-400 max-w-sm mx-auto">
+                  No ground photographic inspection has been submitted yet for {evidenceModalData.intervention?.code || 'this structure'}. Field inspections can be logged via the Field Officer PWA.
+                </p>
+                <div className="pt-2">
+                  <button
+                    onClick={() => {
+                      if (evidenceModalData.intervention) {
+                        navigate(`/intervention/${evidenceModalData.intervention.id}`);
+                      }
+                    }}
+                    className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs text-white font-bold transition inline-flex items-center gap-1.5 shadow-lg cursor-pointer"
+                  >
+                    <span>View Intervention Details</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            ) : (
+              (() => {
+                const currentEv =
+                  evidenceModalData.evidenceItems[evidenceModalData.currentIndex] ||
+                  evidenceModalData.evidenceItems[0];
+                const totalCount = evidenceModalData.evidenceItems.length;
+
+                return (
+                  <div className="space-y-4">
+                    {/* Carousel Header if Multiple Photos */}
+                    {totalCount > 1 && (
+                      <div className="flex items-center justify-between bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-xs font-mono">
+                        <span className="text-slate-300 font-bold">
+                          Photo {evidenceModalData.currentIndex + 1} of {totalCount} &bull;{' '}
+                          <span className="text-indigo-400">{currentEv.id}</span>
+                        </span>
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            onClick={() =>
+                              setEvidenceModalData((prev) => ({
+                                ...prev,
+                                currentIndex:
+                                  prev.currentIndex > 0 ? prev.currentIndex - 1 : totalCount - 1,
+                              }))
+                            }
+                            className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition cursor-pointer"
+                            title="Previous photo"
+                          >
+                            <ChevronLeft className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() =>
+                              setEvidenceModalData((prev) => ({
+                                ...prev,
+                                currentIndex:
+                                  prev.currentIndex < totalCount - 1 ? prev.currentIndex + 1 : 0,
+                              }))
+                            }
+                            className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition cursor-pointer"
+                            title="Next photo"
+                          >
+                            <ChevronRight className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Image Area */}
+                    <div className="relative rounded-xl overflow-hidden aspect-video bg-black border border-slate-800 shadow-xl">
+                      <EvidenceImage
+                        src={currentEv.photoUrl}
+                        alt={currentEv.caption}
+                        coordinates={currentEv.coordinates}
+                        structureCode={currentEv.interventionId}
+                        provenanceLabel="DEMO FIELD EVIDENCE"
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute bottom-2 left-2 z-10 bg-black/85 px-3 py-1 rounded-lg text-[11px] font-mono text-emerald-300 border border-emerald-500/40 backdrop-blur-xs">
+                        📍 {currentEv.coordinates[0].toFixed(5)}° N, {currentEv.coordinates[1].toFixed(5)}° E &bull; Accuracy {currentEv.accuracyM || '±4.8m (GNSS Lock)'}
+                      </div>
+                    </div>
+
+                    {/* Caption */}
+                    <p className="text-xs text-slate-200 font-mono bg-slate-950/80 p-3 rounded-xl border border-slate-800 leading-relaxed">
+                      {currentEv.caption}
+                    </p>
+
+                    {/* Field Metadata Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs font-mono">
+                      <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+                        <span className="text-[10px] text-slate-500 block">INSPECTED BY</span>
+                        <strong className="text-slate-200 text-[11px]">{currentEv.uploadedBy.name}</strong>
+                        <span className="text-[10px] text-slate-400 block">{currentEv.uploadedBy.role}</span>
+                      </div>
+                      <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+                        <span className="text-[10px] text-slate-500 block">CAPTURE TIMESTAMP</span>
+                        <strong className="text-slate-200 text-[11px]">{currentEv.capturedAt}</strong>
+                        <span className="text-[10px] text-slate-400 block">Offline Timestamp Seal</span>
+                      </div>
+                      <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+                        <span className="text-[10px] text-slate-500 block">VERIFICATION STATUS</span>
+                        <strong
+                          className={`text-[11px] ${
+                            currentEv.verificationStatus === 'VERIFIED'
+                              ? 'text-emerald-400'
+                              : currentEv.verificationStatus === 'FLAGGED'
+                              ? 'text-rose-400'
+                              : 'text-amber-400'
+                          }`}
+                        >
+                          {currentEv.verificationStatus === 'VERIFIED'
+                            ? '✓ Human Verified'
+                            : currentEv.verificationStatus === 'FLAGGED'
+                            ? '🚨 Flagged for Desilt'
+                            : '⚠ Pending Review'}
+                        </strong>
+                        <span className="text-[10px] text-slate-400 block">
+                          {currentEv.verifiedBy ? `By ${currentEv.verifiedBy}` : 'Awaiting Nodal Sign'}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Assistive AI Analysis */}
+                    {currentEv.aiAnalysis && (
+                      <div className="rounded-xl border border-indigo-500/30 bg-slate-950 p-3.5 font-mono text-xs space-y-2.5">
+                        <div className="flex items-center justify-between text-indigo-300 font-bold border-b border-slate-800 pb-2">
+                          <span className="flex items-center gap-1.5">
+                            <Sparkles className="h-4 w-4 text-indigo-400" />
+                            AI FIELD IMAGE ANALYSIS (DEMO AI)
+                          </span>
+                          <span className="text-indigo-400 font-bold">
+                            {currentEv.aiAnalysis.confidenceScore}% Model Confidence
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
+                          <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
+                            <span className="text-slate-500 block text-[10px]">Structure:</span>
+                            <strong className="text-white">{currentEv.aiAnalysis.structureDetected}</strong>
+                          </div>
+                          <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
+                            <span className="text-slate-500 block text-[10px]">Water Detected:</span>
+                            <strong
+                              className={
+                                currentEv.aiAnalysis.waterDetected
+                                  ? 'text-emerald-400'
+                                  : 'text-slate-400'
+                              }
+                            >
+                              {currentEv.aiAnalysis.waterDetected
+                                ? `YES (${currentEv.aiAnalysis.waterConfidence}%)`
+                                : 'NO'}
+                            </strong>
+                          </div>
+                          <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
+                            <span className="text-slate-500 block text-[10px]">Vegetation:</span>
+                            <strong
+                              className={
+                                currentEv.aiAnalysis.vegetationDetected
+                                  ? 'text-emerald-400'
+                                  : 'text-slate-400'
+                              }
+                            >
+                              {currentEv.aiAnalysis.vegetationDetected
+                                ? `YES (${currentEv.aiAnalysis.vegetationConfidence}%)`
+                                : 'NO'}
+                            </strong>
+                          </div>
+                          <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
+                            <span className="text-slate-500 block text-[10px]">Condition:</span>
+                            <strong
+                              className={
+                                currentEv.verificationStatus === 'FLAGGED'
+                                  ? 'text-rose-400'
+                                  : 'text-amber-300'
+                              }
+                            >
+                              {currentEv.aiAnalysis.potentialIssue || 'Intact'}
+                            </strong>
+                          </div>
+                        </div>
+
+                        {currentEv.aiAnalysis.recommendation && (
+                          <div className="text-[11px] text-slate-300 bg-slate-900/60 p-2 rounded-lg border border-slate-800">
+                            <strong className="text-indigo-300">Recommendation:</strong>{' '}
+                            {currentEv.aiAnalysis.recommendation}
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Cryptographic Hash Seal */}
+                    <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800/80 font-mono text-[10px] text-slate-400 flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-1.5">
+                        <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+                        <span>SHA-256 Tamper-Evident Digest:</span>
+                      </div>
+                      <span className="font-mono text-slate-300 truncate max-w-[280px]">
+                        {generateSHA256Hash(
+                          `${currentEv.id}:${currentEv.interventionId}:${currentEv.capturedAt}`
+                        )}
+                      </span>
+                    </div>
+
+                    {/* Footer Actions */}
+                    <div className="flex items-center justify-between pt-3 border-t border-slate-800 font-mono text-xs">
+                      <button
+                        onClick={() => setEvidenceModalData((prev) => ({ ...prev, isOpen: false }))}
+                        className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition cursor-pointer"
+                      >
+                        Close
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          setEvidenceModalData((prev) => ({ ...prev, isOpen: false }));
+                          navigate(`/intervention/${currentEv.interventionId}`);
+                        }}
+                        className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition flex items-center gap-1.5 shadow-lg shadow-indigo-950/50 cursor-pointer"
+                      >
+                        <span>Open Full Intervention Dossier</span>
+                        <ArrowRight className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })()
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

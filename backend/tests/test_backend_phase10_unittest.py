@@ -68,7 +68,7 @@ class TestBackendPhase10(unittest.TestCase):
         saved = field_evidence_repo.save_evidence({
             "id": "EVD-CD012-P10-TEST",
             "interventionId": "CD-012",
-            "photoUrl": "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957",
+            "photoUrl": "/assets/evidence/cd012-upstream-checkdam.jpg",
             "caption": "Phase 10 E2E ground inspection.",
             "coordinates": [lat, lng],
             "accuracyM": "±4.8m",

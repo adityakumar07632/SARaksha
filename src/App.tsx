@@ -81,7 +81,8 @@ export const App: React.FC = () => {
           <BrowserRouter>
             <Suspense fallback={<RouteLoadingFallback />}>
               <Routes>
-                {/* Public Login Route */}
+                {/* Public & Root Routes */}
+                <Route path="/" element={<RootRedirect />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/access-denied" element={<AccessDenied />} />
 
@@ -93,7 +94,6 @@ export const App: React.FC = () => {
                     </ProtectedRoute>
                   }
                 >
-                  <Route path="/" element={<RootRedirect />} />
 
                   {/* Super Admin Routes */}
                   <Route

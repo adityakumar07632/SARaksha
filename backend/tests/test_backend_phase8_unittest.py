@@ -76,7 +76,7 @@ class TestBackendPhase8(unittest.TestCase):
             "gpsAccuracy": "±4.8m (Dual GNSS Lock)",
             "condition": cond,
             "notes": "Offline field test sync.",
-            "photoUrl": "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957",
+            "photoUrl": "/assets/evidence/cd012-upstream-checkdam.jpg",
             "sha256Hash": client_hash,
             "capturedAt": timestamp,
         }

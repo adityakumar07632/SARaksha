@@ -52,6 +52,7 @@ import { useData } from '../../context/DataContext';
 import { Badge } from '../../components/ui/Badge';
 import { DataSourceBadge } from '../../components/ui/DataSourceBadge';
 import { HealthScoreGauge } from '../../components/ui/HealthScoreGauge';
+import { EvidenceImage } from '../../components/ui/EvidenceImage';
 import { EvidenceChain } from '../../components/intervention/EvidenceChain';
 import { FieldEvidence, LifecycleStage, LifecycleStageDetail } from '../../types';
 import {
@@ -1215,11 +1216,18 @@ export const InterventionDetail: React.FC = () => {
               >
                 <div>
                   <div className="relative aspect-video bg-black group">
-                    <img src={item.photoUrl} alt={item.caption} className="w-full h-full object-cover" />
-                    <div className="absolute top-2 right-2">
+                    <EvidenceImage
+                      src={item.photoUrl}
+                      alt={item.caption}
+                      coordinates={item.coordinates}
+                      structureCode={item.interventionId}
+                      provenanceLabel="DEMO FIELD EVIDENCE"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-2 right-2 z-10">
                       <Badge status={item.verificationStatus} size="sm" />
                     </div>
-                    <div className="absolute bottom-2 left-2 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded text-[10px] font-mono text-emerald-300 border border-emerald-500/40">
+                    <div className="absolute bottom-2 left-2 z-10 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded text-[10px] font-mono text-emerald-300 border border-emerald-500/40">
                       📍 {item.coordinates[0].toFixed(4)}° N, {item.coordinates[1].toFixed(4)}° E &bull; {item.accuracyM || '±5m'}
                     </div>
                   </div>
@@ -1811,12 +1819,12 @@ export const InterventionDetail: React.FC = () => {
             {/* Split Slider Comparison */}
             <div className="relative rounded-2xl overflow-hidden border border-slate-700 aspect-video bg-black select-none max-w-4xl mx-auto">
               <img
-                src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1200&q=80"
-                alt="After intervention"
+                src="/assets/evidence/watershed-post-monsoon.jpg"
+                alt="After intervention (Post-monsoon monitored)"
                 className="w-full h-full object-cover"
               />
               <div className="absolute top-4 right-4 bg-emerald-950/90 border border-emerald-500/50 px-3 py-1.5 rounded-lg text-xs font-mono text-emerald-300 font-bold shadow-xl">
-                AFTER (POST-MONSOON)
+                AFTER (POST-MONSOON MONITORED)
               </div>
 
               <div
@@ -1824,13 +1832,13 @@ export const InterventionDetail: React.FC = () => {
                 style={{ width: `${sliderPos}%` }}
               >
                 <img
-                  src="https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=1200&q=80"
-                  alt="Before intervention"
-                  className="w-full h-full object-cover filter saturate-50 brightness-90 max-w-none"
+                  src="/assets/evidence/watershed-pre-construction.jpg"
+                  alt="Before intervention (Pre-construction baseline)"
+                  className="w-full h-full object-cover filter saturate-75 brightness-90 max-w-none"
                   style={{ width: '100%', minWidth: '100%' }}
                 />
                 <div className="absolute top-4 left-4 bg-amber-950/90 border border-amber-500/50 px-3 py-1.5 rounded-lg text-xs font-mono text-amber-300 font-bold shadow-xl">
-                  BEFORE (PRE-CONSTRUCTION)
+                  BEFORE (PRE-CONSTRUCTION BASELINE)
                 </div>
               </div>
 
@@ -2033,8 +2041,15 @@ export const InterventionDetail: React.FC = () => {
             </div>
 
             <div className="relative rounded-xl overflow-hidden aspect-video bg-black border border-slate-800">
-              <img src={selectedEvidenceForModal.photoUrl} alt={selectedEvidenceForModal.caption} className="w-full h-full object-cover" />
-              <div className="absolute bottom-2 left-2 bg-black/85 px-3 py-1.5 rounded-lg text-xs font-mono text-emerald-300 border border-emerald-500/40">
+              <EvidenceImage
+                src={selectedEvidenceForModal.photoUrl}
+                alt={selectedEvidenceForModal.caption}
+                coordinates={selectedEvidenceForModal.coordinates}
+                structureCode={selectedEvidenceForModal.interventionId}
+                provenanceLabel="DEMO FIELD EVIDENCE"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute bottom-2 left-2 z-10 bg-black/85 px-3 py-1.5 rounded-lg text-xs font-mono text-emerald-300 border border-emerald-500/40 backdrop-blur-xs">
                 📍 {selectedEvidenceForModal.coordinates[0].toFixed(6)}° N, {selectedEvidenceForModal.coordinates[1].toFixed(6)}° E &bull; Accuracy {selectedEvidenceForModal.accuracyM || '±5m (Simulated)'}
               </div>
             </div>

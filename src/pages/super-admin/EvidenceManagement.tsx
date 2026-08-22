@@ -4,6 +4,7 @@ import { MOCK_FIELD_EVIDENCE } from '../../data/mockData';
 import { FieldEvidence } from '../../types';
 import { Badge } from '../../components/ui/Badge';
 import { StatCard } from '../../components/ui/StatCard';
+import { EvidenceImage } from '../../components/ui/EvidenceImage';
 
 import { useData } from '../../context/DataContext';
 
@@ -115,15 +116,18 @@ export const EvidenceManagement: React.FC = () => {
           >
             <div>
               <div className="relative aspect-video bg-black">
-                <img
+                <EvidenceImage
                   src={item.photoUrl}
                   alt={item.caption}
+                  coordinates={item.coordinates}
+                  structureCode={item.interventionId}
+                  provenanceLabel="DEMO FIELD EVIDENCE"
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute top-2 right-2">
+                <div className="absolute top-2 right-2 z-10">
                   <Badge status={item.verificationStatus} size="sm" />
                 </div>
-                <div className="absolute bottom-2 left-2 bg-black/80 px-2.5 py-1 rounded text-[10px] font-mono text-emerald-300">
+                <div className="absolute bottom-2 left-2 z-10 bg-black/80 px-2.5 py-1 rounded text-[10px] font-mono text-emerald-300 backdrop-blur-xs">
                   📍 {item.coordinates[0].toFixed(4)}° N, {item.coordinates[1].toFixed(4)}° E
                 </div>
               </div>

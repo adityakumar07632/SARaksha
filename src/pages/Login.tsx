@@ -18,19 +18,37 @@ import { useAuth, DEMO_CREDENTIALS } from '../context/AuthContext';
 import { UserRole } from '../types';
 
 export const Login: React.FC = () => {
-  const { login } = useAuth();
+  const { login, isAuthenticated, role } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   const from = (location.state as any)?.from?.pathname || null;
+  const targetFrom = from && from !== '/' && from !== '/login' ? from : null;
 
   const [selectedRole, setSelectedRole] = useState<UserRole>('SUPER_ADMIN');
   const [email, setEmail] = useState('admin@saraksha.demo');
   const [password, setPassword] = useState('••••••••••••');
   const [showForgotNotice, setShowForgotNotice] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // If already authenticated and not explicitly redirected from a protected route, navigate to dashboard
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      if (targetFrom) {
+        navigate(targetFrom, { replace: true });
+      } else if (role === 'SUPER_ADMIN') {
+        navigate('/super-admin', { replace: true });
+      } else if (role === 'NORMAL_ADMIN') {
+        navigate('/dashboard', { replace: true });
+      } else {
+        navigate('/field-officer/dashboard', { replace: true });
+      }
+    }
+  }, [isAuthenticated, role, targetFrom, navigate]);
 
   const handleSelectDemoCredential = (role: UserRole) => {
     setSelectedRole(role);
+    setErrorMessage(null);
     const cred = DEMO_CREDENTIALS.find((c) => c.role === role);
     if (cred) {
       setEmail(cred.email);
@@ -39,19 +57,24 @@ export const Login: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    login(email, password);
+    setErrorMessage(null);
+    const success = login(email || selectedRole, password);
 
-    if (from) {
-      navigate(from, { replace: true });
-      return;
-    }
+    if (success) {
+      if (targetFrom) {
+        navigate(targetFrom, { replace: true });
+        return;
+      }
 
-    if (selectedRole === 'SUPER_ADMIN') {
-      navigate('/super-admin');
-    } else if (selectedRole === 'NORMAL_ADMIN') {
-      navigate('/dashboard');
+      if (selectedRole === 'SUPER_ADMIN') {
+        navigate('/super-admin', { replace: true });
+      } else if (selectedRole === 'NORMAL_ADMIN') {
+        navigate('/dashboard', { replace: true });
+      } else {
+        navigate('/field-officer/dashboard', { replace: true });
+      }
     } else {
-      navigate('/field-evidence');
+      setErrorMessage('Invalid credentials. Please select a valid demo role or enter valid credentials.');
     }
   };
 
@@ -163,6 +186,13 @@ export const Login: React.FC = () => {
               />
             </div>
           </div>
+
+          {errorMessage && (
+            <div className="p-3 rounded-xl bg-rose-950/40 border border-rose-500/40 text-rose-300 text-xs font-mono flex items-center gap-2">
+              <ShieldAlert className="h-4 w-4 shrink-0 text-rose-400" />
+              <span>{errorMessage}</span>
+            </div>
+          )}
 
           {showForgotNotice && (
             <div className="p-3 rounded-xl bg-amber-950/30 border border-amber-500/30 text-amber-300 text-xs font-mono flex items-center gap-2">

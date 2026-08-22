@@ -234,7 +234,7 @@ class MockFieldEvidenceRepository(IFieldEvidenceRepository):
                 "version": 1,
                 "parentEvidenceId": None,
                 "interventionId": "CD-012",
-                "photoUrl": "https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=1200&q=80",
+                "photoUrl": "/assets/evidence/cd012-upstream-checkdam.jpg",
                 "caption": "Masonry check dam body wall and downstream apron inspection.",
                 "coordinates": [27.5684, 76.6128],
                 "accuracyM": "±5m",

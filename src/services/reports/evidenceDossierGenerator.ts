@@ -152,7 +152,10 @@ export function generateEvidenceDossierHTML(payload: EvidenceDossierPayload): st
     <div class="section-title">4. Ground Field Evidence & Human Verification Sign-off</div>
     <div class="grid">
       <div class="card">
-        <div class="label">Ground Photographic Evidence</div>
+        <div class="label" style="display: flex; justify-content: space-between; align-items: center;">
+          <span>Ground Photographic Evidence</span>
+          <span style="font-size: 9px; color: #fbbf24; background: rgba(245, 158, 11, 0.15); padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(245, 158, 11, 0.3);">🟡 DEMO FIELD EVIDENCE</span>
+        </div>
         <div style="margin-top: 6px;">
           <img src="${evidence.photoUrl}" alt="Field Evidence" style="width: 100%; border-radius: 6px; aspect-ratio: 16/9; object-fit: cover;">
         </div>

@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="100%" height="100%">
+  <defs>
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#7dd3fc" />
+      <stop offset="60%" stop-color="#bae6fd" />
+      <stop offset="100%" stop-color="#e0f2fe" />
+    </linearGradient>
+    <linearGradient id="hillGrad1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#a1a1aa" />
+      <stop offset="100%" stop-color="#71717a" />
+    </linearGradient>
+    <linearGradient id="hillGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#b45309" />
+      <stop offset="100%" stop-color="#78350f" />
+    </linearGradient>
+    <linearGradient id="waterGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7" />
+      <stop offset="50%" stop-color="#0369a1" />
+      <stop offset="100%" stop-color="#075985" />
+    </linearGradient>
+    <linearGradient id="masonryGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#94a3b8" />
+      <stop offset="40%" stop-color="#64748b" />
+      <stop offset="100%" stop-color="#475569" />
+    </linearGradient>
+    <linearGradient id="groundGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ca8a04" />
+      <stop offset="60%" stop-color="#854d0e" />
+      <stop offset="100%" stop-color="#713f12" />
+    </linearGradient>
+    <pattern id="masonryPattern" width="40" height="20" patternUnits="userSpaceOnUse">
+      <rect width="40" height="20" fill="#64748b" stroke="#334155" stroke-width="1.5" />
+      <line x1="0" y1="10" x2="40" y2="10" stroke="#334155" stroke-width="1.5" />
+      <line x1="20" y1="0" x2="20" y2="10" stroke="#334155" stroke-width="1.5" />
+      <line x1="10" y1="10" x2="10" y2="20" stroke="#334155" stroke-width="1.5" />
+      <line x1="30" y1="10" x2="30" y2="20" stroke="#334155" stroke-width="1.5" />
+    </pattern>
+  </defs>
+
+  <!-- Sky -->
+  <rect width="1200" height="675" fill="url(#skyGrad)" />
+
+  <!-- Sun -->
+  <circle cx="950" cy="120" r="45" fill="#fef08a" opacity="0.85" />
+  <circle cx="950" cy="120" r="70" fill="#fef08a" opacity="0.25" />
+
+  <!-- Background Aravalli Hills -->
+  <path d="M0 320 Q 200 240, 450 280 T 900 250 T 1200 310 L 1200 450 L 0 450 Z" fill="url(#hillGrad1)" opacity="0.7" />
+  <path d="M0 340 Q 300 290, 600 330 T 1200 300 L 1200 480 L 0 480 Z" fill="url(#hillGrad2)" opacity="0.6" />
+
+  <!-- Dry deciduous trees & shrubs on hills -->
+  <g fill="#4d7c0f" opacity="0.75">
+    <circle cx="120" cy="330" r="18" />
+    <circle cx="140" cy="335" r="14" />
+    <circle cx="320" cy="310" r="22" />
+    <circle cx="350" cy="315" r="16" />
+    <circle cx="780" cy="290" r="25" />
+    <circle cx="810" cy="295" r="18" />
+    <circle cx="1050" cy="320" r="20" />
+  </g>
+
+  <!-- Sloping Stream Banks (Nala Banks) -->
+  <path d="M 0 380 Q 250 400, 320 460 L 300 675 L 0 675 Z" fill="url(#groundGrad)" />
+  <path d="M 1200 380 Q 950 400, 880 460 L 900 675 L 1200 675 Z" fill="url(#groundGrad)" />
+
+  <!-- Riprap stone pitching on left bank -->
+  <g fill="#78716c" stroke="#44403c" stroke-width="1">
+    <ellipse cx="180" cy="460" rx="25" ry="15" />
+    <ellipse cx="225" cy="480" rx="30" ry="18" />
+    <ellipse cx="160" cy="510" rx="28" ry="16" />
+    <ellipse cx="210" cy="540" rx="35" ry="20" />
+    <ellipse cx="260" cy="520" rx="26" ry="16" />
+    <ellipse cx="180" cy="590" rx="32" ry="19" />
+    <ellipse cx="240" cy="610" rx="38" ry="22" />
+  </g>
+
+  <!-- Riprap stone pitching on right bank -->
+  <g fill="#78716c" stroke="#44403c" stroke-width="1">
+    <ellipse cx="1020" cy="460" rx="25" ry="15" />
+    <ellipse cx="975" cy="480" rx="30" ry="18" />
+    <ellipse cx="1040" cy="510" rx="28" ry="16" />
+    <ellipse cx="990" cy="540" rx="35" ry="20" />
+    <ellipse cx="940" cy="520" rx="26" ry="16" />
+    <ellipse cx="1020" cy="590" rx="32" ry="19" />
+    <ellipse cx="960" cy="610" rx="38" ry="22" />
+  </g>
+
+  <!-- Upstream Water Reservoir / Ponding Area -->
+  <path d="M 280 430 Q 600 410, 920 430 L 900 520 Q 600 535, 300 520 Z" fill="url(#waterGrad)" />
+  
+  <!-- Water ripples and reflections -->
+  <ellipse cx="600" cy="460" rx="220" ry="12" fill="#38bdf8" opacity="0.4" />
+  <ellipse cx="550" cy="485" rx="180" ry="8" fill="#7dd3fc" opacity="0.5" />
+  <ellipse cx="640" cy="445" rx="140" ry="6" fill="#e0f2fe" opacity="0.6" />
+
+  <!-- Masonry Check Dam Structure (CD-012) -->
+  <!-- Left Wing Wall -->
+  <polygon points="260,430 380,430 360,570 240,570" fill="url(#masonryPattern)" />
+  <polygon points="260,430 380,430 360,570 240,570" fill="url(#masonryGrad)" opacity="0.3" stroke="#1e293b" stroke-width="2" />
+
+  <!-- Right Wing Wall -->
+  <polygon points="820,430 940,430 960,570 840,570" fill="url(#masonryPattern)" />
+  <polygon points="820,430 940,430 960,570 840,570" fill="url(#masonryGrad)" opacity="0.3" stroke="#1e293b" stroke-width="2" />
+
+  <!-- Central Masonry Spillway Crest / Ogee Section -->
+  <polygon points="380,460 820,460 840,570 360,570" fill="url(#masonryPattern)" />
+  <polygon points="380,460 820,460 840,570 360,570" fill="url(#masonryGrad)" opacity="0.25" stroke="#0f172a" stroke-width="2.5" />
+
+  <!-- Central Spillway Notch Top Cap (Concrete Coping) -->
+  <rect x="370" y="452" width="460" height="12" rx="3" fill="#cbd5e1" stroke="#334155" stroke-width="2" />
+
+  <!-- Water overflowing over central notch -->
+  <path d="M 440 460 Q 600 462, 760 460 L 770 530 Q 600 545, 430 530 Z" fill="#38bdf8" opacity="0.8" />
+  <path d="M 460 464 Q 600 468, 740 464 L 750 515 Q 600 525, 450 515 Z" fill="#bae6fd" opacity="0.7" />
+
+  <!-- Downstream Stilling Basin / Apron -->
+  <polygon points="320,570 880,570 950,675 250,675" fill="#475569" stroke="#1e293b" stroke-width="2" />
+  <polygon points="320,570 880,570 950,675 250,675" fill="url(#masonryPattern)" opacity="0.4" />
+
+  <!-- Stilling Basin Splash & Foam -->
+  <ellipse cx="600" cy="575" rx="160" ry="14" fill="#f8fafc" opacity="0.85" />
+  <ellipse cx="580" cy="582" rx="120" ry="8" fill="#e0f2fe" opacity="0.9" />
+
+  <!-- Downstream Shallow Water Flow -->
+  <path d="M 420 580 Q 600 590, 780 580 L 850 675 L 350 675 Z" fill="#0284c7" opacity="0.75" />
+  <path d="M 480 600 Q 600 608, 720 600 L 780 675 L 420 675 Z" fill="#38bdf8" opacity="0.5" />
+
+  <!-- Gauge Staff / Water Level Measuring Marker on Left Wall -->
+  <rect x="365" y="420" width="10" height="90" fill="#f8fafc" stroke="#0f172a" stroke-width="1.5" />
+  <line x1="365" y1="435" x2="375" y2="435" stroke="#ef4444" stroke-width="2" />
+  <line x1="365" y1="450" x2="375" y2="450" stroke="#0f172a" stroke-width="1.5" />
+  <line x1="365" y1="465" x2="375" y2="465" stroke="#ef4444" stroke-width="2" />
+  <line x1="365" y1="480" x2="375" y2="480" stroke="#0f172a" stroke-width="1.5" />
+  <line x1="365" y1="495" x2="375" y2="495" stroke="#ef4444" stroke-width="2" />
+  <text x="350" y="440" fill="#f8fafc" font-size="9" font-family="monospace" font-weight="bold">1.8m</text>
+
+  <!-- Green vegetative buffer on outer embankments -->
+  <g fill="#15803d">
+    <circle cx="280" cy="410" r="14" />
+    <circle cx="260" cy="420" r="18" />
+    <circle cx="240" cy="405" r="12" />
+    <circle cx="920" cy="410" r="16" />
+    <circle cx="945" cy="420" r="14" />
+    <circle cx="970" cy="405" r="18" />
+  </g>
+
+  <!-- ISRO / GIS Field Camera Inspection HUD Overlay -->
+  <!-- Top Banner: Provenance Classification -->
+  <rect x="24" y="24" width="460" height="38" rx="8" fill="#0f172a" fill-opacity="0.9" stroke="#f59e0b" stroke-width="1.5" />
+  <circle cx="44" cy="43" r="6" fill="#f59e0b" />
+  <text x="60" y="47" fill="#fbbf24" font-size="13" font-family="monospace" font-weight="900" letter-spacing="1">DEMO FIELD EVIDENCE &bull; SIMULATED</text>
+
+  <!-- Top Right Camera Metadata -->
+  <rect x="880" y="24" width="296" height="64" rx="8" fill="#0f172a" fill-opacity="0.9" stroke="#334155" stroke-width="1" />
+  <text x="896" y="46" fill="#10b981" font-size="11" font-family="monospace" font-weight="bold">STRUCTURE: CD-012 (MASONRY)</text>
+  <text x="896" y="62" fill="#94a3b8" font-size="10" font-family="monospace">VIEW: UPSTREAM RESERVOIR &amp; CREST</text>
+  <text x="896" y="78" fill="#64748b" font-size="10" font-family="monospace">INSPECTION DATE: 2026-08-14 10:42 IST</text>
+
+  <!-- Bottom Left GNSS Lock & Location Telemetry -->
+  <rect x="24" y="587" width="380" height="64" rx="8" fill="#0f172a" fill-opacity="0.9" stroke="#334155" stroke-width="1" />
+  <text x="40" y="610" fill="#38bdf8" font-size="11" font-family="monospace" font-weight="bold">GNSS: 27.5684° N, 76.6128° E (&plusmn;3.2m)</text>
+  <text x="40" y="626" fill="#94a3b8" font-size="10" font-family="monospace">WATERSHED: WS-001 (Alwar North Catchment)</text>
+  <text x="40" y="642" fill="#10b981" font-size="10" font-family="monospace">AI CONDITION: INTACT &bull; WATER HEAD 1.8M</text>
+
+  <!-- Bottom Right SHA-256 Seal Tag -->
+  <rect x="860" y="615" width="316" height="36" rx="6" fill="#0f172a" fill-opacity="0.9" stroke="#10b981" stroke-width="1" />
+  <text x="874" y="637" fill="#10b981" font-size="10" font-family="monospace" font-weight="bold">SHA-256 SEAL: 8f9b2c...7e1a (VERIFIED)</text>
+</svg>

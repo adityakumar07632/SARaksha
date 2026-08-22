@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="100%" height="100%">
+  <defs>
+    <linearGradient id="skyGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="60%" stop-color="#bae6fd" />
+      <stop offset="100%" stop-color="#f0f9ff" />
+    </linearGradient>
+    <linearGradient id="fieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#15803d" />
+      <stop offset="60%" stop-color="#166534" />
+      <stop offset="100%" stop-color="#14532d" />
+    </linearGradient>
+    <linearGradient id="channelGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0284c7" />
+      <stop offset="50%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+    <linearGradient id="sandBank" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#d97706" />
+      <stop offset="100%" stop-color="#92400e" />
+    </linearGradient>
+  </defs>
+
+  <!-- Sky -->
+  <rect width="1200" height="675" fill="url(#skyGrad2)" />
+
+  <!-- Sun -->
+  <circle cx="250" cy="110" r="40" fill="#fef08a" opacity="0.9" />
+
+  <!-- Distant Hill Ridge -->
+  <path d="M0 260 Q 300 210, 650 250 T 1200 230 L 1200 380 L 0 380 Z" fill="#94a3b8" opacity="0.6" />
+
+  <!-- Distant Masonry Check Dam (CD-012 Upstream structure in distance) -->
+  <rect x="520" y="270" width="160" height="24" fill="#64748b" stroke="#334155" stroke-width="1.5" />
+  <rect x="550" y="276" width="100" height="18" fill="#475569" />
+  <path d="M 550 294 Q 600 300, 650 294 L 660 320 Q 600 325, 540 320 Z" fill="#0284c7" />
+
+  <!-- Agricultural Fields & Vegetative Buffer Zone on Left Bank -->
+  <path d="M0 310 L 460 310 L 380 675 L 0 675 Z" fill="url(#fieldGrad)" />
+  
+  <!-- Furrow lines / crop rows -->
+  <g stroke="#14532d" stroke-width="2" opacity="0.4">
+    <line x1="0" y1="360" x2="440" y2="360" />
+    <line x1="0" y1="410" x2="420" y2="410" />
+    <line x1="0" y1="470" x2="400" y2="470" />
+    <line x1="0" y1="540" x2="380" y2="540" />
+    <line x1="0" y1="620" x2="360" y2="620" />
+  </g>
+
+  <!-- Agricultural Fields & Vegetative Buffer Zone on Right Bank -->
+  <path d="M 1200 310 L 740 310 L 820 675 L 1200 675 Z" fill="url(#fieldGrad)" />
+  <g stroke="#14532d" stroke-width="2" opacity="0.4">
+    <line x1="1200" y1="360" x2="760" y2="360" />
+    <line x1="1200" y1="410" x2="780" y2="410" />
+    <line x1="1200" y1="470" x2="800" y2="470" />
+    <line x1="1200" y1="540" x2="820" y2="540" />
+    <line x1="1200" y1="620" x2="840" y2="620" />
+  </g>
+
+  <!-- Downstream Stream Bed & Sand Banks -->
+  <polygon points="460,310 740,310 820,675 380,675" fill="url(#sandBank)" />
+
+  <!-- Sinuous Moist Water Channel -->
+  <path d="M 580 310 Q 640 420, 520 500 Q 460 560, 560 675 L 680 675 Q 580 560, 640 500 Q 760 420, 620 310 Z" fill="url(#channelGrad)" />
+
+  <!-- Flow ripples -->
+  <path d="M 570 420 Q 610 440, 650 420" stroke="#e0f2fe" stroke-width="3" fill="none" opacity="0.7" />
+  <path d="M 510 520 Q 560 540, 600 520" stroke="#e0f2fe" stroke-width="4" fill="none" opacity="0.8" />
+  <path d="M 540 610 Q 600 630, 650 610" stroke="#e0f2fe" stroke-width="4" fill="none" opacity="0.8" />
+
+  <!-- Lush Riparian Bushes / Grass Buffer Strip along Channel Edges -->
+  <g fill="#22c55e" opacity="0.9">
+    <!-- Left bank bushes -->
+    <circle cx="460" cy="330" r="16" />
+    <circle cx="440" cy="370" r="22" />
+    <circle cx="425" cy="420" r="26" />
+    <circle cx="410" cy="480" r="30" />
+    <circle cx="390" cy="550" r="34" />
+    <circle cx="370" cy="630" r="38" />
+
+    <!-- Right bank bushes -->
+    <circle cx="730" cy="330" r="16" />
+    <circle cx="750" cy="370" r="22" />
+    <circle cx="770" cy="420" r="26" />
+    <circle cx="790" cy="480" r="30" />
+    <circle cx="810" cy="550" r="34" />
+    <circle cx="830" cy="630" r="38" />
+  </g>
+
+  <g fill="#16a34a">
+    <circle cx="450" cy="380" r="15" />
+    <circle cx="430" cy="440" r="20" />
+    <circle cx="410" cy="500" r="24" />
+    <circle cx="380" cy="580" r="28" />
+    <circle cx="740" cy="380" r="15" />
+    <circle cx="760" cy="440" r="20" />
+    <circle cx="780" cy="500" r="24" />
+    <circle cx="810" cy="580" r="28" />
+  </g>
+
+  <!-- Trees in Farm Field -->
+  <g fill="#15803d">
+    <!-- Left field Neem tree -->
+    <rect x="180" y="440" width="14" height="60" fill="#78350f" rx="3" />
+    <circle cx="187" cy="420" r="45" fill="#15803d" />
+    <circle cx="165" cy="405" r="35" fill="#16a34a" />
+    <circle cx="210" cy="410" r="35" fill="#166534" />
+
+    <!-- Right field Babul tree -->
+    <rect x="1010" y="440" width="14" height="60" fill="#78350f" rx="3" />
+    <circle cx="1017" cy="420" r="45" fill="#15803d" />
+    <circle cx="995" cy="405" r="35" fill="#16a34a" />
+    <circle cx="1040" cy="410" r="35" fill="#166534" />
+  </g>
+
+  <!-- ISRO / GIS Field Camera Inspection HUD Overlay -->
+  <!-- Top Banner: Provenance Classification -->
+  <rect x="24" y="24" width="460" height="38" rx="8" fill="#0f172a" fill-opacity="0.9" stroke="#f59e0b" stroke-width="1.5" />
+  <circle cx="44" cy="43" r="6" fill="#f59e0b" />
+  <text x="60" y="47" fill="#fbbf24" font-size="13" font-family="monospace" font-weight="900" letter-spacing="1">DEMO FIELD EVIDENCE &bull; SIMULATED</text>
+
+  <!-- Top Right Camera Metadata -->
+  <rect x="880" y="24" width="296" height="64" rx="8" fill="#0f172a" fill-opacity="0.9" stroke="#334155" stroke-width="1" />
+  <text x="896" y="46" fill="#10b981" font-size="11" font-family="monospace" font-weight="bold">TARGET: CD-012 DOWNSTREAM BUFFER</text>
+  <text x="896" y="62" fill="#94a3b8" font-size="10" font-family="monospace">VEGETATION: REGENERATING (NDVI 0.54)</text>
+  <text x="896" y="78" fill="#64748b" font-size="10" font-family="monospace">INSPECTION DATE: 2026-08-14 11:15 IST</text>
+
+  <!-- Bottom Left GNSS Lock & Location Telemetry -->
+  <rect x="24" y="587" width="380" height="64" rx="8" fill="#0f172a" fill-opacity="0.9" stroke="#334155" stroke-width="1" />
+  <text x="40" y="610" fill="#38bdf8" font-size="11" font-family="monospace" font-weight="bold">GNSS: 27.5689° N, 76.6134° E (&plusmn;2.8m)</text>
+  <text x="40" y="626" fill="#94a3b8" font-size="10" font-family="monospace">SECTOR: DOWNSTREAM BUFFER (150m)</text>
+  <text x="40" y="642" fill="#10b981" font-size="10" font-family="monospace">MOISTURE STATUS: SUSTAINED CHANNEL FLOW</text>
+
+  <!-- Bottom Right SHA-256 Seal Tag -->
+  <rect x="860" y="615" width="316" height="36" rx="6" fill="#0f172a" fill-opacity="0.9" stroke="#10b981" stroke-width="1" />
+  <text x="874" y="637" fill="#10b981" font-size="10" font-family="monospace" font-weight="bold">SHA-256 SEAL: 4c3d8a...9f2b (VERIFIED)</text>
+</svg>

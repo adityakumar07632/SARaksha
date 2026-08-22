@@ -140,7 +140,7 @@ class OfflineStore {
       gpsAccuracy: data.gpsAccuracy,
       condition: data.condition,
       notes: data.notes,
-      photoUrl: data.photoUrl || 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1200&q=80',
+      photoUrl: data.photoUrl || '/assets/evidence/cd012-upstream-checkdam.jpg',
       sha256Hash: hash,
       syncStatus: isOffline ? 'PENDING' : 'PENDING',
       retryCount: 0,

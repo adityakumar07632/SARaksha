@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="100%" height="100%">
+  <defs>
+    <linearGradient id="drySkyPre" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="60%" stop-color="#ffedd5" />
+      <stop offset="100%" stop-color="#fed7aa" />
+    </linearGradient>
+    <linearGradient id="aridGround" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#a8a29e" />
+      <stop offset="40%" stop-color="#78716c" />
+      <stop offset="100%" stop-color="#57534e" />
+    </linearGradient>
+    <linearGradient id="gullyErosion" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#78350f" />
+      <stop offset="100%" stop-color="#451a03" />
+    </linearGradient>
+  </defs>
+
+  <!-- Hazy dry sky -->
+  <rect width="1200" height="675" fill="url(#drySkyPre)" />
+
+  <!-- Scorching Sun -->
+  <circle cx="950" cy="120" r="55" fill="#facc15" opacity="0.9" />
+
+  <!-- Parched Denuded Hills -->
+  <path d="M0 310 Q 300 240, 600 290 T 1200 260 L 1200 450 L 0 450 Z" fill="#a8a29e" opacity="0.8" />
+  <path d="M0 340 Q 350 280, 700 330 T 1200 300 L 1200 480 L 0 480 Z" fill="#78716c" opacity="0.9" />
+
+  <!-- Degraded eroded landscape -->
+  <polygon points="0,420 1200,420 1200,675 0,675" fill="url(#aridGround)" />
+
+  <!-- Deep Eroded Gully & Dry Riverbed (Pre-construction - No check dam) -->
+  <polygon points="460,420 740,420 850,675 350,675" fill="url(#gullyErosion)" />
+
+  <!-- Bare rocks and boulders in dry gully bed -->
+  <g fill="#57534e" stroke="#292524" stroke-width="1.5">
+    <ellipse cx="580" cy="460" rx="35" ry="18" />
+    <ellipse cx="660" cy="480" rx="28" ry="15" />
+    <ellipse cx="520" cy="520" rx="42" ry="22" />
+    <ellipse cx="610" cy="560" rx="50" ry="25" />
+    <ellipse cx="700" cy="540" rx="36" ry="18" />
+    <ellipse cx="540" cy="620" rx="60" ry="28" />
+    <ellipse cx="670" cy="630" rx="55" ry="26" />
+  </g>
+
+  <!-- Severely stunted withered scrub -->
+  <g fill="#713f12">
+    <circle cx="240" cy="460" r="14" />
+    <circle cx="270" cy="470" r="10" />
+    <circle cx="940" cy="460" r="12" />
+    <circle cx="980" cy="475" r="15" />
+    <circle cx="180" cy="560" r="18" />
+    <circle cx="1020" cy="570" r="16" />
+  </g>
+
+  <!-- Top Banner -->
+  <rect x="24" y="24" width="460" height="38" rx="8" fill="#0f172a" fill-opacity="0.9" stroke="#f59e0b" stroke-width="1.5" />
+  <circle cx="44" cy="43" r="6" fill="#f59e0b" />
+  <text x="60" y="47" fill="#fbbf24" font-size="13" font-family="monospace" font-weight="900" letter-spacing="1">PRE-CONSTRUCTION BASELINE &bull; MAR 2024</text>
+
+  <!-- Telemetry HUD -->
+  <rect x="24" y="587" width="380" height="64" rx="8" fill="#0f172a" fill-opacity="0.9" stroke="#334155" stroke-width="1" />
+  <text x="40" y="610" fill="#fbbf24" font-size="11" font-family="monospace" font-weight="bold">TARGET: CD-012 LOCATION (PROPOSED)</text>
+  <text x="40" y="626" fill="#94a3b8" font-size="10" font-family="monospace">BASELINE NDVI: 0.12 &bull; DEGRADED GULLY</text>
+  <text x="40" y="642" fill="#ef4444" font-size="10" font-family="monospace">SOIL CONDITION: SEVERE RUNOFF &amp; EROSION</text>
+</svg>

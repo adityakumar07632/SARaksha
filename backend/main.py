@@ -94,7 +94,7 @@ class SyncEvidenceRequest(BaseModel):
     gpsAccuracy: str = "±4.8m (Dual GNSS Lock)"
     condition: str = "HEALTHY"
     notes: str = "Routine inspection."
-    photoUrl: Optional[str] = "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1200&q=80"
+    photoUrl: Optional[str] = "/assets/evidence/cd012-upstream-checkdam.jpg"
     sha256Hash: str = Field(..., description="Client-computed SHA-256 tamper-evident digest")
     capturedAt: str = Field(..., description="ISO timestamp of offline field capture")
 

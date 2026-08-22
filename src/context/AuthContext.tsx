@@ -48,14 +48,17 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Session initialization from local storage or default null
+  // Session initialization: check sessionStorage (tab session) or localStorage (persisted session)
   const [currentUser, setCurrentUser] = useState<User | null>(() => {
-    const savedUserId = localStorage.getItem('saraksha_user_id');
-    if (savedUserId) {
-      return MOCK_USERS.find((u) => u.id === savedUserId) || null;
+    if (typeof window !== 'undefined') {
+      const savedUserId =
+        sessionStorage.getItem('saraksha_user_id') ||
+        localStorage.getItem('saraksha_user_id');
+      if (savedUserId) {
+        return MOCK_USERS.find((u) => u.id === savedUserId) || null;
+      }
     }
-    // Default authenticated with Super Admin in development demo for convenience
-    return MOCK_USERS[0];
+    return null;
   });
 
   const isDemoMode = true; // Prototype mode
@@ -63,16 +66,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const isAuthenticated = !!currentUser;
 
   useEffect(() => {
-    if (currentUser) {
-      localStorage.setItem('saraksha_user_id', currentUser.id);
-      localStorage.setItem('saraksha_user_role', currentUser.role);
-    } else {
-      localStorage.removeItem('saraksha_user_id');
-      localStorage.removeItem('saraksha_user_role');
+    if (typeof window !== 'undefined') {
+      if (currentUser) {
+        sessionStorage.setItem('saraksha_user_id', currentUser.id);
+        sessionStorage.setItem('saraksha_user_role', currentUser.role);
+        localStorage.setItem('saraksha_user_id', currentUser.id);
+        localStorage.setItem('saraksha_user_role', currentUser.role);
+      } else {
+        sessionStorage.removeItem('saraksha_user_id');
+        sessionStorage.removeItem('saraksha_user_role');
+        localStorage.removeItem('saraksha_user_id');
+        localStorage.removeItem('saraksha_user_role');
+      }
     }
   }, [currentUser]);
 
   const login = (identifier: string | UserRole, _password?: string): boolean => {
+    if (!identifier) return false;
+
     // 1. Check if identifier matches a UserRole directly
     let matchedUser = MOCK_USERS.find((u) => u.role === identifier);
 
@@ -98,15 +109,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return true;
     }
 
-    // Fallback: match by role
-    setCurrentUser(MOCK_USERS[0]);
-    return true;
+    return false;
   };
 
   const logout = () => {
     setCurrentUser(null);
-    localStorage.removeItem('saraksha_user_id');
-    localStorage.removeItem('saraksha_user_role');
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('saraksha_user_id');
+      sessionStorage.removeItem('saraksha_user_role');
+      sessionStorage.clear();
+      localStorage.removeItem('saraksha_user_id');
+      localStorage.removeItem('saraksha_user_role');
+    }
   };
 
   const switchDemoRole = (newRole: UserRole) => {
