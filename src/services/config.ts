@@ -1,19 +1,24 @@
 /**
  * SARaksha Global Service Configuration
- * Provides environment-aware API URL resolution for local development and production Vercel deployment.
+ * Provides environment-aware API URL resolution for local development and production deployment.
  */
 
 export function getApiBaseUrl(): string {
-  // If explicitly configured in environment (e.g. VITE_RASTER_API_URL="https://my-backend.com" or "http://localhost:8000")
-  if (typeof import.meta !== 'undefined' && import.meta.env?.VITE_RASTER_API_URL !== undefined) {
-    return import.meta.env.VITE_RASTER_API_URL;
+  // 1. Primary standard environment variable for backend API URL (e.g. Railway backend: https://<your-app>.up.railway.app)
+  if (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_BASE_URL) {
+    return import.meta.env.VITE_API_BASE_URL.replace(/\/+$/, '');
   }
 
-  // In production builds on Vercel (same-origin serverless API), default to empty string so /api/... is relative
+  // 2. Alternative / backward-compatible env variable
+  if (typeof import.meta !== 'undefined' && import.meta.env?.VITE_RASTER_API_URL) {
+    return import.meta.env.VITE_RASTER_API_URL.replace(/\/+$/, '');
+  }
+
+  // 3. In production builds with same-origin or proxy routing, return empty string
   if (typeof import.meta !== 'undefined' && import.meta.env?.PROD) {
     return '';
   }
 
-  // In local development or testing, default to local FastAPI server
+  // 4. In local development or testing, default to local FastAPI server
   return 'http://localhost:8000';
 }
