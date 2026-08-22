@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useAuth, DEMO_CREDENTIALS } from '../context/AuthContext';
 import { UserRole } from '../types';
+import { SARakshaLogo } from '../components/branding/SARakshaLogo';
 
 export const Login: React.FC = () => {
   const { login, isAuthenticated, role } = useAuth();
@@ -93,17 +94,9 @@ export const Login: React.FC = () => {
       <div className="w-full max-w-lg rounded-3xl border border-slate-800 bg-slate-900/90 p-4 sm:p-8 shadow-2xl backdrop-blur-xl">
         {/* Header Branding */}
         <div className="text-center mb-5 sm:mb-6">
-          <div className="inline-flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 shadow-xl shadow-emerald-950/50 mb-3 border border-emerald-400/30">
-            <ShieldCheck className="h-7 w-7 sm:h-9 sm:w-9 text-white" />
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white font-mono">
-            SARaksha
-          </h1>
-          <p className="text-xs font-mono font-bold text-emerald-400 mt-1 uppercase tracking-wider">
-            Smart Watershed Monitoring & Evidence System
-          </p>
-          <p className="text-xs text-slate-400 mt-2 font-sans italic">
-            "One connected investigation from map to decision with evidence at every step."
+          <SARakshaLogo variant="full" size="md" priority className="mb-3 max-w-[340px] sm:max-w-[400px] mx-auto" />
+          <p className="text-xs text-slate-300 font-mono tracking-tight max-w-sm mx-auto">
+            "Smart watershed monitoring, evidence verification and decision intelligence."
           </p>
         </div>
 

@@ -7,6 +7,7 @@ import { Layout } from './components/layout/Layout';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { AccessDenied } from './pages/AccessDenied';
 import { Loader2 } from 'lucide-react';
+import { SARakshaLogo } from './components/branding/SARakshaLogo';
 
 // Lazy-loaded Pages for bundle performance
 const Login = lazy(() => import('./pages/Login').then((m) => ({ default: m.Login })));
@@ -56,11 +57,23 @@ const SyncQueue = lazy(() =>
 
 // Loading Fallback Component
 const RouteLoadingFallback: React.FC = () => (
-  <div className="flex flex-col items-center justify-center min-h-[400px] w-full gap-3 font-mono">
-    <Loader2 className="h-8 w-8 text-emerald-400 animate-spin" />
-    <span className="text-xs text-slate-400 uppercase tracking-widest font-bold">
-      Loading Geospatial Intelligence...
-    </span>
+  <div className="flex flex-col items-center justify-center min-h-[450px] w-full gap-4 font-mono p-6 select-none">
+    <SARakshaLogo variant="icon" size="lg" priority />
+    <div className="text-center space-y-1">
+      <span className="text-base font-black text-white font-mono tracking-wider block">
+        SARaksha
+      </span>
+      <span className="text-[10px] text-cyan-400 font-bold uppercase tracking-widest block">
+        SMART WATERSHED MONITORING SYSTEM
+      </span>
+      <span className="text-[9px] text-slate-400 font-mono tracking-wider block pt-0.5">
+        MONITOR &bull; VERIFY &bull; PROTECT
+      </span>
+    </div>
+    <div className="flex items-center gap-2 text-xs text-emerald-400 pt-2">
+      <Loader2 className="h-4 w-4 animate-spin text-emerald-400" />
+      <span className="text-[11px] text-slate-400">Loading Geospatial Intelligence...</span>
+    </div>
   </div>
 );
 

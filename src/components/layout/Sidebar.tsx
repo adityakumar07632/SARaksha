@@ -14,6 +14,7 @@ import {
   X,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { SARakshaLogo } from '../branding/SARakshaLogo';
 
 interface SidebarProps {
   mobileOpen?: boolean;
@@ -64,18 +65,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen = false, onClose })
 
   const renderNavContent = (isMobile = false) => (
     <>
-      <div className="space-y-6">
+      <div className="space-y-5">
+        {/* Desktop Sidebar Branding (Top) */}
+        {!isMobile && (
+          <div className="border-b border-slate-800/80 pb-3.5 pt-1">
+            <SARakshaLogo variant="compact" size="sm" priority />
+          </div>
+        )}
+
         {/* Mobile Header with Close Button */}
         {isMobile && (
           <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-            <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 font-bold text-xs">
-                🛡
-              </div>
-              <span className="font-extrabold text-white font-mono text-sm tracking-tight">
-                SARaksha Menu
-              </span>
-            </div>
+            <SARakshaLogo variant="compact" size="xs" priority />
             <button
               onClick={onClose}
               className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"

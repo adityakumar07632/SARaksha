@@ -14,6 +14,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { UserRole } from '../../types';
+import { SARakshaLogo } from '../branding/SARakshaLogo';
 
 interface HeaderProps {
   onToggleMobileNav?: () => void;
@@ -97,22 +98,25 @@ export const Header: React.FC<HeaderProps> = ({ onToggleMobileNav }) => {
 
         <Link
           to={role === 'SUPER_ADMIN' ? '/super-admin' : '/dashboard'}
-          className="flex items-center gap-2 sm:gap-2.5 group shrink-0"
+          className="flex items-center gap-2 group shrink-0"
+          aria-label="SARaksha Home"
         >
-          <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-teal-700 shadow-md group-hover:scale-105 transition-transform shrink-0">
-            <ShieldCheck className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+          {/* Desktop Compact Logo */}
+          <div className="hidden sm:flex items-center gap-2">
+            <SARakshaLogo variant="compact" size="sm" priority />
+            <span className="text-[9px] uppercase font-bold tracking-widest px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+              PROTOTYPE
+            </span>
           </div>
-          <div className="flex flex-col">
-            <div className="flex items-center gap-1 sm:gap-1.5">
-              <span className="text-sm sm:text-base font-black tracking-tight text-white font-mono">
-                SARaksha
-              </span>
-              <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-widest px-1 sm:px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                PROTOTYPE
-              </span>
-            </div>
-            <span className="text-[10px] text-slate-400 -mt-0.5 hidden md:inline">
-              Smart Watershed Monitoring System
+
+          {/* Mobile Icon + Wordmark */}
+          <div className="flex sm:hidden items-center gap-1.5">
+            <SARakshaLogo variant="icon" size="sm" priority />
+            <span className="text-sm font-black tracking-tight text-white font-mono">
+              SARaksha
+            </span>
+            <span className="text-[8px] uppercase font-bold px-1 py-0.2 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+              DEMO
             </span>
           </div>
         </Link>
