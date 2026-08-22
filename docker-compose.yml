@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  # 1. PostgreSQL 16 + PostGIS Spatial Database
+  postgres:
+    image: postgis/postgis:16-3.4-alpine
+    container_name: saraksha-postgis
+    restart: always
+    environment:
+      POSTGRES_DB: saraksha_gis
+      POSTGRES_USER: saraksha
+      POSTGRES_PASSWORD: saraksha_secure_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/database/schema.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U saraksha -d saraksha_gis"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 2. SARaksha FastAPI Raster Intelligence & Alert Backend
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: saraksha-backend
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PORT: 8000
+      APP_ENV: production
+      DATABASE_URL: postgresql://saraksha:saraksha_secure_pass@postgres:5432/saraksha_gis
+      STAC_API_URL: https://earth-search.aws.element84.com/v1
+      STAC_COLLECTION: sentinel-2-l2a
+      NOTIFICATION_PROVIDER: console
+    ports:
+      - "8000:8000"
+
+  # 3. SARaksha React Vite Frontend
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: saraksha-frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "5173:80"
+    environment:
+      VITE_API_BASE_URL: http://localhost:8000
+      VITE_RASTER_API_URL: http://localhost:8000
+      VITE_STAC_API_URL: https://earth-search.aws.element84.com/v1
+
+volumes:
+  postgres_data:

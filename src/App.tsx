@@ -1,0 +1,252 @@
+import React, { Suspense, lazy } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
+import { DataProvider } from './context/DataContext';
+import { Layout } from './components/layout/Layout';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import { AccessDenied } from './pages/AccessDenied';
+import { Loader2 } from 'lucide-react';
+
+// Lazy-loaded Pages for bundle performance
+const Login = lazy(() => import('./pages/Login').then((m) => ({ default: m.Login })));
+const SuperAdminDashboard = lazy(() =>
+  import('./pages/super-admin/SuperAdminDashboard').then((m) => ({ default: m.SuperAdminDashboard }))
+);
+const UsersManagement = lazy(() =>
+  import('./pages/super-admin/UsersManagement').then((m) => ({ default: m.UsersManagement }))
+);
+const WatershedsList = lazy(() =>
+  import('./pages/super-admin/WatershedsList').then((m) => ({ default: m.WatershedsList }))
+);
+const EvidenceManagement = lazy(() =>
+  import('./pages/super-admin/EvidenceManagement').then((m) => ({ default: m.EvidenceManagement }))
+);
+const AlertsCenter = lazy(() =>
+  import('./pages/super-admin/AlertsCenter').then((m) => ({ default: m.AlertsCenter }))
+);
+const AnalyticsView = lazy(() =>
+  import('./pages/super-admin/AnalyticsView').then((m) => ({ default: m.AnalyticsView }))
+);
+const ReportsView = lazy(() =>
+  import('./pages/super-admin/ReportsView').then((m) => ({ default: m.ReportsView }))
+);
+
+const NormalUserDashboard = lazy(() =>
+  import('./pages/dashboard/NormalUserDashboard').then((m) => ({ default: m.NormalUserDashboard }))
+);
+const WatershedDetail = lazy(() =>
+  import('./pages/watershed/WatershedDetail').then((m) => ({ default: m.WatershedDetail }))
+);
+const InterventionDetail = lazy(() =>
+  import('./pages/intervention/InterventionDetail').then((m) => ({ default: m.InterventionDetail }))
+);
+const FieldOfficerEvidence = lazy(() =>
+  import('./pages/field-officer/FieldOfficerEvidence').then((m) => ({ default: m.FieldOfficerEvidence }))
+);
+const FieldOfficerDashboard = lazy(() =>
+  import('./pages/field-officer/FieldOfficerDashboard').then((m) => ({ default: m.FieldOfficerDashboard }))
+);
+const FieldInspection = lazy(() =>
+  import('./pages/field-officer/FieldInspection').then((m) => ({ default: m.FieldInspection }))
+);
+const SyncQueue = lazy(() =>
+  import('./pages/field-officer/SyncQueue').then((m) => ({ default: m.SyncQueue }))
+);
+
+// Loading Fallback Component
+const RouteLoadingFallback: React.FC = () => (
+  <div className="flex flex-col items-center justify-center min-h-[400px] w-full gap-3 font-mono">
+    <Loader2 className="h-8 w-8 text-emerald-400 animate-spin" />
+    <span className="text-xs text-slate-400 uppercase tracking-widest font-bold">
+      Loading Geospatial Intelligence...
+    </span>
+  </div>
+);
+
+// Role-based root redirect component
+const RootRedirect: React.FC = () => {
+  const { isAuthenticated, role } = useAuth();
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (role === 'SUPER_ADMIN') return <Navigate to="/super-admin" replace />;
+  if (role === 'NORMAL_ADMIN') return <Navigate to="/dashboard" replace />;
+  return <Navigate to="/field-officer/dashboard" replace />;
+};
+
+export const App: React.FC = () => {
+  return (
+    <ThemeProvider>
+      <AuthProvider>
+        <DataProvider>
+          <BrowserRouter>
+            <Suspense fallback={<RouteLoadingFallback />}>
+              <Routes>
+                {/* Public Login Route */}
+                <Route path="/login" element={<Login />} />
+                <Route path="/access-denied" element={<AccessDenied />} />
+
+                {/* Authenticated Application Shell */}
+                <Route
+                  element={
+                    <ProtectedRoute>
+                      <Layout />
+                    </ProtectedRoute>
+                  }
+                >
+                  <Route path="/" element={<RootRedirect />} />
+
+                  {/* Super Admin Routes */}
+                  <Route
+                    path="/super-admin"
+                    element={
+                      <ProtectedRoute allowedRoles={['SUPER_ADMIN']}>
+                        <SuperAdminDashboard />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/super-admin/users"
+                    element={
+                      <ProtectedRoute allowedRoles={['SUPER_ADMIN']} requiredPermission="MANAGE_USERS">
+                        <UsersManagement />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/super-admin/watersheds"
+                    element={
+                      <ProtectedRoute allowedRoles={['SUPER_ADMIN']}>
+                        <WatershedsList />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/super-admin/evidence"
+                    element={
+                      <ProtectedRoute allowedRoles={['SUPER_ADMIN']}>
+                        <EvidenceManagement />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/super-admin/alerts"
+                    element={
+                      <ProtectedRoute allowedRoles={['SUPER_ADMIN']}>
+                        <AlertsCenter />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/super-admin/analytics"
+                    element={
+                      <ProtectedRoute allowedRoles={['SUPER_ADMIN']}>
+                        <AnalyticsView />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/super-admin/reports"
+                    element={
+                      <ProtectedRoute allowedRoles={['SUPER_ADMIN']}>
+                        <ReportsView />
+                      </ProtectedRoute>
+                    }
+                  />
+
+                  {/* Normal Admin & Shared Routes */}
+                  <Route
+                    path="/dashboard"
+                    element={
+                      <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'NORMAL_ADMIN']}>
+                        <NormalUserDashboard />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/watershed/:id"
+                    element={
+                      <ProtectedRoute>
+                        <WatershedDetail />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/intervention/:id"
+                    element={
+                      <ProtectedRoute>
+                        <InterventionDetail />
+                      </ProtectedRoute>
+                    }
+                  />
+
+                  {/* Field Officer & Operations Routes */}
+                  <Route
+                    path="/field-evidence"
+                    element={
+                      <ProtectedRoute>
+                        <FieldOfficerEvidence />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/field-officer/dashboard"
+                    element={
+                      <ProtectedRoute>
+                        <FieldOfficerDashboard />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/field-officer/inspect/:id"
+                    element={
+                      <ProtectedRoute>
+                        <FieldInspection />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/field-officer/sync-queue"
+                    element={
+                      <ProtectedRoute>
+                        <SyncQueue />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/alerts"
+                    element={
+                      <ProtectedRoute>
+                        <AlertsCenter />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/analytics"
+                    element={
+                      <ProtectedRoute>
+                        <AnalyticsView />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/reports"
+                    element={
+                      <ProtectedRoute>
+                        <ReportsView />
+                      </ProtectedRoute>
+                    }
+                  />
+                </Route>
+
+                {/* Fallback Catch-all */}
+                <Route path="*" element={<RootRedirect />} />
+              </Routes>
+            </Suspense>
+          </BrowserRouter>
+        </DataProvider>
+      </AuthProvider>
+    </ThemeProvider>
+  );
+};
+
+export default App;
