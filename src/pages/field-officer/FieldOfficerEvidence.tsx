@@ -102,18 +102,18 @@ export const FieldOfficerEvidence: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-3xl mx-auto font-sans">
+    <div className="space-y-4 sm:space-y-6 max-w-3xl mx-auto font-sans">
       {/* Mobile-Friendly Header */}
-      <div className="border-b border-slate-800/80 pb-4">
-        <div className="flex items-center gap-2">
-          <span className="bg-emerald-500/20 text-emerald-400 text-[10px] font-mono font-bold px-2.5 py-0.5 rounded border border-emerald-500/30 uppercase">
+      <div className="border-b border-slate-800/80 pb-3 sm:pb-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="bg-emerald-500/20 text-emerald-400 text-[10px] font-mono font-bold px-2 sm:px-2.5 py-0.5 rounded border border-emerald-500/30 uppercase shrink-0">
             FIELD INSPECTION HUB
           </span>
-          <span className="text-xs font-mono text-slate-400">
-            Assigned Officer: <strong className="text-slate-200">{currentUser?.name || 'Vikram Singh'}</strong> ({assignedInterventions.length} Assigned Assets)
+          <span className="text-xs font-mono text-slate-400 truncate">
+            Assigned: <strong className="text-slate-200">{currentUser?.name || 'Vikram Singh'}</strong> ({assignedInterventions.length} Monitored)
           </span>
         </div>
-        <h1 className="text-2xl font-black text-white font-mono tracking-tight mt-1">
+        <h1 className="text-xl sm:text-2xl font-black text-white font-mono tracking-tight mt-1">
           Geo-Tagged Evidence Submission
         </h1>
       </div>

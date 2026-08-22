@@ -689,7 +689,7 @@ export const GISMap: React.FC<GISMapProps> = ({
       className={`relative w-full rounded-2xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950 font-sans ${
         isFullscreen ? 'h-screen w-screen fixed inset-0 z-[9999]' : ''
       }`}
-      style={{ height: isFullscreen ? '100vh' : height }}
+      style={{ height: isFullscreen ? '100vh' : `clamp(390px, 60vh, ${height || '520px'})` }}
     >
       {/* 1. Leaflet Interactive Canvas */}
       <div ref={mapContainerRef} className="w-full h-full" />
