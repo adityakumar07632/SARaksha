@@ -7,6 +7,7 @@
  */
 
 import { calculateNDVI, calculateNDWI } from './calculations';
+import { getApiBaseUrl } from '../config';
 
 export const SENTINEL2_REFLECTANCE_SCALE = 10000.0;
 export const NODATA_VALUE = 0;
@@ -390,9 +391,7 @@ export async function fetchRasterAnalysis(
     return res;
   }
 
-  const backendUrl =
-    (typeof import.meta !== 'undefined' && import.meta.env?.VITE_RASTER_API_URL) ||
-    'http://localhost:8000';
+  const backendUrl = getApiBaseUrl();
 
   try {
     const controller = new AbortController();
@@ -571,9 +570,7 @@ export async function fetchMultiSceneHistory(
     return generateDemoMultiSceneHistory(latitude, longitude, interventionId);
   }
 
-  const backendUrl =
-    (typeof import.meta !== 'undefined' && import.meta.env?.VITE_RASTER_API_URL) ||
-    'http://localhost:8000';
+  const backendUrl = getApiBaseUrl();
 
   try {
     const controller = new AbortController();

@@ -8,6 +8,8 @@
  * 3. LULC codes and areas are presented faithfully without inventing unsupported structural claims.
  */
 
+import { getApiBaseUrl } from '../config';
+
 export interface BhuvanLulcRecord {
   code: string;
   area: number | string;
@@ -101,9 +103,7 @@ export async function fetchBhuvanLulcStats(
     return generateDemoBhuvanLulc(interventionId, polygonWkt);
   }
 
-  const backendUrl =
-    (typeof import.meta !== 'undefined' && import.meta.env?.VITE_RASTER_API_URL) ||
-    'http://localhost:8000';
+  const backendUrl = getApiBaseUrl();
 
   try {
     const controller = new AbortController();

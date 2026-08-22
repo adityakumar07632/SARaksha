@@ -15,6 +15,7 @@ import { MockGeospatialProvider } from './mockProvider';
 import { STACClient, stacClient } from './stacClient';
 import { GEOSPATIAL_CONFIG } from './config';
 import { calculatePercentageChange, detectVegetationAnomaly } from './calculations';
+import { getApiBaseUrl } from '../config';
 
 /**
  * RealSatelliteProvider (Live STAC Sentinel-2 Data Integration)
@@ -46,7 +47,8 @@ export class RealSatelliteProvider implements GeospatialProvider {
     try {
       // 1. First attempt authoritative backend Sentinel-2 raster extraction
       try {
-        const backendResp = await fetch('http://localhost:8000/api/satellite/analyze', {
+        const backendUrl = getApiBaseUrl();
+        const backendResp = await fetch(`${backendUrl}/api/satellite/analyze`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
