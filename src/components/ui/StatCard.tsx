@@ -25,16 +25,16 @@ export const StatCard: React.FC<StatCardProps> = ({
   return (
     <div
       onClick={onClick}
-      className={`relative overflow-hidden rounded-xl border border-slate-800 bg-slate-900/80 p-3.5 sm:p-5 backdrop-blur-md transition-all duration-200 hover:border-slate-700 hover:bg-slate-900/95 hover:shadow-lg w-full ${
+      className={`relative overflow-hidden rounded-xl border border-slate-800 bg-slate-900/80 p-3.5 sm:p-4 lg:p-5 backdrop-blur-md transition-all duration-200 hover:border-slate-700 hover:bg-slate-900/95 hover:shadow-lg w-full min-w-0 ${
         onClick ? 'cursor-pointer' : ''
       }`}
     >
       {/* Top row */}
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400 font-mono line-clamp-1">
+      <div className="flex items-center justify-between gap-2 min-w-0">
+        <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400 font-mono truncate min-w-0">
           {title}
         </span>
-        <div className={`flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-lg border shrink-0 ${iconColor}`}>
+        <div className={`flex h-8 w-8 sm:h-9 sm:w-9 lg:h-10 lg:w-10 items-center justify-center rounded-lg border shrink-0 ${iconColor}`}>
           <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
         </div>
       </div>

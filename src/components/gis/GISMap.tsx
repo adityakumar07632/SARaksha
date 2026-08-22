@@ -701,9 +701,11 @@ export const GISMap: React.FC<GISMapProps> = ({
       <div className="absolute top-0 left-0 right-0 z-[1000] flex items-center justify-between px-3 sm:px-5 py-2 sm:py-3 bg-gradient-to-b from-slate-950/95 via-slate-950/80 to-transparent border-b border-slate-800/40 text-xs font-mono backdrop-blur-sm pointer-events-auto">
         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-            <div className="h-5 w-5 rounded-lg bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-300 font-bold text-xs">
-              🛡
-            </div>
+            <img
+              src="/assets/branding/saraksha-logo-icon.png"
+              alt="SARaksha"
+              className="h-5 w-5 object-contain shrink-0 filter drop-shadow-[0_1px_4px_rgba(6,182,212,0.4)]"
+            />
             <div>
               <span className="font-extrabold text-white tracking-wider text-xs sm:text-sm">SARaksha</span>
               <span className="text-[9px] sm:text-[10px] text-cyan-400 block -mt-1 font-semibold">Geospatial Monitoring</span>

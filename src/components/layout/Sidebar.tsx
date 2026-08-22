@@ -65,18 +65,33 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen = false, onClose })
 
   const renderNavContent = (isMobile = false) => (
     <>
-      <div className="space-y-5">
+      <div className="space-y-4">
         {/* Desktop Sidebar Branding (Top) */}
         {!isMobile && (
-          <div className="border-b border-slate-800/80 pb-3.5 pt-1">
-            <SARakshaLogo variant="compact" size="sm" priority />
+          <div className="border-b border-slate-800/80 pb-3.5 pt-0.5">
+            <div className="flex items-center gap-2.5">
+              <SARakshaLogo variant="icon" size="sm" priority />
+              <div className="flex flex-col min-w-0">
+                <span className="text-sm font-black tracking-tight text-white font-mono leading-tight">
+                  SARaksha
+                </span>
+                <span className="text-[9px] font-mono font-bold text-emerald-400 uppercase tracking-wider mt-0.5">
+                  SMART WATERSHED MONITORING
+                </span>
+              </div>
+            </div>
           </div>
         )}
 
         {/* Mobile Header with Close Button */}
         {isMobile && (
           <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-            <SARakshaLogo variant="compact" size="xs" priority />
+            <div className="flex items-center gap-2">
+              <SARakshaLogo variant="icon" size="sm" priority />
+              <span className="font-extrabold text-white font-mono text-sm tracking-tight">
+                SARaksha Menu
+              </span>
+            </div>
             <button
               onClick={onClose}
               className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
@@ -101,7 +116,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen = false, onClose })
         </div>
 
         {/* Navigation list */}
-        <nav className="space-y-1" aria-label="Sidebar Navigation">
+        <nav className="space-y-1.5" aria-label="Sidebar Navigation">
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -111,19 +126,19 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen = false, onClose })
                 end={item.to === '/super-admin' || item.to === '/dashboard'}
                 onClick={isMobile ? onClose : undefined}
                 className={({ isActive }) =>
-                  `flex items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-medium font-mono transition-all duration-150 ${
+                  `flex items-center justify-between h-11 rounded-xl px-3.5 text-xs font-medium font-mono transition-all duration-150 ${
                     isActive
-                      ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-sm'
+                      ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-sm font-bold'
                       : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200 border border-transparent'
                   }`
                 }
               >
-                <div className="flex items-center gap-3">
-                  <Icon className="h-4 w-4" />
-                  <span>{item.name}</span>
+                <div className="flex items-center gap-3 min-w-0">
+                  <Icon className="h-4 w-4 shrink-0 text-slate-400 group-hover:text-slate-200" />
+                  <span className="truncate">{item.name}</span>
                 </div>
                 {item.badge && (
-                  <span className="rounded-full bg-rose-500/20 border border-rose-500/40 px-2 py-0.5 text-[10px] font-bold text-rose-400 font-mono">
+                  <span className="rounded-full bg-rose-500/20 border border-rose-500/40 px-2 py-0.5 text-[10px] font-bold text-rose-400 font-mono shrink-0 ml-2">
                     {item.badge}
                   </span>
                 )}
@@ -166,7 +181,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen = false, onClose })
   return (
     <>
       {/* Desktop Permanent Sidebar (>= 1024px) */}
-      <aside className="hidden lg:flex flex-col justify-between w-64 min-h-[calc(100vh-4rem)] border-r border-slate-800 bg-slate-950/95 p-4 backdrop-blur-md shrink-0">
+      <aside className="hidden lg:flex flex-col justify-between w-[280px] min-h-[calc(100vh-4rem)] border-r border-slate-800 bg-slate-950/95 p-5 backdrop-blur-md shrink-0">
         {renderNavContent(false)}
       </aside>
 
@@ -186,7 +201,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen = false, onClose })
           />
 
           {/* Drawer */}
-          <aside className="relative flex flex-col justify-between w-72 max-w-[85vw] h-full border-r border-slate-800 bg-slate-950 p-4 shadow-2xl z-10 overflow-y-auto">
+          <aside className="relative flex flex-col justify-between w-72 max-w-[85vw] h-full border-r border-slate-800 bg-slate-950 p-5 shadow-2xl z-10 overflow-y-auto">
             {renderNavContent(true)}
           </aside>
         </div>

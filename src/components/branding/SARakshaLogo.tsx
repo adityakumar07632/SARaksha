@@ -18,67 +18,24 @@ export const SARakshaLogo: React.FC<SARakshaLogoProps> = ({
   showSubtitle = true,
   priority = false,
 }) => {
-  // Dimension mappings based on variant and size
-  const getDimensions = () => {
-    switch (variant) {
-      case 'icon':
-        switch (size) {
-          case 'xs':
-            return 'h-6 w-6';
-          case 'sm':
-            return 'h-8 w-8';
-          case 'md':
-            return 'h-10 w-10';
-          case 'lg':
-            return 'h-14 w-14';
-          case 'xl':
-            return 'h-20 w-20';
-          default:
-            return 'h-10 w-10';
-        }
-      case 'compact':
-        switch (size) {
-          case 'xs':
-            return 'h-7 max-w-[140px]';
-          case 'sm':
-            return 'h-9 max-w-[170px]';
-          case 'md':
-            return 'h-11 max-w-[210px]';
-          case 'lg':
-            return 'h-14 max-w-[280px]';
-          case 'xl':
-            return 'h-20 max-w-[380px]';
-          default:
-            return 'h-11 max-w-[210px]';
-        }
-      case 'full':
-      default:
-        switch (size) {
-          case 'xs':
-            return 'max-w-[220px]';
-          case 'sm':
-            return 'max-w-[300px]';
-          case 'md':
-            return 'max-w-[400px]';
-          case 'lg':
-            return 'max-w-[500px]';
-          case 'xl':
-            return 'max-w-[620px]';
-          default:
-            return 'max-w-[400px]';
-        }
-    }
-  };
-
-  const dimClasses = getDimensions();
-
   if (variant === 'icon') {
+    const iconDim =
+      size === 'xs'
+        ? 'h-5 w-5'
+        : size === 'sm'
+        ? 'h-8 w-8'
+        : size === 'md'
+        ? 'h-10 w-10'
+        : size === 'lg'
+        ? 'h-14 w-14'
+        : 'h-20 w-20';
+
     return (
       <div className={`inline-flex items-center justify-center shrink-0 select-none ${className}`}>
         <img
           src="/assets/branding/saraksha-logo-icon.png"
-          alt="SARaksha Shield Emblem"
-          className={`${dimClasses} object-contain filter drop-shadow-[0_2px_10px_rgba(6,182,212,0.35)]`}
+          alt="SARaksha Emblem"
+          className={`${iconDim} object-contain filter drop-shadow-[0_2px_8px_rgba(6,182,212,0.35)]`}
           loading={priority ? 'eager' : 'lazy'}
         />
       </div>
@@ -86,25 +43,68 @@ export const SARakshaLogo: React.FC<SARakshaLogoProps> = ({
   }
 
   if (variant === 'compact') {
+    const iconSizeClass =
+      size === 'xs'
+        ? 'h-7 w-7'
+        : size === 'sm'
+        ? 'h-8 w-8 sm:h-9 sm:w-9'
+        : size === 'lg'
+        ? 'h-11 w-11'
+        : size === 'xl'
+        ? 'h-14 w-14'
+        : 'h-9 w-9 sm:h-10 sm:w-10';
+
+    const titleSizeClass =
+      size === 'xs'
+        ? 'text-xs'
+        : size === 'sm'
+        ? 'text-sm sm:text-base'
+        : size === 'lg'
+        ? 'text-lg sm:text-xl'
+        : 'text-base sm:text-lg';
+
     return (
-      <div className={`inline-flex items-center select-none shrink-0 ${className}`}>
+      <div className={`inline-flex items-center gap-2.5 select-none shrink-0 ${className}`}>
         <img
-          src="/assets/branding/saraksha-logo-compact.png"
-          alt="SARaksha Logo"
-          className={`${dimClasses} object-contain filter drop-shadow-[0_2px_12px_rgba(6,182,212,0.25)]`}
+          src="/assets/branding/saraksha-logo-icon.png"
+          alt="SARaksha Emblem"
+          className={`${iconSizeClass} object-contain filter drop-shadow-[0_2px_8px_rgba(6,182,212,0.35)] shrink-0`}
           loading={priority ? 'eager' : 'lazy'}
         />
+        <div className="flex flex-col justify-center min-w-0">
+          <div className="flex items-center gap-1.5 leading-none">
+            <span className={`${titleSizeClass} font-black tracking-tight text-white font-mono`}>
+              SARaksha
+            </span>
+          </div>
+          {showSubtitle && (
+            <span className="text-[10px] sm:text-[11px] text-slate-400 font-sans tracking-tight mt-0.5 hidden sm:block truncate">
+              Smart Watershed Monitoring System
+            </span>
+          )}
+        </div>
       </div>
     );
   }
 
-  // Full Logo Variant
+  // Full Logo Variant (For Login screen & Splash)
+  const fullMaxDim =
+    size === 'xs'
+      ? 'max-w-[220px]'
+      : size === 'sm'
+      ? 'max-w-[300px]'
+      : size === 'lg'
+      ? 'max-w-[500px]'
+      : size === 'xl'
+      ? 'max-w-[620px]'
+      : 'max-w-[400px]';
+
   return (
     <div className={`inline-flex flex-col items-center select-none w-full ${className}`}>
       <img
         src="/assets/branding/saraksha-logo-full.png"
         alt="SARaksha — Smart Watershed Monitoring System"
-        className={`w-full ${dimClasses} object-contain filter drop-shadow-[0_4px_24px_rgba(6,182,212,0.35)] mx-auto`}
+        className={`w-full ${fullMaxDim} object-contain filter drop-shadow-[0_4px_24px_rgba(6,182,212,0.35)] mx-auto`}
         loading={priority ? 'eager' : 'lazy'}
       />
     </div>

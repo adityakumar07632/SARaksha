@@ -105,17 +105,17 @@ export const NormalUserDashboard: React.FC = () => {
       </div>
 
       {/* Main Section: Interactive GIS Map + Map-Side Summary Panel */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start w-full min-w-0">
         {/* GIS Map (8 cols) */}
-        <div className="lg:col-span-8 space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Compass className="h-4 w-4 text-emerald-400" />
-              <h2 className="text-sm font-bold text-white font-mono uppercase tracking-wider">
+        <div className="lg:col-span-8 space-y-3 min-w-0">
+          <div className="flex items-center justify-between min-w-0 gap-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <Compass className="h-4 w-4 text-emerald-400 shrink-0" />
+              <h2 className="text-xs sm:text-sm font-bold text-white font-mono uppercase tracking-wider truncate">
                 Watershed Interactive GIS Spatial View
               </h2>
             </div>
-            <span className="text-[11px] font-mono text-slate-400">
+            <span className="text-[10px] sm:text-[11px] font-mono text-slate-400 shrink-0">
               Click any marker to inspect intervention
             </span>
           </div>
@@ -134,7 +134,7 @@ export const NormalUserDashboard: React.FC = () => {
         </div>
 
         {/* Map-Side Summary Panel (4 cols) */}
-        <div className="lg:col-span-4 space-y-4">
+        <div className="lg:col-span-4 space-y-4 sm:space-y-5 min-w-0">
           <HealthScoreGauge
             score={assignedWatershed.healthScore}
             breakdown={MOCK_HEALTH_BREAKDOWN_CD012}

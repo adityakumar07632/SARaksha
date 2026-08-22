@@ -98,7 +98,7 @@ export const SuperAdminDashboard: React.FC = () => {
       </div>
 
       {/* Top 6 Dynamic KPI Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-3.5 w-full min-w-0">
         <StatCard
           title="Watersheds"
           value="24"
@@ -147,17 +147,17 @@ export const SuperAdminDashboard: React.FC = () => {
       </div>
 
       {/* Main Command Center Layout: Left GIS Map, Right Regional Health */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start w-full min-w-0">
         {/* Main Map Box (8 cols) */}
-        <div className="lg:col-span-8 space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Compass className="h-4 w-4 text-emerald-400" />
-              <h2 className="text-sm font-bold text-white font-mono uppercase tracking-wider">
+        <div className="lg:col-span-8 space-y-3 min-w-0">
+          <div className="flex items-center justify-between min-w-0 gap-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <Compass className="h-4 w-4 text-emerald-400 shrink-0" />
+              <h2 className="text-xs sm:text-sm font-bold text-white font-mono uppercase tracking-wider truncate">
                 System-Wide Interactive GIS Map &bull; Regional Distribution
               </h2>
             </div>
-            <span className="text-[11px] font-mono text-slate-400">
+            <span className="text-[10px] sm:text-[11px] font-mono text-slate-400 shrink-0">
               Showing <strong className="text-emerald-400">{filteredWatersheds.length}</strong> Watersheds
             </span>
           </div>
@@ -182,9 +182,9 @@ export const SuperAdminDashboard: React.FC = () => {
         </div>
 
         {/* State Summaries & Priority Alerts (4 cols) */}
-        <div className="lg:col-span-4 space-y-4">
+        <div className="lg:col-span-4 space-y-4 sm:space-y-5 min-w-0">
           {/* State Performance Card */}
-          <div className="rounded-xl border border-slate-800 bg-slate-900/90 p-4">
+          <div className="rounded-xl border border-slate-800 bg-slate-900/90 p-4 min-w-0">
             <div className="flex items-center justify-between border-b border-slate-800 pb-2 mb-3">
               <h3 className="text-xs font-bold text-white font-mono uppercase tracking-wider">
                 State Performance Indices

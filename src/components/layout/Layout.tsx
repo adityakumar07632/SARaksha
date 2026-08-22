@@ -16,9 +16,9 @@ export const Layout: React.FC = () => {
       <Header onToggleMobileNav={() => setMobileNavOpen((prev) => !prev)} />
 
       {/* Content wrapper with Sidebar + Main area */}
-      <div className="flex flex-1 min-w-0">
+      <div className="flex flex-1 min-w-0 w-full">
         <Sidebar mobileOpen={mobileNavOpen} onClose={() => setMobileNavOpen(false)} />
-        <main className="flex-1 p-3.5 sm:p-5 md:p-6 overflow-y-auto max-w-[1700px] w-full min-w-0 mx-auto overflow-x-hidden">
+        <main className="flex-1 w-full min-w-0 max-w-[1600px] mx-auto px-4 sm:px-5 lg:px-6 py-5 lg:py-6 overflow-y-auto overflow-x-hidden">
           <Outlet />
         </main>
       </div>
