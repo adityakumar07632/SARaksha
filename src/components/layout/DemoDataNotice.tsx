@@ -104,33 +104,51 @@ export const DemoDataNotice: React.FC = () => {
   return (
     <>
       {/* Top Banner Notice */}
-      <div className="bg-slate-950/90 border-b border-emerald-500/30 px-3 sm:px-4 py-2 text-xs font-mono text-emerald-200 backdrop-blur-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 z-40 relative">
-        <div className="flex items-center gap-2 max-w-5xl">
-          <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-          <span className="bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded border border-emerald-500/40 text-[9px] sm:text-[10px] uppercase tracking-wider shrink-0">
-            SARAKSHA SIH EVALUATION MODE
-          </span>
-          <span className="text-slate-300 text-xs hidden md:inline">
-            Real Sentinel-2 L2A STAC discovery, 10m raster extraction, and offline PWA field sync active.
-          </span>
-        </div>
+      <div className="bg-slate-950/95 border-b border-emerald-500/30 px-3 sm:px-4 py-2 text-xs font-mono text-emerald-200 backdrop-blur-md z-40 relative">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 max-w-full">
+          {/* Row 1 on mobile / Left group on desktop */}
+          <div className="flex items-center justify-between sm:justify-start gap-2 min-w-0 w-full sm:w-auto">
+            <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+              <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+              <span className="bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded border border-emerald-500/40 text-[9px] sm:text-[10px] uppercase tracking-wider shrink-0">
+                SARAKSHA SIH EVALUATION MODE
+              </span>
+              <span className="text-slate-300 text-xs hidden lg:inline truncate">
+                Real Sentinel-2 L2A STAC discovery &amp; offline PWA sync active.
+              </span>
+            </div>
 
-        <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
-          <button
-            onClick={() => setModalOpen(true)}
-            className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-[10px] sm:text-[11px] font-bold transition flex items-center gap-1 cursor-pointer shadow-sm shadow-emerald-950"
-          >
-            <Play className="h-3 w-3 fill-current" />
-            <span>SIH Demonstration Scenarios</span>
-          </button>
+            {/* Dismiss X button on mobile (top right) */}
+            <button
+              onClick={() => setDismissed(true)}
+              className="sm:hidden text-slate-400 hover:text-white p-1 rounded hover:bg-slate-800 cursor-pointer shrink-0 min-h-[32px] min-w-[32px] flex items-center justify-center"
+              title="Dismiss notice"
+              aria-label="Dismiss notice"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
 
-          <button
-            onClick={() => setDismissed(true)}
-            className="text-slate-400 hover:text-white transition-colors p-1 rounded hover:bg-slate-800 cursor-pointer"
-            title="Dismiss notice"
-          >
-            <X className="h-3.5 w-3.5" />
-          </button>
+          {/* Row 2 on mobile / Right controls on desktop */}
+          <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
+            <button
+              onClick={() => setModalOpen(true)}
+              className="w-full sm:w-auto px-3 py-1.5 sm:py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-[11px] font-bold transition flex items-center justify-center gap-1.5 cursor-pointer shadow-sm shadow-emerald-950 min-h-[36px] sm:min-h-0"
+            >
+              <Play className="h-3 w-3 fill-current shrink-0" />
+              <span>SIH Demonstration Scenarios</span>
+            </button>
+
+            {/* Dismiss X button on desktop */}
+            <button
+              onClick={() => setDismissed(true)}
+              className="hidden sm:flex text-slate-400 hover:text-white transition-colors p-1 rounded hover:bg-slate-800 cursor-pointer shrink-0"
+              title="Dismiss notice"
+              aria-label="Dismiss notice"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
         </div>
       </div>
 

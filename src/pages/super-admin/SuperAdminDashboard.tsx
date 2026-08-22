@@ -51,20 +51,20 @@ export const SuperAdminDashboard: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 border-b border-slate-800/80 pb-4">
         <div>
           <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-lg sm:text-xl font-extrabold text-white font-mono tracking-tight">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white font-mono tracking-tight leading-tight">
               National Watershed Command Center
             </h1>
             <span className="bg-emerald-500/20 text-emerald-400 text-[10px] font-mono font-bold px-2 py-0.5 rounded border border-emerald-500/30 uppercase shrink-0">
               LIVE SYSTEM MONITOR
             </span>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl leading-relaxed">
             System-wide multi-state GIS monitoring &amp; evidence-based decision intelligence.
           </p>
         </div>
 
         {/* Drill-down state selector */}
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full md:w-auto">
           <span className="text-xs font-mono text-slate-400 font-semibold flex items-center gap-1 shrink-0">
             <Filter className="h-3.5 w-3.5 text-emerald-400" />
             State Filter:
@@ -72,7 +72,7 @@ export const SuperAdminDashboard: React.FC = () => {
           <div className="flex flex-wrap rounded-lg bg-slate-900 border border-slate-800 p-1 gap-1">
             <button
               onClick={() => setSelectedState('ALL')}
-              className={`px-2.5 sm:px-3 py-1 text-xs font-mono rounded font-semibold transition cursor-pointer ${
+              className={`px-2.5 sm:px-3 py-1.5 sm:py-1 text-xs font-mono rounded-md font-semibold transition cursor-pointer min-h-[36px] sm:min-h-0 flex items-center justify-center ${
                 selectedState === 'ALL'
                   ? 'bg-emerald-500 text-slate-950 font-bold'
                   : 'text-slate-400 hover:text-white'
@@ -84,7 +84,7 @@ export const SuperAdminDashboard: React.FC = () => {
               <button
                 key={s.name}
                 onClick={() => setSelectedState(s.name)}
-                className={`px-2.5 sm:px-3 py-1 text-xs font-mono rounded font-semibold transition cursor-pointer ${
+                className={`px-2.5 sm:px-3 py-1.5 sm:py-1 text-xs font-mono rounded-md font-semibold transition cursor-pointer min-h-[36px] sm:min-h-0 flex items-center justify-center ${
                   selectedState === s.name
                     ? 'bg-emerald-500 text-slate-950 font-bold'
                     : 'text-slate-400 hover:text-white'

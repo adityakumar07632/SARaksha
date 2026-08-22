@@ -142,8 +142,8 @@ export const Header: React.FC<HeaderProps> = ({ onToggleMobileNav }) => {
 
       {/* Right Controls: Role Switcher, Theme, User */}
       <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
-        {/* Role Switcher Pill */}
-        <div className="relative">
+        {/* Role Switcher Pill (Desktop / Tablet only) */}
+        <div className="relative hidden sm:block">
           <button
             onClick={() => setRoleDropdownOpen(!roleDropdownOpen)}
             className="flex items-center gap-1 sm:gap-2 rounded-lg border border-amber-500/40 bg-slate-900 px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs font-mono font-semibold text-amber-300 hover:border-amber-400 transition cursor-pointer"
@@ -193,11 +193,11 @@ export const Header: React.FC<HeaderProps> = ({ onToggleMobileNav }) => {
           )}
         </div>
 
-        {/* Theme Toggle */}
+        {/* Theme Toggle (Accessible on all viewports) */}
         <button
           type="button"
           onClick={toggleTheme}
-          className="flex h-9 w-9 sm:h-9 sm:w-9 min-h-[44px] min-w-[44px] sm:min-h-[36px] sm:min-w-[36px] items-center justify-center rounded-lg border border-slate-800 bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white transition cursor-pointer"
+          className="flex h-9 w-9 sm:h-9 sm:w-9 min-h-[44px] min-w-[44px] sm:min-h-[36px] sm:min-w-[36px] items-center justify-center rounded-lg border border-slate-800 bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white transition cursor-pointer shrink-0"
           title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
           aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
         >
@@ -208,8 +208,8 @@ export const Header: React.FC<HeaderProps> = ({ onToggleMobileNav }) => {
           )}
         </button>
 
-        {/* User profile & Logout */}
-        <div className="flex items-center gap-1.5 sm:gap-2 pl-1.5 sm:pl-2 border-l border-slate-800">
+        {/* User profile & Logout (Desktop / Tablet only) */}
+        <div className="hidden sm:flex items-center gap-1.5 sm:gap-2 pl-1.5 sm:pl-2 border-l border-slate-800">
           <div className="hidden md:flex flex-col text-right">
             <span className="text-xs font-semibold text-white leading-tight truncate max-w-[120px]">
               {currentUser?.name || 'Authorized Official'}

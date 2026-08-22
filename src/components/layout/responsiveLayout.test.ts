@@ -1,6 +1,6 @@
 ﻿import { describe, it, expect } from 'vitest';
 
-describe('SARaksha Responsive Mobile Layout Rules', () => {
+describe('SARaksha Responsive Mobile Layout & Layering Rules', () => {
   it('defines proper responsive breakpoint behaviors for desktop (>=1024px), tablet (768px-1023px), and mobile (<=767px)', () => {
     const desktopBreakpoint = 1024;
     const tabletBreakpoint = 768;
@@ -9,6 +9,21 @@ describe('SARaksha Responsive Mobile Layout Rules', () => {
     expect(desktopBreakpoint).toBeGreaterThanOrEqual(1024);
     expect(tabletBreakpoint).toBeLessThan(1024);
     expect(mobileWidth).toBeLessThan(768);
+  });
+
+  it('enforces strict mobile modal & drawer z-index hierarchy over GIS map', () => {
+    const mapContainerZ = 0;
+    const mapOverlaysZ = 25;
+    const fullscreenMapZ = 500;
+    const mobileBackdropZ = 10000;
+    const mobileDrawerZ = 10010;
+    const sihModalZ = 20000;
+
+    expect(mapOverlaysZ).toBeGreaterThan(mapContainerZ);
+    expect(fullscreenMapZ).toBeGreaterThan(mapOverlaysZ);
+    expect(mobileBackdropZ).toBeGreaterThan(fullscreenMapZ);
+    expect(mobileDrawerZ).toBeGreaterThan(mobileBackdropZ);
+    expect(sihModalZ).toBeGreaterThan(mobileDrawerZ);
   });
 
   it('verifies standard mobile viewports (375x812, 390x844, 430x932, 768x1024, 1024x768, 1440x900)', () => {

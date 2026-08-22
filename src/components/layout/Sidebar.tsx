@@ -1,4 +1,5 @@
-import React from 'react';
+﻿import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -12,8 +13,10 @@ import {
   Layers,
   ShieldAlert,
   X,
+  UserCheck,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { UserRole } from '../../types';
 import { SARakshaLogo } from '../branding/SARakshaLogo';
 
 interface SidebarProps {
@@ -22,8 +25,39 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen = false, onClose }) => {
-  const { role, currentUser, logout } = useAuth();
+  const { role, currentUser, switchDemoRole, logout } = useAuth();
   const navigate = useNavigate();
+
+  // Body Scroll Lock & Escape Key Handler for Mobile Drawer
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && onClose) {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = originalStyle;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [mobileOpen, onClose]);
+
+  const handleRoleChange = (newRole: UserRole) => {
+    switchDemoRole(newRole);
+    if (newRole === 'SUPER_ADMIN') {
+      navigate('/super-admin');
+    } else if (newRole === 'NORMAL_ADMIN') {
+      navigate('/dashboard');
+    } else {
+      navigate('/field-officer/dashboard');
+    }
+  };
 
   const handleLogout = () => {
     logout();
@@ -102,18 +136,74 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen = false, onClose })
           </div>
         )}
 
-        {/* Role identifier badge */}
-        <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">
-            Navigation Mode
+        {/* Role identifier & Interactive Mobile Switcher */}
+        {isMobile ? (
+          <div className="rounded-xl border border-amber-500/30 bg-slate-900/80 p-3 space-y-2 font-mono">
+            <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-amber-400">
+              <span className="flex items-center gap-1.5">
+                <UserCheck className="h-3.5 w-3.5 text-amber-400" />
+                DEMO ROLE
+              </span>
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            </div>
+            <div className="grid grid-cols-1 gap-1.5 pt-0.5 text-xs">
+              <button
+                onClick={() => {
+                  handleRoleChange('SUPER_ADMIN');
+                  if (onClose) onClose();
+                }}
+                className={`w-full text-left px-2.5 py-1.5 rounded-lg flex items-center justify-between transition cursor-pointer ${
+                  role === 'SUPER_ADMIN'
+                    ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/40'
+                    : 'text-slate-300 hover:bg-slate-800'
+                }`}
+              >
+                <span>Super Admin</span>
+                <span className="text-[10px] text-slate-500">National</span>
+              </button>
+              <button
+                onClick={() => {
+                  handleRoleChange('NORMAL_ADMIN');
+                  if (onClose) onClose();
+                }}
+                className={`w-full text-left px-2.5 py-1.5 rounded-lg flex items-center justify-between transition cursor-pointer ${
+                  role === 'NORMAL_ADMIN'
+                    ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/40'
+                    : 'text-slate-300 hover:bg-slate-800'
+                }`}
+              >
+                <span>Normal Admin</span>
+                <span className="text-[10px] text-slate-500">Nodal</span>
+              </button>
+              <button
+                onClick={() => {
+                  handleRoleChange('FIELD_OFFICER');
+                  if (onClose) onClose();
+                }}
+                className={`w-full text-left px-2.5 py-1.5 rounded-lg flex items-center justify-between transition cursor-pointer ${
+                  role === 'FIELD_OFFICER'
+                    ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/40'
+                    : 'text-slate-300 hover:bg-slate-800'
+                }`}
+              >
+                <span>Field Officer</span>
+                <span className="text-[10px] text-slate-500">Ground</span>
+              </button>
+            </div>
           </div>
-          <div className="mt-1 flex items-center justify-between">
-            <span className="text-xs font-bold text-white font-mono">
-              {role.replace('_', ' ')}
-            </span>
-            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+        ) : (
+          <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
+            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">
+              Navigation Mode
+            </div>
+            <div className="mt-1 flex items-center justify-between">
+              <span className="text-xs font-bold text-white font-mono">
+                {role.replace('_', ' ')}
+              </span>
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Navigation list */}
         <nav className="space-y-1.5" aria-label="Sidebar Navigation">
@@ -185,27 +275,29 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen = false, onClose })
         {renderNavContent(false)}
       </aside>
 
-      {/* Mobile Slide-in Drawer (< 1024px) */}
-      {mobileOpen && (
-        <div
-          className="fixed inset-0 z-50 lg:hidden flex font-sans"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Mobile Navigation Menu"
-        >
-          {/* Backdrop */}
+      {/* Mobile Slide-in Drawer Portal (< 1024px) */}
+      {mobileOpen &&
+        createPortal(
           <div
-            className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity duration-200"
-            onClick={onClose}
-            aria-hidden="true"
-          />
+            className="fixed inset-0 z-[10000] lg:hidden flex font-sans"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobile Navigation Menu"
+          >
+            {/* High-contrast Backdrop */}
+            <div
+              className="fixed inset-0 bg-slate-950/85 backdrop-blur-md transition-opacity duration-200"
+              onClick={onClose}
+              aria-hidden="true"
+            />
 
-          {/* Drawer */}
-          <aside className="relative flex flex-col justify-between w-72 max-w-[85vw] h-full border-r border-slate-800 bg-slate-950 p-5 shadow-2xl z-10 overflow-y-auto">
-            {renderNavContent(true)}
-          </aside>
-        </div>
-      )}
+            {/* Solid Off-Canvas Navigation Drawer */}
+            <aside className="relative flex flex-col justify-between w-[min(18rem,85vw)] h-full border-r border-slate-800 bg-slate-950 p-5 shadow-2xl z-[10010] overflow-y-auto pointer-events-auto">
+              {renderNavContent(true)}
+            </aside>
+          </div>,
+          document.body
+        )}
     </>
   );
 };

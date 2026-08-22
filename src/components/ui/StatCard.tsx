@@ -30,8 +30,8 @@ export const StatCard: React.FC<StatCardProps> = ({
       }`}
     >
       {/* Top row */}
-      <div className="flex items-center justify-between gap-2 min-w-0">
-        <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400 font-mono truncate min-w-0">
+      <div className="flex items-start justify-between gap-2 min-w-0">
+        <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400 font-mono leading-tight min-w-0 break-words flex-1">
           {title}
         </span>
         <div className={`flex h-8 w-8 sm:h-9 sm:w-9 lg:h-10 lg:w-10 items-center justify-center rounded-lg border shrink-0 ${iconColor}`}>
@@ -41,7 +41,7 @@ export const StatCard: React.FC<StatCardProps> = ({
 
       {/* Value */}
       <div className="mt-2 sm:mt-3 flex items-baseline gap-2">
-        <span className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-white font-mono truncate">
+        <span className="text-lg sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-white font-mono truncate">
           {value}
         </span>
         {change && (
@@ -61,7 +61,7 @@ export const StatCard: React.FC<StatCardProps> = ({
 
       {/* Subtitle */}
       {subtitle && (
-        <p className="mt-1 text-[10px] sm:text-xs text-slate-400 line-clamp-1">
+        <p className="mt-1 text-[10px] sm:text-xs text-slate-400 leading-snug line-clamp-1">
           {subtitle}
         </p>
       )}

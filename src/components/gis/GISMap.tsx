@@ -686,8 +686,8 @@ export const GISMap: React.FC<GISMapProps> = ({
   return (
     <div
       ref={mapWrapperRef}
-      className={`relative w-full rounded-2xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950 font-sans ${
-        isFullscreen ? 'h-screen w-screen fixed inset-0 z-[9999]' : ''
+      className={`relative w-full rounded-2xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950 font-sans z-0 isolation-auto ${
+        isFullscreen ? 'h-screen w-screen fixed inset-0 z-[500]' : ''
       }`}
       style={{ height: isFullscreen ? '100vh' : `clamp(390px, 60vh, ${height || '520px'})` }}
     >
@@ -698,7 +698,7 @@ export const GISMap: React.FC<GISMapProps> = ({
       <div className="absolute inset-0 pointer-events-none border border-slate-800/80 rounded-2xl shadow-[inset_0_0_35px_rgba(2,6,23,0.55)]" />
 
       {/* 2. Top Header Bar (Overlaid on Map Canvas) */}
-      <div className="absolute top-0 left-0 right-0 z-[1000] flex items-center justify-between px-3 sm:px-5 py-2 sm:py-3 bg-gradient-to-b from-slate-950/95 via-slate-950/80 to-transparent border-b border-slate-800/40 text-xs font-mono backdrop-blur-sm pointer-events-auto">
+      <div className="absolute top-0 left-0 right-0 z-[20] flex items-center justify-between px-3 sm:px-5 py-2 sm:py-3 bg-gradient-to-b from-slate-950/95 via-slate-950/80 to-transparent border-b border-slate-800/40 text-xs font-mono backdrop-blur-sm pointer-events-auto">
         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <img
@@ -741,7 +741,7 @@ export const GISMap: React.FC<GISMapProps> = ({
       </div>
 
       {/* 3. Left Navigation & Zoom Controls */}
-      <div className="absolute top-14 sm:top-18 left-2 sm:left-4 z-[1000] flex flex-col rounded-xl border border-slate-700/80 bg-slate-950/90 backdrop-blur-md shadow-2xl overflow-hidden">
+      <div className="absolute top-14 sm:top-18 left-2 sm:left-4 z-[20] flex flex-col rounded-xl border border-slate-700/80 bg-slate-950/90 backdrop-blur-md shadow-2xl overflow-hidden">
         <button
           onClick={handleZoomIn}
           title="Zoom In"
@@ -828,7 +828,7 @@ export const GISMap: React.FC<GISMapProps> = ({
       </div>
 
       {/* 6. Top-Right Collapsible Layers Manager */}
-      <div className="absolute top-14 sm:top-18 right-2 sm:right-4 z-[1000] w-56 sm:w-64 rounded-xl border border-slate-800 bg-slate-950/95 backdrop-blur-md p-2.5 sm:p-3.5 shadow-2xl text-xs font-mono space-y-2.5 max-h-[calc(100%-120px)] overflow-y-auto">
+      <div className="absolute top-14 sm:top-18 right-2 sm:right-4 z-[25] w-56 sm:w-64 rounded-xl border border-slate-800 bg-slate-950/95 backdrop-blur-md p-2.5 sm:p-3.5 shadow-2xl text-xs font-mono space-y-2.5 max-h-[calc(100%-120px)] overflow-y-auto">
         <div className="flex items-center justify-between border-b border-slate-800 pb-2">
           <span className="font-extrabold text-white uppercase text-[10px] sm:text-[11px] tracking-wider flex items-center gap-1.5">
             <Layers className="h-3.5 w-3.5 text-cyan-400" />
@@ -1015,7 +1015,7 @@ export const GISMap: React.FC<GISMapProps> = ({
 
       {/* 7. Bottom-Right Collapsible Map Telemetry Card */}
       {showTelemetryPanel && (
-        <div className="absolute bottom-8 right-4 z-[1000] w-72 rounded-xl border border-slate-800 bg-slate-950/95 backdrop-blur-md p-3 shadow-2xl text-xs font-mono space-y-2 hidden sm:block">
+        <div className="absolute bottom-8 right-4 z-[20] w-72 rounded-xl border border-slate-800 bg-slate-950/95 backdrop-blur-md p-3 shadow-2xl text-xs font-mono space-y-2 hidden sm:block">
           <div className="flex items-center justify-between border-b border-slate-800 pb-1">
             <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
               MAP TELEMETRY
@@ -1071,7 +1071,7 @@ export const GISMap: React.FC<GISMapProps> = ({
       )}
 
       {/* 8. Bottom Status & Scale Breadcrumb Bar */}
-      <div className="absolute bottom-0 left-0 right-0 z-[999] flex items-center justify-between px-4 py-1 bg-slate-950/95 border-t border-slate-800/80 text-[10px] font-mono text-slate-400">
+      <div className="absolute bottom-0 left-0 right-0 z-[20] flex items-center justify-between px-4 py-1 bg-slate-950/95 border-t border-slate-800/80 text-[10px] font-mono text-slate-400">
         <div className="flex items-center gap-3">
           <span>0 &nbsp; 250 &nbsp; 500 &nbsp; 750 &nbsp; 1000 km</span>
         </div>
@@ -1094,7 +1094,7 @@ export const GISMap: React.FC<GISMapProps> = ({
       {/* 9. Field Evidence Detail Modal Overlay over GIS Map */}
       {evidenceModalData.isOpen && (
         <div
-          className="absolute inset-0 z-[2000] flex items-center justify-center p-2 sm:p-4 bg-slate-950/85 backdrop-blur-md font-sans pointer-events-auto"
+          className="absolute inset-0 z-[40] flex items-center justify-center p-2 sm:p-4 bg-slate-950/85 backdrop-blur-md font-sans pointer-events-auto"
           onClick={() => setEvidenceModalData((prev) => ({ ...prev, isOpen: false }))}
         >
           <div
