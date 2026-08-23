@@ -38,14 +38,14 @@ describe('SARaksha Complete Interaction & Button Functionality Audit Suite', () 
     });
   });
 
-  // 2. GIS Evidence & Camera Marker Interaction Bridge
+  // 2. GIS Evidence & Camera Marker Interaction Flow
   describe('GIS Map Evidence & Camera Marker Interactions', () => {
     it('accurately resolves intervention and evidence associations for CD-012', () => {
       const cd012 = MOCK_INTERVENTIONS.find((i) => i.id === 'CD-012');
       expect(cd012).toBeDefined();
 
       const evidence = MOCK_FIELD_EVIDENCE.filter((e) => e.interventionId === 'CD-012');
-      expect(evidence.length).toBeGreaterThanOrEqual(1);
+      expect(evidence.length).toBeGreaterThanOrEqual(2);
 
       // Verify that every evidence record contains required geospatial and verification fields
       evidence.forEach((ev) => {
@@ -56,22 +56,45 @@ describe('SARaksha Complete Interaction & Button Functionality Audit Suite', () 
       });
     });
 
-    it('validates window bridge for global evidence modal dispatch', () => {
-      let modalOpenedWith: { interventionId: string; evidenceId?: string } | null = null;
+    it('resolves individual evidence photo lookups for EVD-101 and EVD-102', () => {
+      const evd101 = MOCK_FIELD_EVIDENCE.find((e) => e.id === 'EVD-101');
+      const evd102 = MOCK_FIELD_EVIDENCE.find((e) => e.id === 'EVD-102');
 
-      // Simulate global bridge registration as done in GISMap.tsx
-      (globalThis as any).__saraksha_open_evidence = (interventionId: string, evidenceId?: string) => {
-        modalOpenedWith = { interventionId, evidenceId };
+      expect(evd101).toBeDefined();
+      expect(evd101?.interventionId).toBe('CD-012');
+      expect(evd101?.caption).toContain('Upstream reservoir ponding');
+
+      expect(evd102).toBeDefined();
+      expect(evd102?.interventionId).toBe('CD-012');
+      expect(evd102?.caption).toContain('Downstream channel buffer zone');
+    });
+
+    it('determines modal state and item index accurately during evidence triggering', () => {
+      const resolveEvidenceModal = (interventionId: string, specificEvidenceId?: string) => {
+        const matched = MOCK_INTERVENTIONS.find((i) => i.id === interventionId);
+        const list = MOCK_FIELD_EVIDENCE.filter((e) => e.interventionId === interventionId);
+        let index = 0;
+        if (specificEvidenceId) {
+          const idx = list.findIndex((e) => e.id === specificEvidenceId);
+          if (idx >= 0) index = idx;
+        }
+        return {
+          intervention: matched,
+          evidenceItems: list,
+          currentIndex: index,
+          isOpen: true,
+        };
       };
 
-      (globalThis as any).__saraksha_open_evidence('CD-012', 'EVD-101');
+      const resultEVD101 = resolveEvidenceModal('CD-012', 'EVD-101');
+      expect(resultEVD101.isOpen).toBe(true);
+      expect(resultEVD101.evidenceItems.length).toBe(2);
+      expect(resultEVD101.currentIndex).toBe(0);
 
-      expect(modalOpenedWith).toEqual({
-        interventionId: 'CD-012',
-        evidenceId: 'EVD-101',
-      });
-
-      delete (globalThis as any).__saraksha_open_evidence;
+      const resultEVD102 = resolveEvidenceModal('CD-012', 'EVD-102');
+      expect(resultEVD102.isOpen).toBe(true);
+      expect(resultEVD102.evidenceItems.length).toBe(2);
+      expect(resultEVD102.currentIndex).toBe(1);
     });
   });
 

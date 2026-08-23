@@ -31,6 +31,7 @@ export const SuperAdminDashboard: React.FC = () => {
   } = useData();
 
   const [selectedState, setSelectedState] = useState<string>('ALL');
+  const [selectedInterventionId, setSelectedInterventionId] = useState<string>('CD-012');
 
   // Filtered watersheds based on state drilldown
   const filteredWatersheds =
@@ -170,6 +171,8 @@ export const SuperAdminDashboard: React.FC = () => {
             interventions={interventions}
             alerts={alerts}
             evidenceList={evidenceList}
+            selectedInterventionId={selectedInterventionId}
+            onSelectIntervention={(id) => setSelectedInterventionId(id)}
             center={
               selectedState === 'Punjab'
                 ? [30.9010, 75.8573]
