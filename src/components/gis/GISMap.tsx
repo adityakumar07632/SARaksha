@@ -155,21 +155,42 @@ export const GISMap: React.FC<GISMapProps> = ({
   // Active Intervention
   const activeIntervention = interventions.find((i) => i.id === selectedInterventionId);
 
+  // Calculated zoom thresholds to avoid excessive layer rebuilds during continuous zooming
+  const isDistrictVisible = currentZoom >= 8;
+  const isWatershedVisible = currentZoom >= 8;
+  const isDrainageVisible = currentZoom >= 8;
+  const isWaterBodiesVisible = currentZoom >= 9;
+  const isAoiVisible = currentZoom >= 11;
+  const isNationalScale = currentZoom < 8;
+
   // 1. Initialize Map on India Operational Overview (Single Source of Truth)
   useEffect(() => {
     if (!mapContainerRef.current) return;
     if (mapInstanceRef.current) return;
 
-    const map = L.map(mapContainerRef.current, {
-      center: [22.8, 79.2], // Frame India + Pakistan + China + Nepal + Bhutan + Bangladesh + Sri Lanka
-      zoom: 6.0,
+    const mapOptions: L.MapOptions & { tap?: boolean } = {
+      center: center || [22.8, 79.2], // Frame India + regional context
+      zoom: zoom || 6.0,
       minZoom: 4,
       maxZoom: 18,
       zoomControl: false,
       attributionControl: false,
+      preferCanvas: true, // Hardware-accelerated canvas vector rendering
       fadeAnimation: true,
       zoomAnimation: true,
-    });
+      markerZoomAnimation: true,
+      dragging: true,
+      touchZoom: true,
+      doubleClickZoom: true,
+      scrollWheelZoom: false, // Prevents intercepting page scroll on mobile/touch screens
+      inertia: true,
+      inertiaDeceleration: 3000,
+      inertiaMaxSpeed: 1500,
+      tap: false, // Prevents 300ms mobile tap lag and simulated click conflicts on iOS Safari 13+ & Chrome
+      bounceAtZoomLimits: false,
+    };
+
+    const map = L.map(mapContainerRef.current, mapOptions);
 
     // High-Resolution Satellite Basemap (Esri World Imagery)
     const satTile = L.tileLayer(
@@ -233,19 +254,29 @@ export const GISMap: React.FC<GISMapProps> = ({
     layerGroupsRef.current.alertsGroup = alertsGroup;
     layerGroupsRef.current.aoiGroup = aoiGroup;
 
-    // Telemetry Event Listeners
+    // Telemetry Event Listeners - Throttled & decoupled from continuous move to ensure 60fps drag smoothness
+    let mouseMoveThrottleTimeout: number | null = null;
     map.on('mousemove', (e: L.LeafletMouseEvent) => {
-      setCursorCoords({
-        lat: Number(e.latlng.lat.toFixed(4)),
-        lng: Number(e.latlng.lng.toFixed(4)),
-      });
+      if (mouseMoveThrottleTimeout) return;
+      mouseMoveThrottleTimeout = window.setTimeout(() => {
+        setCursorCoords({
+          lat: Number(e.latlng.lat.toFixed(4)),
+          lng: Number(e.latlng.lng.toFixed(4)),
+        });
+        mouseMoveThrottleTimeout = null;
+      }, 100);
     });
 
     map.on('mouseout', () => {
+      if (mouseMoveThrottleTimeout) {
+        clearTimeout(mouseMoveThrottleTimeout);
+        mouseMoveThrottleTimeout = null;
+      }
       setCursorCoords(null);
     });
 
-    map.on('move', () => {
+    // Update map center coordinate telemetry ONLY on moveend so dragging never triggers React component re-renders
+    map.on('moveend', () => {
       const c = map.getCenter();
       setMapCenterCoords({
         lat: Number(c.lat.toFixed(4)),
@@ -259,15 +290,65 @@ export const GISMap: React.FC<GISMapProps> = ({
 
     mapInstanceRef.current = map;
 
-    // Delayed size invalidation to ensure clean rendering within container
-    setTimeout(() => {
+    // Delayed size invalidation to ensure clean initial layout rendering
+    const initTimer = setTimeout(() => {
       map.invalidateSize();
-    }, 200);
+    }, 150);
 
     return () => {
+      clearTimeout(initTimer);
+      if (mouseMoveThrottleTimeout) {
+        clearTimeout(mouseMoveThrottleTimeout);
+      }
       map.off();
       map.remove();
       mapInstanceRef.current = null;
+    };
+  }, []);
+
+  // Handle external center and zoom prop updates smoothly without map recreation
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map) return;
+    const currentCenter = map.getCenter();
+    const latDiff = Math.abs(currentCenter.lat - center[0]);
+    const lngDiff = Math.abs(currentCenter.lng - center[1]);
+    const zoomDiff = Math.abs(map.getZoom() - zoom);
+
+    if (latDiff > 0.001 || lngDiff > 0.001 || zoomDiff > 0.1) {
+      map.setView(center, zoom, { animate: true });
+    }
+  }, [center[0], center[1], zoom]);
+
+  // Responsive ResizeObserver for smooth drawer, breakpoint & orientation adjustments
+  useEffect(() => {
+    const container = mapContainerRef.current;
+    const map = mapInstanceRef.current;
+    if (!container || !map) return;
+
+    let resizeTimer: number | null = null;
+    const handleResize = () => {
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.invalidateSize({ pan: false });
+        }
+      }, 120);
+    };
+
+    const resizeObserver = new ResizeObserver(() => {
+      handleResize();
+    });
+    resizeObserver.observe(container);
+
+    window.addEventListener('orientationchange', handleResize);
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeObserver.disconnect();
+      window.removeEventListener('orientationchange', handleResize);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
@@ -352,7 +433,7 @@ export const GISMap: React.FC<GISMapProps> = ({
     }
     if (
       layers.districtBoundaries &&
-      currentZoom >= 8 &&
+      isDistrictVisible &&
       ADMINISTRATIVE_BOUNDARIES.districts.features.length > 0
     ) {
       const districtLayer = L.geoJSON(ADMINISTRATIVE_BOUNDARIES.districts as any, {
@@ -366,7 +447,13 @@ export const GISMap: React.FC<GISMapProps> = ({
       }).addTo(map);
       layerGroupsRef.current.districtBoundaryGroup = districtLayer;
     }
-  }, [layers.countryBoundary, layers.stateBoundaries, layers.districtBoundaries, currentZoom]);
+  }, [
+    layers.countryBoundary,
+    layers.stateBoundaries,
+    layers.districtBoundaries,
+    isDistrictVisible,
+    currentZoom >= 10,
+  ]);
 
   // 5. Catchment, Drainage & Water Infrastructure
   useEffect(() => {
@@ -377,7 +464,7 @@ export const GISMap: React.FC<GISMapProps> = ({
     if (layerGroupsRef.current.boundaryGroup) {
       map.removeLayer(layerGroupsRef.current.boundaryGroup);
     }
-    if (layers.watershedBoundary && currentZoom >= 8) {
+    if (layers.watershedBoundary && isWatershedVisible) {
       const boundaryLayer = L.geoJSON(MOCK_GEOJSON_LAYERS.watershedBoundary as any, {
         style: {
           color: '#06b6d4',
@@ -407,7 +494,7 @@ export const GISMap: React.FC<GISMapProps> = ({
     if (layerGroupsRef.current.drainageGroup) {
       map.removeLayer(layerGroupsRef.current.drainageGroup);
     }
-    if (layers.drainageNetwork && currentZoom >= 8) {
+    if (layers.drainageNetwork && isDrainageVisible) {
       const drainageLayer = L.geoJSON(MOCK_GEOJSON_LAYERS.drainageNetwork as any, {
         style: (feature) => ({
           color: feature?.properties.order === 3 ? '#06b6d4' : '#38bdf8',
@@ -423,7 +510,7 @@ export const GISMap: React.FC<GISMapProps> = ({
     if (layerGroupsRef.current.waterBodiesGroup) {
       map.removeLayer(layerGroupsRef.current.waterBodiesGroup);
     }
-    if (layers.waterBodies && currentZoom >= 9) {
+    if (layers.waterBodies && isWaterBodiesVisible) {
       const waterLayer = L.geoJSON(MOCK_GEOJSON_LAYERS.waterBodies as any, {
         style: {
           color: '#0284c7',
@@ -434,7 +521,16 @@ export const GISMap: React.FC<GISMapProps> = ({
       }).addTo(map);
       layerGroupsRef.current.waterBodiesGroup = waterLayer;
     }
-  }, [layers.watershedBoundary, layers.drainageNetwork, layers.waterBodies, currentZoom]);
+  }, [
+    layers.watershedBoundary,
+    layers.drainageNetwork,
+    layers.waterBodies,
+    isWatershedVisible,
+    isDrainageVisible,
+    isWaterBodiesVisible,
+    currentZoom >= 9,
+    currentZoom >= 11,
+  ]);
 
   // 6. Sentinel-2 AOI Window (Only when selected intervention and zoom >= 11)
   useEffect(() => {
@@ -444,7 +540,7 @@ export const GISMap: React.FC<GISMapProps> = ({
 
     aoiGroup.clearLayers();
 
-    if (layers.sentinel2Aoi && selectedInterventionId && currentZoom >= 11) {
+    if (layers.sentinel2Aoi && selectedInterventionId && isAoiVisible) {
       const selectedItem = interventions.find((i) => i.id === selectedInterventionId);
       if (selectedItem) {
         const [lat, lon] = selectedItem.coordinates;
@@ -473,7 +569,7 @@ export const GISMap: React.FC<GISMapProps> = ({
         aoiGroup.addLayer(aoiRect);
       }
     }
-  }, [layers.sentinel2Aoi, selectedInterventionId, currentZoom, interventions]);
+  }, [layers.sentinel2Aoi, selectedInterventionId, isAoiVisible, interventions]);
 
   // 7. Render Intervention Markers, Field Evidence & Alerts
   useEffect(() => {
@@ -487,8 +583,7 @@ export const GISMap: React.FC<GISMapProps> = ({
     evidenceGroup.clearLayers();
     alertsGroup.clearLayers();
 
-    // Sizing based on zoom level: 12px at national view, 18px at regional/catchment view
-    const isNationalScale = currentZoom < 8;
+    // Sizing based on zoom scale: 14px at national view, 18px at regional/catchment view
     const markerSize = isNationalScale ? 14 : 18;
     const innerDotSize = isNationalScale ? 8 : 10;
 
@@ -643,7 +738,7 @@ export const GISMap: React.FC<GISMapProps> = ({
     layers.fieldEvidence,
     layers.alerts,
     selectedInterventionId,
-    currentZoom,
+    isNationalScale,
     onSelectIntervention,
     flyToTarget,
     handleOpenEvidence,

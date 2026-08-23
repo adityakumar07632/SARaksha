@@ -48,6 +48,28 @@
   height: 100%;
   background-color: #0f172a !important;
   font-family: inherit;
+  touch-action: pan-x pan-y;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Hardware accelerated smooth map rendering on mobile */
+.leaflet-tile-container {
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.leaflet-zoom-animated {
+  will-change: transform;
+}
+
+.custom-gis-marker,
+.custom-evidence-marker,
+.custom-alert-marker {
+  touch-action: none;
+  pointer-events: auto;
 }
 
 .leaflet-popup-content-wrapper {
