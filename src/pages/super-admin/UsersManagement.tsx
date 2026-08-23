@@ -8,6 +8,8 @@ export const UsersManagement: React.FC = () => {
   const [users, setUsers] = useState<User[]>(MOCK_USERS);
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [selectedUserForView, setSelectedUserForView] = useState<User | null>(null);
+  const [selectedUserForEdit, setSelectedUserForEdit] = useState<User | null>(null);
 
   // Form State
   const [newName, setNewName] = useState('');
@@ -31,6 +33,25 @@ export const UsersManagement: React.FC = () => {
     setNewName('');
     setNewEmail('');
     setNewRegion('');
+  };
+
+  const handleSaveEditUser = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedUserForEdit) return;
+    setUsers(
+      users.map((u) => (u.id === selectedUserForEdit.id ? selectedUserForEdit : u))
+    );
+    setSelectedUserForEdit(null);
+  };
+
+  const handleToggleUserStatus = (userId: string) => {
+    setUsers(
+      users.map((u) =>
+        u.id === userId
+          ? { ...u, status: (u.status === 'Active' ? 'Inactive' : 'Active') as 'Active' | 'Inactive' }
+          : u
+      )
+    );
   };
 
   const filteredUsers = users.filter(
@@ -121,13 +142,29 @@ export const UsersManagement: React.FC = () => {
                   </td>
                   <td className="py-3 px-4 text-slate-400">{user.lastActive}</td>
                   <td className="py-3 px-4 text-right space-x-2">
-                    <button className="p-1 text-slate-400 hover:text-white" title="View details">
+                    <button
+                      onClick={() => setSelectedUserForView(user)}
+                      className="p-1 text-slate-400 hover:text-white transition cursor-pointer"
+                      title="View details"
+                    >
                       <Eye className="h-3.5 w-3.5" />
                     </button>
-                    <button className="p-1 text-slate-400 hover:text-emerald-400" title="Edit user">
+                    <button
+                      onClick={() => setSelectedUserForEdit(user)}
+                      className="p-1 text-slate-400 hover:text-emerald-400 transition cursor-pointer"
+                      title="Edit user"
+                    >
                       <Edit2 className="h-3.5 w-3.5" />
                     </button>
-                    <button className="p-1 text-slate-400 hover:text-rose-400" title="Disable user">
+                    <button
+                      onClick={() => handleToggleUserStatus(user.id)}
+                      className={`p-1 transition cursor-pointer ${
+                        user.status === 'Active'
+                          ? 'text-slate-400 hover:text-rose-400'
+                          : 'text-amber-400 hover:text-emerald-400'
+                      }`}
+                      title={user.status === 'Active' ? 'Deactivate user' : 'Activate user'}
+                    >
                       <Ban className="h-3.5 w-3.5" />
                     </button>
                   </td>
@@ -137,6 +174,125 @@ export const UsersManagement: React.FC = () => {
           </table>
         </div>
       </div>
+
+      {/* View User Details Modal */}
+      {selectedUserForView && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm font-sans">
+          <div className="w-full max-w-md rounded-2xl border border-slate-700 bg-slate-900 p-6 shadow-2xl space-y-4 font-mono">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <h3 className="text-base font-bold text-white">Official User Profile</h3>
+              <button
+                onClick={() => setSelectedUserForView(null)}
+                className="text-slate-400 hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="space-y-3 text-xs">
+              <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-2">
+                <div>
+                  <span className="text-[10px] text-slate-500 uppercase block">Name &amp; ID</span>
+                  <strong className="text-white text-sm">{selectedUserForView.name}</strong>
+                  <span className="text-slate-400 block text-[11px]">ID: {selectedUserForView.id}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-500 uppercase block">Email Address</span>
+                  <span className="text-emerald-400">{selectedUserForView.email}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-500 uppercase block">Role Designation</span>
+                  <span className="text-slate-200 font-bold">{selectedUserForView.role.replace('_', ' ')}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-500 uppercase block">Assigned Jurisdiction</span>
+                  <span className="text-slate-300">{selectedUserForView.region}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-500 uppercase block">Account Status</span>
+                  <Badge status={selectedUserForView.status} size="sm" />
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-end pt-2">
+              <button
+                onClick={() => setSelectedUserForView(null)}
+                className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-bold transition cursor-pointer"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit User Modal */}
+      {selectedUserForEdit && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm font-sans">
+          <div className="w-full max-w-md rounded-2xl border border-slate-700 bg-slate-900 p-6 shadow-2xl space-y-4 font-mono">
+            <h3 className="text-base font-bold text-white border-b border-slate-800 pb-3">
+              Edit User &bull; {selectedUserForEdit.name}
+            </h3>
+            <form onSubmit={handleSaveEditUser} className="space-y-3 text-xs">
+              <div>
+                <label className="block text-slate-400 mb-1">Full Name</label>
+                <input
+                  type="text"
+                  required
+                  value={selectedUserForEdit.name}
+                  onChange={(e) =>
+                    setSelectedUserForEdit({ ...selectedUserForEdit, name: e.target.value })
+                  }
+                  className="w-full p-2 bg-slate-950 border border-slate-800 rounded-lg text-white"
+                />
+              </div>
+              <div>
+                <label className="block text-slate-400 mb-1">Role Type</label>
+                <select
+                  value={selectedUserForEdit.role}
+                  onChange={(e) =>
+                    setSelectedUserForEdit({
+                      ...selectedUserForEdit,
+                      role: e.target.value as UserRole,
+                    })
+                  }
+                  className="w-full p-2 bg-slate-950 border border-slate-800 rounded-lg text-white"
+                >
+                  <option value="SUPER_ADMIN">Super Admin</option>
+                  <option value="NORMAL_ADMIN">Normal Admin</option>
+                  <option value="FIELD_OFFICER">Field Officer</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-slate-400 mb-1">Regional Jurisdiction</label>
+                <input
+                  type="text"
+                  required
+                  value={selectedUserForEdit.region}
+                  onChange={(e) =>
+                    setSelectedUserForEdit({ ...selectedUserForEdit, region: e.target.value })
+                  }
+                  className="w-full p-2 bg-slate-950 border border-slate-800 rounded-lg text-white"
+                />
+              </div>
+              <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+                <button
+                  type="button"
+                  onClick={() => setSelectedUserForEdit(null)}
+                  className="px-3 py-1.5 text-slate-400 hover:text-white"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg cursor-pointer"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Add User Modal */}
       {showAddModal && (

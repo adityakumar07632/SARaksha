@@ -105,6 +105,7 @@ export const SuperAdminDashboard: React.FC = () => {
           subtitle="4 States active"
           icon={Globe}
           iconColor="text-blue-400 bg-blue-500/10 border-blue-500/20"
+          onClick={() => navigate('/super-admin/watersheds')}
         />
         <StatCard
           title="Interventions"
@@ -112,6 +113,7 @@ export const SuperAdminDashboard: React.FC = () => {
           subtitle="142 Verified"
           icon={Layers}
           iconColor="text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
+          onClick={() => navigate('/watershed/WS-001')}
         />
         <StatCard
           title="Evidence Records"
@@ -143,6 +145,7 @@ export const SuperAdminDashboard: React.FC = () => {
           subtitle="Live ground integrity"
           icon={CheckCircle2}
           iconColor="text-teal-400 bg-teal-500/10 border-teal-500/20"
+          onClick={() => navigate('/super-admin/evidence')}
         />
       </div>
 

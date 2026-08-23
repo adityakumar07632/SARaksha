@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { FileText, Download, Printer, CheckCircle2, ShieldCheck, Sparkles, MapPin, Calendar } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { FileText, Download, Printer, CheckCircle2, ShieldCheck, Sparkles, MapPin, Calendar, ArrowRight } from 'lucide-react';
 import { MOCK_WATERSHEDS, MOCK_INTERVENTIONS, MOCK_HEALTH_BREAKDOWN_CD012 } from '../../data/mockData';
 
 export const ReportsView: React.FC = () => {
+  const navigate = useNavigate();
   const [selectedWatershedId, setSelectedWatershedId] = useState('WS-001');
   const [reportGenerated, setReportGenerated] = useState(false);
 
@@ -105,20 +107,20 @@ export const ReportsView: React.FC = () => {
           </div>
 
           {/* Action buttons */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
+          <div className="flex flex-wrap justify-end gap-3 pt-4 border-t border-slate-800">
             <button
               onClick={() => window.print()}
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-mono font-semibold flex items-center gap-1.5 transition"
+              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-mono font-semibold flex items-center gap-1.5 transition cursor-pointer"
             >
               <Printer className="h-4 w-4" />
               <span>Print Briefing Document</span>
             </button>
             <button
-              onClick={() => alert('Demo PDF download simulated!')}
-              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 transition"
+              onClick={() => navigate('/evidence-dossier?interventionId=INT-RAJ-ALW-001')}
+              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 transition shadow-lg cursor-pointer"
             >
-              <Download className="h-4 w-4" />
-              <span>Download Official PDF (Simulated)</span>
+              <span>View Full Official Evidence Dossier</span>
+              <ArrowRight className="h-4 w-4" />
             </button>
           </div>
         </div>

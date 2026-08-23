@@ -109,6 +109,52 @@ export const GISMap: React.FC<GISMapProps> = ({
     [interventions, evidenceList, onSelectEvidence]
   );
 
+  // Global window bridge for Leaflet marker popups and direct DOM clicks
+  useEffect(() => {
+    (window as any).__saraksha_open_evidence = (intId: string, evId?: string) => {
+      handleOpenEvidence(intId, evId);
+    };
+    return () => {
+      delete (window as any).__saraksha_open_evidence;
+    };
+  }, [handleOpenEvidence]);
+
+  // Capturing-phase click and touch listener on map container for 100% reliable camera badge interaction
+  useEffect(() => {
+    const container = mapContainerRef.current;
+    if (!container) return;
+
+    const handleContainerEvClick = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+
+      const btn = target.closest(
+        '.camera-marker-badge, .ev-camera-btn, .custom-evidence-marker, [data-saraksha-evidence-btn]'
+      ) as HTMLElement | null;
+
+      if (btn) {
+        e.stopPropagation();
+        e.preventDefault();
+        const intId =
+          btn.getAttribute('data-saraksha-intervention-id') ||
+          btn.getAttribute('data-id') ||
+          btn.getAttribute('data-intervention-id') ||
+          'CD-012';
+        const evId =
+          btn.getAttribute('data-saraksha-evidence-id') ||
+          btn.getAttribute('data-evidence-id') ||
+          undefined;
+
+        handleOpenEvidence(intId, evId);
+      }
+    };
+
+    container.addEventListener('click', handleContainerEvClick, true);
+    return () => {
+      container.removeEventListener('click', handleContainerEvClick, true);
+    };
+  }, [handleOpenEvidence]);
+
   // Dynamic Coordinates & Telemetry
   const [cursorCoords, setCursorCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [mapCenterCoords, setMapCenterCoords] = useState<{ lat: number; lng: number }>({
@@ -615,8 +661,8 @@ export const GISMap: React.FC<GISMapProps> = ({
                      ${
                        hasEvidence
                          ? `<div class="flex items-center gap-1.5 pt-1 border-t border-slate-800">
-                              <button type="button" class="ev-camera-btn flex items-center gap-1 px-2 py-0.5 rounded bg-indigo-950/90 hover:bg-indigo-900 border border-indigo-500/60 text-indigo-300 hover:text-white text-[9px] font-mono font-bold transition shadow-sm cursor-pointer" data-id="${item.id}">
-                                <svg class="w-2.5 h-2.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                              <button type="button" class="ev-camera-btn flex items-center gap-1 px-2.5 py-1 rounded-lg bg-indigo-950 hover:bg-indigo-900 border border-indigo-400 text-indigo-200 hover:text-white text-[10px] font-mono font-bold transition shadow-md cursor-pointer" data-id="${item.id}" data-saraksha-intervention-id="${item.id}" onclick="if (window.__saraksha_open_evidence) { window.__saraksha_open_evidence('${item.id}'); event.stopPropagation(); }">
+                                <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                 <span class="truncate">📷 View Evidence (${itemEvidence.length})</span>
                               </button>
                             </div>`
@@ -631,8 +677,8 @@ export const GISMap: React.FC<GISMapProps> = ({
               <span class="rounded-full" style="width: ${innerDotSize}px; height: ${innerDotSize}px; background-color: ${statusColor};"></span>
               ${
                 hasEvidence
-                  ? `<div class="camera-marker-badge absolute -top-1.5 -right-1.5 flex items-center justify-center h-4 w-4 rounded-full bg-indigo-600 hover:bg-indigo-500 border border-white text-white shadow-lg cursor-pointer hover:scale-125 transition-transform" title="Click to view Field Evidence (${itemEvidence.length} photo${itemEvidence.length > 1 ? 's' : ''})" data-id="${item.id}">
-                       <svg class="w-2.5 h-2.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                  ? `<div class="camera-marker-badge absolute -top-1.5 -right-1.5 flex items-center justify-center h-5 w-5 rounded-full bg-indigo-600 hover:bg-indigo-500 border-2 border-white text-white shadow-xl cursor-pointer hover:scale-125 transition-transform z-40" title="Click to view Field Evidence (${itemEvidence.length} photo${itemEvidence.length > 1 ? 's' : ''})" data-id="${item.id}" data-saraksha-intervention-id="${item.id}" onclick="if (window.__saraksha_open_evidence) { window.__saraksha_open_evidence('${item.id}'); event.stopPropagation(); }">
+                       <svg class="w-3 h-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                      </div>`
                   : ''
               }
@@ -670,9 +716,9 @@ export const GISMap: React.FC<GISMapProps> = ({
     if (layers.fieldEvidence && evidenceList.length > 0) {
       evidenceList.forEach((ev) => {
         const evIconHtml = `
-          <div class="relative flex items-center justify-center cursor-pointer group" title="Click to view Field Evidence Dossier (${ev.id})">
-            <div class="flex items-center justify-center h-5 w-5 rounded-md bg-slate-950/95 border-2 border-indigo-400 shadow-xl text-indigo-300 group-hover:scale-125 group-hover:bg-indigo-600 group-hover:text-white group-hover:border-white transition-all">
-              <svg class="w-3 h-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          <div class="relative flex items-center justify-center cursor-pointer group custom-evidence-marker" data-saraksha-intervention-id="${ev.interventionId}" data-saraksha-evidence-id="${ev.id}" onclick="if (window.__saraksha_open_evidence) { window.__saraksha_open_evidence('${ev.interventionId}', '${ev.id}'); event.stopPropagation(); }" title="Click to view Field Evidence Dossier (${ev.id})">
+            <div class="flex items-center justify-center h-6 w-6 rounded-lg bg-slate-950/95 border-2 border-indigo-400 shadow-xl text-indigo-300 group-hover:scale-125 group-hover:bg-indigo-600 group-hover:text-white group-hover:border-white transition-all">
+              <svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             </div>
             <span class="absolute -bottom-5 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 border border-indigo-500/50 text-[9px] font-mono text-indigo-200 px-1.5 py-0.5 rounded whitespace-nowrap pointer-events-none shadow-lg z-50">
               ${ev.id} Photo
@@ -683,9 +729,9 @@ export const GISMap: React.FC<GISMapProps> = ({
         const evIcon = L.divIcon({
           html: evIconHtml,
           className: 'custom-evidence-marker',
-          iconSize: [20, 20],
-          iconAnchor: [10, 10],
-          popupAnchor: [0, -12],
+          iconSize: [24, 24],
+          iconAnchor: [12, 12],
+          popupAnchor: [0, -14],
         });
 
         const evMarker = L.marker(ev.coordinates, { icon: evIcon });
@@ -898,7 +944,7 @@ export const GISMap: React.FC<GISMapProps> = ({
       )}
 
       {/* 5. Bottom-Left Responsive Legend Bar */}
-      <div className="absolute bottom-6 sm:bottom-8 left-2 sm:left-4 z-[1000] max-w-[calc(100%-16px)] sm:max-w-none flex flex-wrap items-center gap-1.5 sm:gap-2.5 bg-slate-950/90 backdrop-blur-md border border-slate-800 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl text-[10px] sm:text-[11px] font-mono text-slate-300 shadow-2xl">
+      <div className="absolute bottom-6 sm:bottom-8 left-2 sm:left-4 z-[20] max-w-[calc(100%-16px)] sm:max-w-none flex flex-wrap items-center gap-1.5 sm:gap-2.5 bg-slate-950/90 backdrop-blur-md border border-slate-800 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl text-[10px] sm:text-[11px] font-mono text-slate-300 shadow-2xl">
         <div className="flex items-center gap-1.5">
           <span className="h-2 w-2 rounded-full bg-emerald-500" />
           <span>Healthy</span>

@@ -25,8 +25,11 @@ export const StatCard: React.FC<StatCardProps> = ({
   return (
     <div
       onClick={onClick}
+      onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } } : undefined}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
       className={`relative overflow-hidden rounded-xl border border-slate-800 bg-slate-900/80 p-3.5 sm:p-4 lg:p-5 backdrop-blur-md transition-all duration-200 hover:border-slate-700 hover:bg-slate-900/95 hover:shadow-lg w-full min-w-0 ${
-        onClick ? 'cursor-pointer' : ''
+        onClick ? 'cursor-pointer hover:border-emerald-500/40 hover:scale-[1.01] focus:outline-none focus:ring-1 focus:ring-emerald-500' : ''
       }`}
     >
       {/* Top row */}
