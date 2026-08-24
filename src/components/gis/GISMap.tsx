@@ -21,6 +21,7 @@ import {
   Sparkles,
   ShieldCheck,
   ImageOff,
+  Check,
 } from 'lucide-react';
 import { Intervention, Watershed, Alert, FieldEvidence } from '../../types';
 import { MOCK_GEOJSON_LAYERS, MOCK_INTERVENTIONS, MOCK_FIELD_EVIDENCE } from '../../data/mockData';
@@ -72,6 +73,15 @@ export const GISMap: React.FC<GISMapProps> = ({
   const [showLayerPanel, setShowLayerPanel] = useState<boolean>(true);
   const [showTelemetryPanel, setShowTelemetryPanel] = useState<boolean>(true);
   const [showAdminContext, setShowAdminContext] = useState<boolean>(true);
+  const layerPanelRef = useRef<HTMLDivElement>(null);
+
+  // Stop Leaflet click/scroll/drag propagation from the Layers panel
+  useEffect(() => {
+    if (layerPanelRef.current) {
+      L.DomEvent.disableClickPropagation(layerPanelRef.current);
+      L.DomEvent.disableScrollPropagation(layerPanelRef.current);
+    }
+  }, [showLayerPanel]);
 
   // Field Evidence Modal State (opens over map on camera icon click)
   const [evidenceModalData, setEvidenceModalData] = useState<{
@@ -917,7 +927,13 @@ export const GISMap: React.FC<GISMapProps> = ({
       </div>
 
       {/* 3. Left Navigation & Zoom Controls */}
-      <div className="absolute top-14 sm:top-18 left-2 sm:left-4 z-[20] flex flex-col rounded-xl border border-slate-700/80 bg-slate-950/90 backdrop-blur-md shadow-2xl overflow-hidden">
+      <div
+        onMouseDown={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
+        onDoubleClick={(e) => e.stopPropagation()}
+        onTouchStart={(e) => e.stopPropagation()}
+        className="absolute top-14 sm:top-18 left-2 sm:left-4 z-[500] flex flex-col rounded-xl border border-slate-700/80 bg-slate-950/90 backdrop-blur-md shadow-2xl overflow-hidden"
+      >
         <button
           onClick={handleZoomIn}
           title="Zoom In"
@@ -946,7 +962,13 @@ export const GISMap: React.FC<GISMapProps> = ({
 
       {/* 4. Bottom-Left Collapsible Administrative Context Card */}
       {showAdminContext && (
-        <div className="absolute bottom-10 sm:bottom-12 left-2 sm:left-4 z-[1000] max-w-[calc(100vw-32px)] sm:max-w-xs rounded-xl border border-cyan-500/40 bg-slate-950/95 p-3 sm:p-3.5 shadow-2xl backdrop-blur-md text-xs font-mono space-y-2 border-l-4 border-l-cyan-400">
+        <div
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
+          onDoubleClick={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
+          className="absolute bottom-10 sm:bottom-12 left-2 sm:left-4 z-[500] max-w-[calc(100vw-32px)] sm:max-w-xs rounded-xl border border-cyan-500/40 bg-slate-950/95 p-3 sm:p-3.5 shadow-2xl backdrop-blur-md text-xs font-mono space-y-2 border-l-4 border-l-cyan-400"
+        >
           <div className="flex items-center justify-between">
             <span className="text-[10px] uppercase font-bold text-cyan-400 tracking-wider">
               ADMINISTRATIVE HIERARCHY
@@ -1004,186 +1026,227 @@ export const GISMap: React.FC<GISMapProps> = ({
       </div>
 
       {/* 6. Top-Right Collapsible Layers Manager */}
-      <div className="absolute top-14 sm:top-18 right-2 sm:right-4 z-[25] w-56 sm:w-64 rounded-xl border border-slate-800 bg-slate-950/95 backdrop-blur-md p-2.5 sm:p-3.5 shadow-2xl text-xs font-mono space-y-2.5 max-h-[calc(100%-120px)] overflow-y-auto">
-        <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-          <span className="font-extrabold text-white uppercase text-[10px] sm:text-[11px] tracking-wider flex items-center gap-1.5">
-            <Layers className="h-3.5 w-3.5 text-cyan-400" />
-            LAYERS
+      <div
+        ref={layerPanelRef}
+        onMouseDown={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
+        onDoubleClick={(e) => e.stopPropagation()}
+        onTouchStart={(e) => e.stopPropagation()}
+        onTouchMove={(e) => e.stopPropagation()}
+        onTouchEnd={(e) => e.stopPropagation()}
+        onWheel={(e) => e.stopPropagation()}
+        className="absolute top-14 sm:top-16 right-2 sm:right-4 z-[800] w-64 sm:w-72 rounded-2xl border border-slate-700/80 bg-slate-950/98 backdrop-blur-xl p-3 sm:p-4 shadow-2xl text-xs font-mono space-y-3 max-h-[calc(100%-80px)] sm:max-h-[calc(100%-100px)] overflow-y-auto"
+      >
+        <div className="flex items-center justify-between border-b border-slate-800 pb-2.5 px-0.5">
+          <span className="font-black text-white uppercase text-xs tracking-wider flex items-center gap-2">
+            <Layers className="h-4 w-4 text-cyan-400 shrink-0" />
+            <span>GIS LAYERS</span>
           </span>
           <button
             onClick={() => setShowLayerPanel(!showLayerPanel)}
-            className="text-slate-400 hover:text-white p-0.5 cursor-pointer"
+            className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800/60 transition cursor-pointer"
+            aria-label={showLayerPanel ? 'Collapse Layers Panel' : 'Expand Layers Panel'}
           >
-            {showLayerPanel ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+            {showLayerPanel ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           </button>
         </div>
 
         {showLayerPanel && (
-          <div className="space-y-3 pt-1">
+          <div className="space-y-3.5 pt-0.5">
             {/* BASEMAP */}
-            <div className="space-y-1">
-              <span className="text-[10px] text-cyan-400 font-bold uppercase tracking-wider block">
-                BASEMAP
-              </span>
-              <div className="space-y-1 text-slate-300 text-[11px]">
-                <label className="flex items-center gap-2 cursor-pointer hover:text-white">
-                  <input
-                    type="radio"
-                    name="basemap-radio-polish"
-                    checked={baseMap === 'satellite'}
-                    onChange={() => setBaseMap('satellite')}
-                    className="text-cyan-600 focus:ring-cyan-500 cursor-pointer"
-                  />
-                  <span>Satellite</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer hover:text-white">
-                  <input
-                    type="radio"
-                    name="basemap-radio-polish"
-                    checked={baseMap === 'satellite-ref'}
-                    onChange={() => setBaseMap('satellite-ref')}
-                    className="text-cyan-600 focus:ring-cyan-500 cursor-pointer"
-                  />
-                  <span>Satellite + Reference</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer hover:text-white">
-                  <input
-                    type="radio"
-                    name="basemap-radio-polish"
-                    checked={baseMap === 'terrain'}
-                    onChange={() => setBaseMap('terrain')}
-                    className="text-cyan-600 focus:ring-cyan-500 cursor-pointer"
-                  />
-                  <span>Terrain</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer hover:text-white">
-                  <input
-                    type="radio"
-                    name="basemap-radio-polish"
-                    checked={baseMap === 'dark'}
-                    onChange={() => setBaseMap('dark')}
-                    className="text-cyan-600 focus:ring-cyan-500 cursor-pointer"
-                  />
-                  <span>Dark</span>
-                </label>
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between px-0.5">
+                <span className="text-[11px] text-cyan-400 font-extrabold uppercase tracking-wider flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 inline-block" />
+                  BASEMAP
+                </span>
+                <span className="text-[10px] text-slate-400 font-medium">Tile Layer</span>
+              </div>
+              <div className="space-y-1.5">
+                {[
+                  { id: 'satellite', label: 'Satellite', hint: 'Esri World Imagery' },
+                  { id: 'satellite-ref', label: 'Satellite + Reference', hint: 'Imagery + Labels' },
+                  { id: 'terrain', label: 'Terrain', hint: 'Topographic Relief' },
+                  { id: 'dark', label: 'Dark', hint: 'Carto Dark Matter' },
+                ].map((bm) => {
+                  const isSelected = baseMap === bm.id;
+                  return (
+                    <label
+                      key={bm.id}
+                      onClick={() => setBaseMap(bm.id as BaseMapType)}
+                      className={`flex items-center justify-between py-2 px-2.5 rounded-xl border transition cursor-pointer min-h-[38px] sm:min-h-[40px] select-none ${
+                        isSelected
+                          ? 'bg-cyan-500/20 border-cyan-500/60 text-white font-bold shadow-md shadow-cyan-950/40'
+                          : 'bg-slate-900/80 border-slate-800/90 text-slate-200 hover:bg-slate-800/80 hover:border-slate-700 hover:text-white'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        {/* Custom high-contrast Radio indicator */}
+                        <div
+                          className={`h-4 w-4 rounded-full border-2 flex items-center justify-center shrink-0 transition ${
+                            isSelected
+                              ? 'border-cyan-400 bg-cyan-950/80 shadow-[0_0_8px_rgba(34,211,238,0.5)]'
+                              : 'border-slate-400 bg-slate-900'
+                          }`}
+                        >
+                          {isSelected && <div className="h-2 w-2 rounded-full bg-cyan-400" />}
+                        </div>
+                        <span className="text-xs truncate">{bm.label}</span>
+                      </div>
+                      <input
+                        type="radio"
+                        name="saraksha-basemap-radio"
+                        checked={isSelected}
+                        onChange={() => setBaseMap(bm.id as BaseMapType)}
+                        className="sr-only"
+                      />
+                      <span className={`text-[10px] truncate ml-1 font-medium ${isSelected ? 'text-cyan-300' : 'text-slate-400'}`}>
+                        {bm.hint}
+                      </span>
+                    </label>
+                  );
+                })}
               </div>
             </div>
 
             {/* ADMINISTRATIVE BOUNDARIES */}
-            <div className="space-y-1 pt-1.5 border-t border-slate-800">
-              <span className="text-[10px] text-cyan-400 font-bold uppercase tracking-wider block">
-                ADMINISTRATIVE BOUNDARIES
-              </span>
-              <div className="space-y-1 text-slate-300 text-[11px]">
-                <label className="flex items-center justify-between cursor-pointer hover:text-white">
-                  <span>Country Boundary</span>
-                  <input
-                    type="checkbox"
-                    checked={layers.countryBoundary}
-                    onChange={(e) => setLayers({ ...layers, countryBoundary: e.target.checked })}
-                    className="rounded border-slate-700 text-cyan-600 focus:ring-cyan-500 cursor-pointer"
-                  />
-                </label>
-                <label className="flex items-center justify-between cursor-pointer hover:text-white">
-                  <span>State / UT Boundaries</span>
-                  <input
-                    type="checkbox"
-                    checked={layers.stateBoundaries}
-                    onChange={(e) => setLayers({ ...layers, stateBoundaries: e.target.checked })}
-                    className="rounded border-slate-700 text-cyan-600 focus:ring-cyan-500 cursor-pointer"
-                  />
-                </label>
-                <label className="flex items-center justify-between cursor-pointer hover:text-white">
-                  <span>District Boundaries</span>
-                  <input
-                    type="checkbox"
-                    checked={layers.districtBoundaries}
-                    onChange={(e) => setLayers({ ...layers, districtBoundaries: e.target.checked })}
-                    className="rounded border-slate-700 text-cyan-600 focus:ring-cyan-500 cursor-pointer"
-                  />
-                </label>
+            <div className="space-y-1.5 pt-2 border-t border-slate-800">
+              <div className="flex items-center justify-between px-0.5">
+                <span className="text-[11px] text-cyan-400 font-extrabold uppercase tracking-wider flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 inline-block" />
+                  ADMINISTRATIVE BOUNDARIES
+                </span>
+                <span className="text-[10px] text-slate-400 font-medium">Overlays</span>
+              </div>
+              <div className="space-y-1.5">
+                {[
+                  {
+                    key: 'countryBoundary' as const,
+                    label: 'Country Boundary',
+                    tag: 'National Limit',
+                    checked: layers.countryBoundary,
+                  },
+                  {
+                    key: 'stateBoundaries' as const,
+                    label: 'State / UT Boundaries',
+                    tag: 'State Limits',
+                    checked: layers.stateBoundaries,
+                  },
+                  {
+                    key: 'districtBoundaries' as const,
+                    label: 'District Boundaries',
+                    tag: 'District Limits',
+                    checked: layers.districtBoundaries,
+                  },
+                ].map((item) => {
+                  return (
+                    <label
+                      key={item.key}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setLayers((prev) => ({ ...prev, [item.key]: !prev[item.key] }));
+                      }}
+                      className={`flex items-center justify-between py-2 px-2.5 rounded-xl border transition cursor-pointer min-h-[38px] sm:min-h-[40px] select-none ${
+                        item.checked
+                          ? 'bg-cyan-500/20 border-cyan-500/60 text-white font-bold shadow-md shadow-cyan-950/40'
+                          : 'bg-slate-900/80 border-slate-800/90 text-slate-200 hover:bg-slate-800/80 hover:border-slate-700 hover:text-white'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        {/* Custom high-contrast Checkbox indicator */}
+                        <div
+                          className={`h-4 w-4 rounded border-2 flex items-center justify-center shrink-0 transition ${
+                            item.checked
+                              ? 'border-cyan-400 bg-cyan-500 text-slate-950 shadow-[0_0_8px_rgba(34,211,238,0.5)]'
+                              : 'border-slate-400 bg-slate-900'
+                          }`}
+                        >
+                          {item.checked && <Check className="h-3 w-3 stroke-[3]" />}
+                        </div>
+                        <span className="text-xs truncate">{item.label}</span>
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={item.checked}
+                        onChange={() => {}}
+                        className="sr-only"
+                      />
+                      <span className={`text-[10px] truncate ml-1 font-medium ${item.checked ? 'text-cyan-300' : 'text-slate-400'}`}>
+                        {item.tag}
+                      </span>
+                    </label>
+                  );
+                })}
               </div>
             </div>
 
             {/* SARAKSHA DATA */}
-            <div className="space-y-1 pt-1.5 border-t border-slate-800">
-              <span className="text-[10px] text-cyan-400 font-bold uppercase tracking-wider block">
-                SARAKSHA DATA
-              </span>
-              <div className="space-y-1 text-slate-300 text-[11px]">
-                <label className="flex items-center justify-between cursor-pointer hover:text-white">
-                  <span>Interventions</span>
-                  <input
-                    type="checkbox"
-                    checked={layers.interventions}
-                    onChange={(e) => setLayers({ ...layers, interventions: e.target.checked })}
-                    className="rounded border-slate-700 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
-                  />
-                </label>
-                <label className="flex items-center justify-between cursor-pointer hover:text-white">
-                  <span>Catchment Boundary</span>
-                  <input
-                    type="checkbox"
-                    checked={layers.watershedBoundary}
-                    onChange={(e) => setLayers({ ...layers, watershedBoundary: e.target.checked })}
-                    className="rounded border-slate-700 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
-                  />
-                </label>
-                <label className="flex items-center justify-between cursor-pointer hover:text-white">
-                  <span>Drainage / Streams</span>
-                  <input
-                    type="checkbox"
-                    checked={layers.drainageNetwork}
-                    onChange={(e) => setLayers({ ...layers, drainageNetwork: e.target.checked })}
-                    className="rounded border-slate-700 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
-                  />
-                </label>
-                <label className="flex items-center justify-between cursor-pointer hover:text-white">
-                  <span>Water Bodies</span>
-                  <input
-                    type="checkbox"
-                    checked={layers.waterBodies}
-                    onChange={(e) => setLayers({ ...layers, waterBodies: e.target.checked })}
-                    className="rounded border-slate-700 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
-                  />
-                </label>
-                <label className="flex items-center justify-between cursor-pointer hover:text-white">
-                  <span>Sentinel-2 AOI</span>
-                  <input
-                    type="checkbox"
-                    checked={layers.sentinel2Aoi}
-                    onChange={(e) => setLayers({ ...layers, sentinel2Aoi: e.target.checked })}
-                    className="rounded border-slate-700 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
-                  />
-                </label>
-                <label className="flex items-center justify-between cursor-pointer hover:text-white">
-                  <span>Field Evidence</span>
-                  <input
-                    type="checkbox"
-                    checked={layers.fieldEvidence}
-                    onChange={(e) => setLayers({ ...layers, fieldEvidence: e.target.checked })}
-                    className="rounded border-slate-700 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
-                  />
-                </label>
-                <label className="flex items-center justify-between cursor-pointer hover:text-white">
-                  <span>Active Alerts</span>
-                  <input
-                    type="checkbox"
-                    checked={layers.alerts}
-                    onChange={(e) => setLayers({ ...layers, alerts: e.target.checked })}
-                    className="rounded border-slate-700 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
-                  />
-                </label>
+            <div className="space-y-1.5 pt-2 border-t border-slate-800">
+              <div className="flex items-center justify-between px-0.5">
+                <span className="text-[11px] text-emerald-400 font-extrabold uppercase tracking-wider flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 inline-block" />
+                  SARAKSHA DATA
+                </span>
+                <span className="text-[10px] text-slate-400 font-medium">Features</span>
+              </div>
+              <div className="space-y-1.5">
+                {[
+                  { key: 'interventions' as const, label: 'Interventions', count: interventions.length, checked: layers.interventions },
+                  { key: 'watershedBoundary' as const, label: 'Catchment Boundary', tag: 'Polygon', checked: layers.watershedBoundary },
+                  { key: 'drainageNetwork' as const, label: 'Drainage / Streams', tag: 'Hydrology', checked: layers.drainageNetwork },
+                  { key: 'waterBodies' as const, label: 'Water Bodies', tag: 'NDWI', checked: layers.waterBodies },
+                  { key: 'sentinel2Aoi' as const, label: 'Sentinel-2 AOI', tag: '10m Raster', checked: layers.sentinel2Aoi },
+                  { key: 'fieldEvidence' as const, label: 'Field Evidence', count: evidenceList.length, checked: layers.fieldEvidence },
+                  { key: 'alerts' as const, label: 'Active Alerts', count: alerts.length, checked: layers.alerts },
+                ].map((item) => {
+                  return (
+                    <label
+                      key={item.key}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setLayers((prev) => ({ ...prev, [item.key]: !prev[item.key] }));
+                      }}
+                      className={`flex items-center justify-between py-2 px-2.5 rounded-xl border transition cursor-pointer min-h-[38px] sm:min-h-[40px] select-none ${
+                        item.checked
+                          ? 'bg-emerald-500/20 border-emerald-500/60 text-white font-bold shadow-md shadow-emerald-950/40'
+                          : 'bg-slate-900/80 border-slate-800/90 text-slate-200 hover:bg-slate-800/80 hover:border-slate-700 hover:text-white'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        {/* Custom high-contrast Checkbox indicator (Emerald) */}
+                        <div
+                          className={`h-4 w-4 rounded border-2 flex items-center justify-center shrink-0 transition ${
+                            item.checked
+                              ? 'border-emerald-400 bg-emerald-500 text-slate-950 shadow-[0_0_8px_rgba(52,211,153,0.5)]'
+                              : 'border-slate-400 bg-slate-900'
+                          }`}
+                        >
+                          {item.checked && <Check className="h-3 w-3 stroke-[3]" />}
+                        </div>
+                        <span className="text-xs truncate">{item.label}</span>
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={item.checked}
+                        onChange={() => {}}
+                        className="sr-only"
+                      />
+                      <span className={`text-[10px] truncate ml-1 font-semibold ${item.checked ? 'text-emerald-300' : 'text-slate-400'}`}>
+                        {item.count !== undefined ? `${item.count} items` : item.tag}
+                      </span>
+                    </label>
+                  );
+                })}
               </div>
             </div>
 
             {/* Clear All Layers Button */}
             <button
               onClick={handleClearAllLayers}
-              className="w-full py-1 px-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 text-[10px] font-bold transition flex items-center justify-center gap-1.5 cursor-pointer border border-rose-500/30"
+              className="w-full py-2 px-3 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 hover:text-rose-200 text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer border border-rose-500/40 min-h-[38px] shadow-sm active:scale-[0.98]"
             >
-              <Trash2 className="h-3 w-3" />
-              <span>Clear All Layers</span>
+              <Trash2 className="h-3.5 w-3.5" />
+              <span>Clear All Feature Layers</span>
             </button>
           </div>
         )}
@@ -1191,7 +1254,13 @@ export const GISMap: React.FC<GISMapProps> = ({
 
       {/* 7. Bottom-Right Collapsible Map Telemetry Card */}
       {showTelemetryPanel && (
-        <div className="absolute bottom-8 right-4 z-[20] w-72 rounded-xl border border-slate-800 bg-slate-950/95 backdrop-blur-md p-3 shadow-2xl text-xs font-mono space-y-2 hidden sm:block">
+        <div
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
+          onDoubleClick={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
+          className="absolute bottom-8 right-4 z-[500] w-72 rounded-xl border border-slate-800 bg-slate-950/95 backdrop-blur-md p-3 shadow-2xl text-xs font-mono space-y-2 hidden sm:block"
+        >
           <div className="flex items-center justify-between border-b border-slate-800 pb-1">
             <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
               MAP TELEMETRY
