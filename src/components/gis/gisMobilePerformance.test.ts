@@ -10,7 +10,7 @@ describe('Phase 15: GIS Map Mobile Performance & Touch Interaction Architecture'
       dragging: true,
       touchZoom: true,
       doubleClickZoom: true,
-      scrollWheelZoom: false,
+      scrollWheelZoom: true,
       inertia: true,
       inertiaDeceleration: 3000,
       inertiaMaxSpeed: 1500,
@@ -24,7 +24,7 @@ describe('Phase 15: GIS Map Mobile Performance & Touch Interaction Architecture'
     expect(leafLetMobileConfig.inertia).toBe(true);
     expect(leafLetMobileConfig.inertiaDeceleration).toBe(3000);
     expect(leafLetMobileConfig.inertiaMaxSpeed).toBe(1500);
-    expect(leafLetMobileConfig.scrollWheelZoom).toBe(false);
+    expect(leafLetMobileConfig.scrollWheelZoom).toBe(true);
     expect(leafLetMobileConfig.tap).toBe(false);
   });
 

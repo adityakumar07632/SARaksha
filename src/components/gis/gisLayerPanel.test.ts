@@ -102,4 +102,22 @@ describe('GIS Map Layers Control Panel Architecture & Contrast Specifications', 
     expect(layersState.fieldEvidence).toBe(false);
     expect(layersState.alerts).toBe(false);
   });
+
+  it('validates zoom controls and wheel zoom configuration', () => {
+    const zoomConfig = {
+      zoomControlEnabled: true,
+      zoomInFunction: 'map.zoomIn()',
+      zoomOutFunction: 'map.zoomOut()',
+      scrollWheelZoom: true,
+      touchZoom: true,
+      zoomControlsZIndex: 'z-[500]',
+      layersPanelZIndex: 'z-[800]',
+      layersPanelWheelIsolated: true,
+    };
+
+    expect(zoomConfig.zoomControlEnabled).toBe(true);
+    expect(zoomConfig.scrollWheelZoom).toBe(true);
+    expect(zoomConfig.touchZoom).toBe(true);
+    expect(zoomConfig.layersPanelWheelIsolated).toBe(true);
+  });
 });

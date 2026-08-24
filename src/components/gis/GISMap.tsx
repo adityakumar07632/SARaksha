@@ -74,14 +74,29 @@ export const GISMap: React.FC<GISMapProps> = ({
   const [showTelemetryPanel, setShowTelemetryPanel] = useState<boolean>(true);
   const [showAdminContext, setShowAdminContext] = useState<boolean>(true);
   const layerPanelRef = useRef<HTMLDivElement>(null);
+  const zoomControlsRef = useRef<HTMLDivElement>(null);
+  const adminContextRef = useRef<HTMLDivElement>(null);
+  const telemetryRef = useRef<HTMLDivElement>(null);
 
-  // Stop Leaflet click/scroll/drag propagation from the Layers panel
+  // Stop Leaflet click/scroll/drag propagation from overlaid controls
   useEffect(() => {
     if (layerPanelRef.current) {
       L.DomEvent.disableClickPropagation(layerPanelRef.current);
       L.DomEvent.disableScrollPropagation(layerPanelRef.current);
     }
-  }, [showLayerPanel]);
+    if (zoomControlsRef.current) {
+      L.DomEvent.disableClickPropagation(zoomControlsRef.current);
+      L.DomEvent.disableScrollPropagation(zoomControlsRef.current);
+    }
+    if (adminContextRef.current) {
+      L.DomEvent.disableClickPropagation(adminContextRef.current);
+      L.DomEvent.disableScrollPropagation(adminContextRef.current);
+    }
+    if (telemetryRef.current) {
+      L.DomEvent.disableClickPropagation(telemetryRef.current);
+      L.DomEvent.disableScrollPropagation(telemetryRef.current);
+    }
+  }, [showLayerPanel, showAdminContext, showTelemetryPanel]);
 
   // Field Evidence Modal State (opens over map on camera icon click)
   const [evidenceModalData, setEvidenceModalData] = useState<{
@@ -231,7 +246,7 @@ export const GISMap: React.FC<GISMapProps> = ({
       dragging: true,
       touchZoom: true,
       doubleClickZoom: true,
-      scrollWheelZoom: false, // Prevents intercepting page scroll on mobile/touch screens
+      scrollWheelZoom: true, // Normal Leaflet mouse wheel zoom
       inertia: true,
       inertiaDeceleration: 3000,
       inertiaMaxSpeed: 1500,
@@ -836,8 +851,19 @@ export const GISMap: React.FC<GISMapProps> = ({
   ]);
 
   // Controls Handlers
-  const handleZoomIn = () => mapInstanceRef.current?.zoomIn();
-  const handleZoomOut = () => mapInstanceRef.current?.zoomOut();
+  const handleZoomIn = (e?: React.MouseEvent | React.TouchEvent) => {
+    if (e) {
+      e.stopPropagation();
+    }
+    mapInstanceRef.current?.zoomIn();
+  };
+
+  const handleZoomOut = (e?: React.MouseEvent | React.TouchEvent) => {
+    if (e) {
+      e.stopPropagation();
+    }
+    mapInstanceRef.current?.zoomOut();
+  };
   const handleResetNationalView = () => {
     mapInstanceRef.current?.flyTo([22.8, 79.2], 6.0, {
       animate: true,
@@ -928,30 +954,33 @@ export const GISMap: React.FC<GISMapProps> = ({
 
       {/* 3. Left Navigation & Zoom Controls */}
       <div
-        onMouseDown={(e) => e.stopPropagation()}
-        onClick={(e) => e.stopPropagation()}
-        onDoubleClick={(e) => e.stopPropagation()}
-        onTouchStart={(e) => e.stopPropagation()}
-        className="absolute top-14 sm:top-18 left-2 sm:left-4 z-[500] flex flex-col rounded-xl border border-slate-700/80 bg-slate-950/90 backdrop-blur-md shadow-2xl overflow-hidden"
+        ref={zoomControlsRef}
+        className="absolute top-14 sm:top-18 left-2 sm:left-4 z-[500] flex flex-col rounded-xl border border-slate-700/80 bg-slate-950/95 backdrop-blur-md shadow-2xl overflow-hidden pointer-events-auto select-none"
       >
         <button
+          type="button"
           onClick={handleZoomIn}
           title="Zoom In"
-          className="p-1.5 sm:p-2 text-slate-300 hover:text-white hover:bg-slate-800/80 transition cursor-pointer border-b border-slate-800 flex items-center justify-center"
+          className="p-1.5 sm:p-2 text-slate-300 hover:text-white hover:bg-slate-800/80 active:bg-slate-700 transition cursor-pointer border-b border-slate-800 flex items-center justify-center pointer-events-auto"
+          aria-label="Zoom in"
         >
           <Plus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
         </button>
         <button
+          type="button"
           onClick={handleZoomOut}
           title="Zoom Out"
-          className="p-1.5 sm:p-2 text-slate-300 hover:text-white hover:bg-slate-800/80 transition cursor-pointer border-b border-slate-800 flex items-center justify-center"
+          className="p-1.5 sm:p-2 text-slate-300 hover:text-white hover:bg-slate-800/80 active:bg-slate-700 transition cursor-pointer border-b border-slate-800 flex items-center justify-center pointer-events-auto"
+          aria-label="Zoom out"
         >
           <Minus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
         </button>
         <button
+          type="button"
           onClick={handleResetNationalView}
           title="Reset to India National Overview"
-          className="p-1.5 sm:p-2 text-cyan-400 hover:text-cyan-300 hover:bg-slate-800/80 transition cursor-pointer border-b border-slate-800 flex items-center justify-center"
+          className="p-1.5 sm:p-2 text-cyan-400 hover:text-cyan-300 hover:bg-slate-800/80 active:bg-slate-700 transition cursor-pointer border-b border-slate-800 flex items-center justify-center pointer-events-auto"
+          aria-label="Reset view"
         >
           <Crosshair className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
         </button>
@@ -963,11 +992,8 @@ export const GISMap: React.FC<GISMapProps> = ({
       {/* 4. Bottom-Left Collapsible Administrative Context Card */}
       {showAdminContext && (
         <div
-          onMouseDown={(e) => e.stopPropagation()}
-          onClick={(e) => e.stopPropagation()}
-          onDoubleClick={(e) => e.stopPropagation()}
-          onTouchStart={(e) => e.stopPropagation()}
-          className="absolute bottom-10 sm:bottom-12 left-2 sm:left-4 z-[500] max-w-[calc(100vw-32px)] sm:max-w-xs rounded-xl border border-cyan-500/40 bg-slate-950/95 p-3 sm:p-3.5 shadow-2xl backdrop-blur-md text-xs font-mono space-y-2 border-l-4 border-l-cyan-400"
+          ref={adminContextRef}
+          className="absolute bottom-10 sm:bottom-12 left-2 sm:left-4 z-[500] max-w-[calc(100vw-32px)] sm:max-w-xs rounded-xl border border-cyan-500/40 bg-slate-950/95 p-3 sm:p-3.5 shadow-2xl backdrop-blur-md text-xs font-mono space-y-2 border-l-4 border-l-cyan-400 pointer-events-auto select-none"
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] uppercase font-bold text-cyan-400 tracking-wider">
@@ -1255,11 +1281,8 @@ export const GISMap: React.FC<GISMapProps> = ({
       {/* 7. Bottom-Right Collapsible Map Telemetry Card */}
       {showTelemetryPanel && (
         <div
-          onMouseDown={(e) => e.stopPropagation()}
-          onClick={(e) => e.stopPropagation()}
-          onDoubleClick={(e) => e.stopPropagation()}
-          onTouchStart={(e) => e.stopPropagation()}
-          className="absolute bottom-8 right-4 z-[500] w-72 rounded-xl border border-slate-800 bg-slate-950/95 backdrop-blur-md p-3 shadow-2xl text-xs font-mono space-y-2 hidden sm:block"
+          ref={telemetryRef}
+          className="absolute bottom-8 right-4 z-[500] w-72 rounded-xl border border-slate-800 bg-slate-950/95 backdrop-blur-md p-3 shadow-2xl text-xs font-mono space-y-2 hidden sm:block pointer-events-auto select-none"
         >
           <div className="flex items-center justify-between border-b border-slate-800 pb-1">
             <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
