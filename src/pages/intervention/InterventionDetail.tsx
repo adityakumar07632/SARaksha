@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import {
   FileText,
   ShieldCheck,
@@ -54,6 +54,7 @@ import { DataSourceBadge } from '../../components/ui/DataSourceBadge';
 import { HealthScoreGauge } from '../../components/ui/HealthScoreGauge';
 import { EvidenceImage } from '../../components/ui/EvidenceImage';
 import { EvidenceChain } from '../../components/intervention/EvidenceChain';
+import { WatershedImpactAnalysis } from '../../components/impact/WatershedImpactAnalysis';
 import { FieldEvidence, LifecycleStage, LifecycleStageDetail } from '../../types';
 import {
   geospatialService,
@@ -111,10 +112,17 @@ export const InterventionDetail: React.FC = () => {
     (a) => a.interventionId === intervention.id && !a.isResolved
   );
 
+  const [searchParams] = useSearchParams();
+  const initialTab = searchParams.get('tab') as any;
+
   // Tab State
   const [activeTab, setActiveTab] = useState<
     'overview' | 'evidence' | 'satellite' | 'before-after' | 'health' | 'alerts'
-  >('overview');
+  >(
+    initialTab && ['overview', 'evidence', 'satellite', 'before-after', 'health', 'alerts'].includes(initialTab)
+      ? initialTab
+      : 'overview'
+  );
 
   // Before/After slider position (0 to 100)
   const [sliderPos, setSliderPos] = useState<number>(50);
@@ -420,6 +428,13 @@ export const InterventionDetail: React.FC = () => {
       responsibleAgency: 'Automated Multi-Spectral Sentinel-2 System',
       notes: '10-day orbital passes tracking vegetation regeneration and ponding indices.',
     },
+    'Under Intervention': {
+      stage: 'Under Intervention',
+      date: 'Active Horizon (2025 - 2026)',
+      status: 'Current',
+      responsibleAgency: 'Watershed Implementing Agency',
+      notes: 'Active biological and engineering catchment treatment in progress.',
+    },
     'Impact Assessed': {
       stage: 'Impact Assessed',
       date: 'Scheduled Oct 2026',
@@ -581,7 +596,7 @@ export const InterventionDetail: React.FC = () => {
             { id: 'overview', label: '1. Overview', icon: Layers },
             { id: 'evidence', label: '2. Field Evidence', icon: Camera, badge: evidenceList.length },
             { id: 'satellite', label: '3. Satellite Raster Intelligence', icon: Satellite },
-            { id: 'before-after', label: '4. Before / After', icon: GitCompare },
+            { id: 'before-after', label: '4. Watershed Impact Analysis', icon: GitCompare },
             { id: 'health', label: '5. Health Score', icon: BrainCircuit },
             { id: 'alerts', label: '6. Alerts & Monitoring', icon: AlertTriangle, badge: interventionAlerts.length + monitoringEvents.length },
           ].map((tab) => {
@@ -1781,111 +1796,14 @@ export const InterventionDetail: React.FC = () => {
       )}
 
       {/* ======================================================== */}
-      {/* TAB 4: BEFORE / AFTER WITH DYNAMIC CHANGE DETECTION */}
+      {/* TAB 4: WATERSHED IMPACT ANALYSIS (BEFORE VS AFTER) */}
       {/* ======================================================== */}
       {activeTab === 'before-after' && (
-        <div className="space-y-6">
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/90 p-6 space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
-              <div>
-                <h3 className="text-sm font-bold text-white font-mono uppercase tracking-wider">
-                  Spatial & Spectral Change Detection Model
-                </h3>
-                <p className="text-xs text-slate-400 font-mono">
-                  Calculated dynamically from multi-temporal observations ({changeObservations[0]?.baselineDate || '2024 Baseline'} vs{' '}
-                  {changeObservations[0]?.comparisonDate || '2026 Observation'})
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                {changeObservations.map((obs) => (
-                  <span
-                    key={obs.metric}
-                    className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded border border-emerald-500/20 font-bold"
-                  >
-                    {obs.metric}: {obs.percentageChange > 0 ? `+${obs.percentageChange}%` : `${obs.percentageChange}%`}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Split Slider Comparison */}
-            <div className="relative rounded-2xl overflow-hidden border border-slate-700 aspect-video bg-black select-none max-w-4xl mx-auto">
-              <img
-                src="/assets/evidence/watershed-post-monsoon.jpg"
-                alt="After intervention (Post-monsoon monitored)"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute top-4 right-4 bg-emerald-950/90 border border-emerald-500/50 px-3 py-1.5 rounded-lg text-xs font-mono text-emerald-300 font-bold shadow-xl">
-                AFTER (POST-MONSOON MONITORED)
-              </div>
-
-              <div
-                className="absolute inset-0 overflow-hidden border-r-2 border-white"
-                style={{ width: `${sliderPos}%` }}
-              >
-                <img
-                  src="/assets/evidence/watershed-pre-construction.jpg"
-                  alt="Before intervention (Pre-construction baseline)"
-                  className="w-full h-full object-cover filter saturate-75 brightness-90 max-w-none"
-                  style={{ width: '100%', minWidth: '100%' }}
-                />
-                <div className="absolute top-4 left-4 bg-amber-950/90 border border-amber-500/50 px-3 py-1.5 rounded-lg text-xs font-mono text-amber-300 font-bold shadow-xl">
-                  BEFORE (PRE-CONSTRUCTION BASELINE)
-                </div>
-              </div>
-
-              <div
-                className="absolute top-0 bottom-0 flex items-center justify-center -ml-4 pointer-events-none"
-                style={{ left: `${sliderPos}%` }}
-              >
-                <div className="h-10 w-10 rounded-full bg-white shadow-2xl flex items-center justify-center text-slate-900 font-bold text-xs">
-                  &harr;
-                </div>
-              </div>
-
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={sliderPos}
-                onChange={(e) => setSliderPos(Number(e.target.value))}
-                className="absolute inset-0 opacity-0 cursor-ew-resize w-full h-full z-10"
-              />
-            </div>
-
-            <div className="flex justify-between items-center text-xs font-mono text-slate-400 max-w-4xl mx-auto">
-              <span>&larr; Drag slider to inspect baseline</span>
-              <span>Drag slider to reveal post-construction &rarr;</span>
-            </div>
-
-            {/* Observed Change Section */}
-            <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-slate-300 space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="font-bold text-emerald-400 flex items-center gap-1.5 text-xs uppercase tracking-wider">
-                  <Info className="h-4 w-4" />
-                  OBSERVED CHANGE ANALYSIS
-                </span>
-                <DataSourceBadge
-                  type={satelliteState === 'REAL' ? 'REAL_DATA' : 'DEMO_DATA'}
-                  sourceText={satelliteState === 'REAL' ? 'REAL RASTER PIXELS' : 'DEMO DATA'}
-                  size="sm"
-                />
-              </div>
-
-              <div className="space-y-1 text-slate-300">
-                {changeObservations.map((obs) => (
-                  <p key={obs.metric}>
-                    &bull; <strong>{obs.metric}:</strong> {obs.interpretation} (Baseline: {obs.baselineValue} &rarr; Comparison: {obs.comparisonValue})
-                  </p>
-                ))}
-              </div>
-
-              <div className="p-3 rounded-lg bg-amber-950/20 border border-amber-500/30 text-amber-300 text-[11px] leading-relaxed">
-                ⚠️ <strong>SCIENTIFIC PRINCIPLE:</strong> Observed spectral changes describe environmental conditions over time and do not prove causal attribution to the intervention without hydrological modeling.
-              </div>
-            </div>
-          </div>
-        </div>
+        <WatershedImpactAnalysis
+          intervention={intervention}
+          evidenceList={evidenceList}
+          onOpenEvidenceModal={(ev) => setSelectedEvidenceForModal(ev)}
+        />
       )}
 
       {/* ======================================================== */}

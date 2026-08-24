@@ -75,9 +75,9 @@ export const AlertsCenter: React.FC = () => {
             className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-white focus:outline-none focus:border-emerald-500 text-xs"
           >
             <option value="ALL">All States</option>
-            <option value="Rajasthan">Rajasthan (Alwar North)</option>
-            <option value="Maharashtra">Maharashtra (Pune South)</option>
-            <option value="Madhya Pradesh">Madhya Pradesh (Ujjain West)</option>
+            {Array.from(new Set(alerts.map((a) => a.state))).map((st) => (
+              <option key={st} value={st}>{st}</option>
+            ))}
           </select>
         </div>
       </div>

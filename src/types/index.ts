@@ -48,7 +48,8 @@ export type LifecycleStage =
   | 'Completed'
   | 'Field Verified'
   | 'Monitoring'
-  | 'Impact Assessed';
+  | 'Impact Assessed'
+  | 'Under Intervention';
 
 export type InterventionType = 
   | 'Check Dam'
@@ -56,7 +57,89 @@ export type InterventionType =
   | 'Farm Pond'
   | 'Percolation Tank'
   | 'Gully Plug'
-  | 'Afforestation Area';
+  | 'Afforestation Area'
+  | 'Afforestation Zone'
+  | 'Recharge Shaft'
+  | 'Contour Bund'
+  | 'Desilting Site'
+  | 'Stream Restoration'
+  | 'Drainage Treatment';
+
+export type ImpactClassification =
+  | 'SIGNIFICANT_IMPROVEMENT'
+  | 'POSITIVE_IMPROVEMENT'
+  | 'MINIMAL_CHANGE'
+  | 'NEGATIVE_TREND'
+  | 'SIGNIFICANT_DEGRADATION';
+
+export interface PeriodMetrics {
+  periodLabel: string;
+  date: string;
+  image: string;
+  ndvi: number;
+  vegetationPercent: number;
+  waterPresencePercent: number;
+  barrenAreaPercent: number;
+  healthScore: number;
+  waterSurfaceAreaKm2: number;
+  waterConfidence: number;
+  soilMoisture: string;
+  erosionRisk: 'LOW' | 'MODERATE' | 'HIGH' | 'CRITICAL';
+}
+
+export interface LulcDistribution {
+  water: number;
+  vegetation: number;
+  agriculture: number;
+  barren: number;
+  builtUp?: number;
+}
+
+export interface ImpactTimelineItem {
+  year: string;
+  stage: string;
+  title: string;
+  description: string;
+  badge?: string;
+}
+
+export interface ImpactFieldCorrelation {
+  metric: string;
+  satelliteObservation: string;
+  fieldFinding: string;
+  consistency: 'CONSISTENT' | 'PARTIALLY_CONSISTENT' | 'INCONSISTENT';
+  interpretation: string;
+}
+
+export interface ImpactAnalysisRecord {
+  interventionId: string;
+  watershedId: string;
+  locationName: string;
+  coordinates: [number, number];
+  areaKm2: number;
+  dataClassification: 'DEMO_DATA';
+  before: PeriodMetrics;
+  after: PeriodMetrics;
+  lulc: {
+    before: LulcDistribution;
+    after: LulcDistribution;
+  };
+  fieldEvidenceIds: string[];
+  fieldPhotos?: {
+    before?: { url: string; caption: string; date: string };
+    after?: { url: string; caption: string; date: string };
+  };
+  timeline: ImpactTimelineItem[];
+  fieldCorrelation: ImpactFieldCorrelation[];
+  impactScore: number; // delta health score e.g. +18
+  classification: ImpactClassification;
+  aiInterpretation: {
+    summary: string;
+    confidence: number;
+    disclaimer: string;
+  };
+  recommendations: string[];
+}
 
 export interface Intervention {
   id: string;

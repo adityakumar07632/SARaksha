@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Search, Filter, ArrowRight, Layers, Globe } from 'lucide-react';
-import { MOCK_WATERSHEDS } from '../../data/mockData';
+import { useData } from '../../context/DataContext';
 import { Badge } from '../../components/ui/Badge';
 
 export const WatershedsList: React.FC = () => {
   const navigate = useNavigate();
+  const { watersheds } = useData();
   const [searchTerm, setSearchTerm] = useState('');
   const [stateFilter, setStateFilter] = useState('ALL');
 
-  const filtered = MOCK_WATERSHEDS.filter((w) => {
+  const statesList = Array.from(new Set(watersheds.map((w) => w.state)));
+
+  const filtered = watersheds.filter((w) => {
     const matchState = stateFilter === 'ALL' || w.state.toLowerCase() === stateFilter.toLowerCase();
     const matchSearch =
       w.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -52,11 +55,9 @@ export const WatershedsList: React.FC = () => {
             className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs font-mono text-white focus:outline-none focus:border-emerald-500"
           >
             <option value="ALL">All States</option>
-            <option value="Rajasthan">Rajasthan</option>
-            <option value="Punjab">Punjab</option>
-            <option value="Madhya Pradesh">Madhya Pradesh</option>
-            <option value="Gujarat">Gujarat</option>
-            <option value="Haryana">Haryana</option>
+            {statesList.map((st) => (
+              <option key={st} value={st}>{st}</option>
+            ))}
           </select>
         </div>
       </div>

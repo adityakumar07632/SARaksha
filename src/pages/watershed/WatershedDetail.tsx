@@ -8,7 +8,8 @@ import {
   AlertTriangle,
   Calendar,
   Compass,
-  FileText
+  FileText,
+  Sparkles,
 } from 'lucide-react';
 import { MOCK_WATERSHEDS, MOCK_INTERVENTIONS, MOCK_ALERTS, MOCK_HEALTH_BREAKDOWN_CD012 } from '../../data/mockData';
 import { Badge } from '../../components/ui/Badge';
@@ -109,6 +110,72 @@ export const WatershedDetail: React.FC = () => {
             title="Watershed Health Index"
           />
         </div>
+      </div>
+
+      {/* Impact Assessment Section */}
+      <div className="rounded-xl border border-slate-800 bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950/20 p-5 font-mono">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3 mb-4">
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-8 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0">
+              <Sparkles className="h-4 w-4" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+                Watershed Multi-Temporal Impact Assessment
+              </h3>
+              <p className="text-xs text-slate-400">
+                Satellite change detection comparing 2022 baseline vs 2026 monitored state across the catchment.
+              </p>
+            </div>
+          </div>
+          <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold self-start sm:self-auto">
+            MULTI-TEMPORAL SENTINEL-2
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs mb-4">
+          <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800">
+            <span className="text-[10px] text-slate-400 block uppercase">Catchment Health Trajectory</span>
+            <div className="flex items-baseline gap-2 mt-1">
+              <span className="text-lg font-bold text-white">58 &rarr; {watershed.healthScore}/100</span>
+              <span className="text-emerald-400 font-bold">+{watershed.healthScore - 58 > 0 ? `${watershed.healthScore - 58}` : 18} pts</span>
+            </div>
+            <span className="text-[10px] text-slate-400 block mt-0.5">Significant catchment improvement</span>
+          </div>
+
+          <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800">
+            <span className="text-[10px] text-slate-400 block uppercase">Vegetation Biomass Delta</span>
+            <div className="flex items-baseline gap-2 mt-1">
+              <span className="text-lg font-bold text-emerald-400">+19% Cover</span>
+              <span className="text-xs text-slate-400">(42% &rarr; 61%)</span>
+            </div>
+            <span className="text-[10px] text-slate-400 block mt-0.5">Riparian &amp; bund stabilization</span>
+          </div>
+
+          <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800">
+            <span className="text-[10px] text-slate-400 block uppercase">Surface Water Dynamics</span>
+            <div className="flex items-baseline gap-2 mt-1">
+              <span className="text-lg font-bold text-cyan-400">+72% Storage Area</span>
+              <span className="text-xs text-slate-400">(0.18 &rarr; 0.31 km²)</span>
+            </div>
+            <span className="text-[10px] text-slate-400 block mt-0.5">Extended post-monsoon retention</span>
+          </div>
+        </div>
+
+        {interventions.length > 0 && (
+          <div className="pt-2 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+            <span className="text-slate-400">
+              Explore structure-level before/after optical slider &amp; LULC breakdown for <strong>{interventions[0]?.code}</strong>
+            </span>
+            <button
+              onClick={() => navigate(`/intervention/${interventions[0]?.id}?tab=before-after`)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 font-bold transition cursor-pointer self-start sm:self-auto"
+            >
+              <span>Inspect Impact Analysis</span>
+              <ArrowRight className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Interventions in this Watershed */}

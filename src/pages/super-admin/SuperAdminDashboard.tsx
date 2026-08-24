@@ -16,6 +16,8 @@ import { StatCard } from '../../components/ui/StatCard';
 import { Badge } from '../../components/ui/Badge';
 import { GISMap } from '../../components/gis/GISMap';
 import { useData } from '../../context/DataContext';
+import { getNationalImpactSummary } from '../../data/mockData';
+import { Sparkles, TrendingUp, GitCompare } from 'lucide-react';
 
 export const SuperAdminDashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -39,12 +41,35 @@ export const SuperAdminDashboard: React.FC = () => {
       ? watersheds
       : watersheds.filter((w) => w.state.toLowerCase() === selectedState.toLowerCase());
 
-  const stateSummaries = [
-    { name: 'Rajasthan', watersheds: 12, interventions: 88, health: 76, status: 'HEALTHY', center: [27.0238, 74.2179] as [number, number] },
-    { name: 'Punjab', watersheds: 4, interventions: 34, health: 48, status: 'CRITICAL', center: [30.9010, 75.8573] as [number, number] },
-    { name: 'Madhya Pradesh', watersheds: 5, interventions: 38, health: 86, status: 'HEALTHY', center: [22.7196, 75.8577] as [number, number] },
-    { name: 'Gujarat', watersheds: 3, interventions: 26, health: 79, status: 'HEALTHY', center: [23.5979, 72.9698] as [number, number] },
-  ];
+  // Compute dynamic state summaries from actual watersheds and interventions
+  const statesList = Array.from(new Set(watersheds.map((w) => w.state)));
+  const stateCenterMap: Record<string, [number, number]> = {
+    'Rajasthan': [27.2, 76.2],
+    'Madhya Pradesh': [23.6, 78.5],
+    'Maharashtra': [19.0, 77.0],
+    'Karnataka': [13.34, 78.21]
+  };
+
+  const stateSummaries = statesList.map((stName) => {
+    const wsInState = watersheds.filter((w) => w.state === stName);
+    const intInState = interventions.filter((i) => i.state === stName);
+    const avgHealth = Math.round(
+      wsInState.reduce((acc, curr) => acc + curr.healthScore, 0) / (wsInState.length || 1)
+    );
+    const status: 'HEALTHY' | 'MODERATE' | 'CRITICAL' =
+      avgHealth >= 75 ? 'HEALTHY' : avgHealth >= 50 ? 'MODERATE' : 'CRITICAL';
+
+    return {
+      name: stName,
+      watersheds: wsInState.length,
+      interventions: intInState.length,
+      health: avgHealth,
+      status,
+      center: stateCenterMap[stName] || ([22.5, 78.0] as [number, number])
+    };
+  });
+
+  const verifiedInterventionsCount = interventions.filter((i) => i.isFieldVerified).length;
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -102,24 +127,24 @@ export const SuperAdminDashboard: React.FC = () => {
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-3.5 w-full min-w-0">
         <StatCard
           title="Watersheds"
-          value="24"
-          subtitle="4 States active"
+          value={watersheds.length.toString()}
+          subtitle={`${statesList.length} States active`}
           icon={Globe}
           iconColor="text-blue-400 bg-blue-500/10 border-blue-500/20"
           onClick={() => navigate('/super-admin/watersheds')}
         />
         <StatCard
           title="Interventions"
-          value="186"
-          subtitle="142 Verified"
+          value={interventions.length.toString()}
+          subtitle={`${verifiedInterventionsCount} Verified`}
           icon={Layers}
           iconColor="text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
-          onClick={() => navigate('/watershed/WS-001')}
+          onClick={() => navigate('/super-admin/watersheds')}
         />
         <StatCard
           title="Evidence Records"
           value={totalEvidenceCount.toLocaleString()}
-          subtitle={`+${evidenceList.length} in audit pool`}
+          subtitle={`Audit Pipeline`}
           icon={Camera}
           iconColor="text-indigo-400 bg-indigo-500/10 border-indigo-500/20"
           onClick={() => navigate('/super-admin/evidence')}
@@ -174,15 +199,11 @@ export const SuperAdminDashboard: React.FC = () => {
             selectedInterventionId={selectedInterventionId}
             onSelectIntervention={(id) => setSelectedInterventionId(id)}
             center={
-              selectedState === 'Punjab'
-                ? [30.9010, 75.8573]
-                : selectedState === 'Madhya Pradesh'
-                ? [22.7196, 75.8577]
-                : selectedState === 'Gujarat'
-                ? [23.5979, 72.9698]
-                : [27.5684, 76.6128]
+              selectedState !== 'ALL' && stateCenterMap[selectedState]
+                ? stateCenterMap[selectedState]
+                : [22.8, 77.0]
             }
-            zoom={selectedState === 'ALL' ? 7 : 11}
+            zoom={selectedState === 'ALL' ? 6 : 9}
             height="520px"
           />
         </div>
@@ -267,6 +288,67 @@ export const SuperAdminDashboard: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* National Watershed Impact & Change Detection Summary */}
+      {(() => {
+        const impactSummary = getNationalImpactSummary();
+        return (
+          <div className="rounded-2xl border border-slate-800 bg-gradient-to-r from-slate-900 via-slate-900 to-emerald-950/30 p-4 sm:p-5 shadow-xl font-mono">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3 mb-3">
+              <div className="flex items-center gap-2">
+                <div className="h-8 w-8 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0">
+                  <Sparkles className="h-4 w-4" />
+                </div>
+                <div>
+                  <h3 className="text-xs sm:text-sm font-bold text-white uppercase tracking-wider">
+                    National Watershed Impact &amp; Multi-Temporal Change Detection
+                  </h3>
+                  <p className="text-[11px] text-slate-400">
+                    Aggregate multi-year satellite before-vs-after evaluation across all monitored interventions
+                  </p>
+                </div>
+              </div>
+              <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold self-start sm:self-auto">
+                {impactSummary.totalAssessed} SITES ASSESSED
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+              <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800">
+                <span className="text-[10px] text-slate-400 block uppercase">Positive Impact</span>
+                <div className="flex items-baseline gap-1.5 mt-1">
+                  <span className="text-xl font-black text-emerald-400">{impactSummary.positiveImpact}</span>
+                  <span className="text-[10px] text-slate-400">sites ({Math.round((impactSummary.positiveImpact / impactSummary.totalAssessed) * 100)}%)</span>
+                </div>
+              </div>
+
+              <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800">
+                <span className="text-[10px] text-slate-400 block uppercase">Avg Health Delta</span>
+                <div className="flex items-baseline gap-1.5 mt-1">
+                  <span className="text-xl font-black text-teal-400">+{impactSummary.avgHealthImprovement}</span>
+                  <span className="text-[10px] text-slate-400">points</span>
+                </div>
+              </div>
+
+              <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800">
+                <span className="text-[10px] text-slate-400 block uppercase">Minimal Change</span>
+                <div className="flex items-baseline gap-1.5 mt-1">
+                  <span className="text-xl font-black text-slate-300">{impactSummary.minimalChange}</span>
+                  <span className="text-[10px] text-slate-400">sites</span>
+                </div>
+              </div>
+
+              <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800">
+                <span className="text-[10px] text-slate-400 block uppercase">Needs Field Review</span>
+                <div className="flex items-baseline gap-1.5 mt-1">
+                  <span className="text-xl font-black text-amber-400">{impactSummary.needsReview}</span>
+                  <span className="text-[10px] text-slate-400">site (silt choke)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Featured Watersheds Data Table */}
       <div className="rounded-xl border border-slate-800 bg-slate-900/90 p-5">

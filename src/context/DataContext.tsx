@@ -41,26 +41,26 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [inspections, setInspections] = useState<InspectionTask[]>([
     {
       id: 'INS-001',
-      interventionId: 'GP-011',
-      interventionName: 'Gully Plug #11',
-      watershedId: 'WS-012',
-      watershedName: 'Ludhiana Canal Catchment (WS-012)',
-      reason: 'Structural anchor scour after flash rain',
+      interventionId: 'CD-015',
+      interventionName: 'Check Dam #15',
+      watershedId: 'WS-001',
+      watershedName: 'Alwar North Catchment (WS-001)',
+      reason: 'Silt deposition near inlet notch causing deflection',
       priority: 'HIGH',
-      assignedOfficer: 'Harpreet Kaur',
-      assignedOfficerId: 'USR-004',
+      assignedOfficer: 'Vikram Singh',
+      assignedOfficerId: 'USR-003',
       dueDate: '2026-08-25',
       status: 'Pending Field Visit',
       createdAt: '2026-08-21',
-      alertId: 'ALT-902',
+      alertId: 'ALT-901',
     }
   ]);
 
   // Compute dynamic stats
   const pendingEvidence = evidenceList.filter((e) => e.verificationStatus === 'PENDING');
   const verifiedEvidence = evidenceList.filter((e) => e.verificationStatus === 'VERIFIED');
-  const pendingVerificationCount = 14 + (pendingEvidence.length - 1); // Baseline 14 + delta
-  const totalEvidenceCount = 1248 + (evidenceList.length - MOCK_FIELD_EVIDENCE.length);
+  const pendingVerificationCount = pendingEvidence.length;
+  const totalEvidenceCount = evidenceList.length;
   const activeAlertsCount = alerts.filter((a) => !a.isResolved).length;
   const verificationRatePercent = Math.round((verifiedEvidence.length / (evidenceList.length || 1)) * 100);
 

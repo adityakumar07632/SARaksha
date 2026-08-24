@@ -33,28 +33,28 @@ export const EvidenceManagement: React.FC = () => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <StatCard
           title="Total Evidence"
-          value="1,248"
+          value={evidenceList.length.toString()}
           subtitle="All recorded surveys"
           icon={Camera}
           iconColor="text-blue-400 bg-blue-500/10 border-blue-500/20"
         />
         <StatCard
           title="Verified"
-          value="1,085"
+          value={evidenceList.filter((e) => e.verificationStatus === 'VERIFIED').length.toString()}
           subtitle="Human signed-off"
           icon={CheckCircle2}
           iconColor="text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
         />
         <StatCard
           title="Pending Audit"
-          value="14"
+          value={pendingVerificationCount.toString()}
           subtitle="Awaiting sign-off"
           icon={Clock}
           iconColor="text-amber-400 bg-amber-500/10 border-amber-500/20"
         />
         <StatCard
           title="Flagged"
-          value="8"
+          value={evidenceList.filter((e) => e.verificationStatus === 'FLAGGED').length.toString()}
           subtitle="Requires field re-inspection"
           icon={AlertTriangle}
           iconColor="text-rose-400 bg-rose-500/10 border-rose-500/20"

@@ -203,4 +203,48 @@ describe('SARaksha Complete Interaction & Button Functionality Audit Suite', () 
       expect(getScenarioRoute(6)).toBe('/evidence-dossier?scenario=6');
     });
   });
+
+  // 6. National Demo Dataset & Multi-Watershed Integrity
+  describe('National Demo Dataset & Multi-Watershed Structure', () => {
+    it('contains 8 realistic demo watersheds across 4 key Indian states', () => {
+      expect(MOCK_WATERSHEDS).toHaveLength(8);
+      const states = new Set(MOCK_WATERSHEDS.map((w) => w.state));
+      expect(states.has('Rajasthan')).toBe(true);
+      expect(states.has('Maharashtra')).toBe(true);
+      expect(states.has('Madhya Pradesh')).toBe(true);
+      expect(states.has('Karnataka')).toBe(true);
+
+      // Verify CD-012 / WS-001 integrity is preserved
+      const ws001 = MOCK_WATERSHEDS.find((w) => w.id === 'WS-001');
+      expect(ws001?.name).toContain('Alwar North Catchment');
+    });
+
+    it('contains 41 realistic interventions distributed across all 8 watersheds', () => {
+      expect(MOCK_INTERVENTIONS).toHaveLength(41);
+
+      // Verify that every watershed has interventions assigned
+      for (let i = 1; i <= 8; i++) {
+        const wsId = `WS-00${i}`;
+        const count = MOCK_INTERVENTIONS.filter((inv) => inv.watershedId === wsId).length;
+        expect(count).toBeGreaterThanOrEqual(4);
+      }
+
+      // Check CD-012 intact
+      const cd012 = MOCK_INTERVENTIONS.find((i) => i.id === 'CD-012');
+      expect(cd012?.watershedId).toBe('WS-001');
+      expect(cd012?.isFieldVerified).toBe(true);
+    });
+
+    it('contains 21 valid field evidence records with AI analysis and photos', () => {
+      expect(MOCK_FIELD_EVIDENCE).toHaveLength(21);
+
+      MOCK_FIELD_EVIDENCE.forEach((ev) => {
+        expect(ev.id).toMatch(/^EVD-\d{3}$/);
+        expect(ev.photoUrl).toBeDefined();
+        expect(ev.coordinates).toHaveLength(2);
+        expect(ev.aiAnalysis.structureDetected).toBeDefined();
+        expect(ev.aiAnalysis.confidenceScore).toBeGreaterThan(50);
+      });
+    });
+  });
 });
